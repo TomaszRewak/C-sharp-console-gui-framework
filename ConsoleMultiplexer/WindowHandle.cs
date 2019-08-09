@@ -54,7 +54,7 @@ namespace ConsoleMultiplexer
 
 			for (int x = 0; x < innterRect.Width; x++)
 				for (int y = 0; y < innterRect.Height; y++)
-					Paint(innterRect.Left + x, innterRect.Top + y, 'x');
+					Paint(innterRect.Left + x, innterRect.Top + y, '▒');
 		}
 
 		internal void Paint(int left, int top, char character)
