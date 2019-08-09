@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleMultiplexer
 {
-	public class ConsoleManager
+	internal class ConsoleManager
 	{
-		public static void A()
+		private static readonly List<WindowHandle> _windows = new List<WindowHandle>();
+
+		internal static void Register(WindowHandle windowHandle)
 		{
+			windowHandle.Repaint(windowHandle.Rect);
+		}
+
+		internal static void Unregister(WindowHandle windowHandle)
+		{
+
 		}
 	}
 }

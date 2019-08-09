@@ -5,22 +5,18 @@ namespace ConsoleMultiplexer.Example
 {
 	class Program
 	{
-
-
 		static void Main(string[] args)
 		{
-			Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
+			Console.SetWindowSize(1, 1);
+			Console.SetBufferSize(200, 50);
+			Console.SetWindowSize(200, 50);
 
-			var consoleHandle1 = new ConsoleWindowHandle(10, 10, 10, 10);
-			var consoleHandle2 = new ConsoleWindowHandle(20, 20, 10, 10);
+			var consoleHandle1 = new WindowHandle(new ScreenRect(10, 10, 10, 10), WindowBorder.All);
+			var consoleHandle2 = new WindowHandle(new ScreenRect(20, 20, 10, 10), WindowBorder.All);
+			var consoleHandle3 = new WindowHandle(new ScreenRect(25, 15, 20, 10), WindowBorder.All);
 
 			for (int i = 0; ; i++)
 			{
-				consoleHandle1.WriteLine($"aaa{i}");
-				consoleHandle1.WriteLine($"bbb{i}");
-				consoleHandle1.WriteLine($"ccc{i}");
-				consoleHandle2.WriteLine($"ddd{i}");
-				consoleHandle2.WriteLine($"eee{i}");
 
 				Thread.Sleep(500);
 			}
