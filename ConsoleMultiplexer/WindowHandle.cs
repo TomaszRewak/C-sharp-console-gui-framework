@@ -31,35 +31,44 @@ namespace ConsoleMultiplexer
 		private void RepaintBorder(in ScreenRect rect)
 		{
 			if (Border.HasFlag(WindowBorder.Top))
-				for (int i = 1; i < Rect.Width - 1; i++)
-					Paint(Rect.Left + i, Rect.Top, '═');
+				for (int i = 0; i < Rect.Width; i++)
+					Paint(i, -1, '═');
 
-			if (Border.HasFlag(WindowBorder.Top))
-				for (int i = 1; i < Rect.Width - 1; i++)
-					Paint(Rect.Left + i, Rect.Top + Rect.Height - 1, '═');
+			if (Border.HasFlag(WindowBorder.Bottom))
+				for (int i = 0; i < Rect.Width; i++)
+					Paint(i, Rect.Height, '═');
 
-			if (Border.HasFlag(WindowBorder.Top))
-				for (int i = 1; i < Rect.Height - 1; i++)
-					Paint(Rect.Left, Rect.Top + i, '║');
+			if (Border.HasFlag(WindowBorder.Left))
+				for (int i = 0; i < Rect.Height; i++)
+					Paint(-1, i, '║');
 
-			if (Border.HasFlag(WindowBorder.Top))
-				for (int i = 1; i < Rect.Height - 1; i++)
-					Paint(Rect.Left + Rect.Width - 1, Rect.Top + i, '║');
+			if (Border.HasFlag(WindowBorder.Right))
+				for (int i = 0; i < Rect.Height; i++)
+					Paint(Rect.Width, i, '║');
 
+			if (Border.HasFlag(WindowBorder.Top | WindowBorder.Left))
+				Paint(-1, -1, '╔');
+
+			if (Border.HasFlag(WindowBorder.Top | WindowBorder.Right))
+				Paint(Rect.Width, -1, '╗');
+
+			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Left))
+				Paint(-1, Rect.Height, '╚');
+
+			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Right))
+				Paint(Rect.Width, Rect.Height, '╝');
 		}
 
 		private void RepaintContent(in ScreenRect rect)
 		{
-			var innterRect = Rect.Crop(Border);
-
-			for (int x = 0; x < innterRect.Width; x++)
-				for (int y = 0; y < innterRect.Height; y++)
-					Paint(innterRect.Left + x, innterRect.Top + y, '▒');
+			for (int x = 0; x < Rect.Width; x++)
+				for (int y = 0; y < Rect.Height; y++)
+					Paint(x, y, '▒');
 		}
 
 		internal void Paint(int left, int top, char character)
 		{
-			Console.SetCursorPosition(left, top);
+			Console.SetCursorPosition(Rect.Left + left, Rect.Top + top);
 			Console.Write(character);
 		}
 	}

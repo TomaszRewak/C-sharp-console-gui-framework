@@ -12,15 +12,4 @@ namespace ConsoleMultiplexer
 		Bottom = 0b1000,
 		All    = 0b1111
 	}
-
-	internal static class WindowBorderExtension
-	{
-		internal static int CountBorders(this WindowBorder border, WindowBorder type)
-		{
-			int borders = 0;
-			for (var bordersToCheck = (int)(border & type); bordersToCheck > 0; bordersToCheck >>= 1)
-				borders += bordersToCheck & 1;
-			return borders;
-		}
-	}
 }

@@ -18,14 +18,5 @@ namespace ConsoleMultiplexer
 			Width = width;
 			Height = height;
 		}
-
-		internal ScreenRect Crop(WindowBorder border)
-		{
-			return new ScreenRect(
-				Left   + border.CountBorders(WindowBorder.Left),
-				Top    + border.CountBorders(WindowBorder.Top),
-				Width  - border.CountBorders(WindowBorder.Left | WindowBorder.Right),
-				Height - border.CountBorders(WindowBorder.Top | WindowBorder.Bottom));
-		}
 	}
 }
