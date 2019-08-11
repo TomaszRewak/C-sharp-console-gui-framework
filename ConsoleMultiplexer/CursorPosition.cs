@@ -6,13 +6,25 @@ namespace ConsoleMultiplexer
 {
 	internal struct CursorPosition
 	{
-		int X { get; }
-		int Y { get; }
+		private int DistanceFromBeginning { get; }
+		private int ScreenWidth { get; }
 
-		public CursorPosition(int x, int y, int spaceWidth)
+		public int X => DistanceFromBeginning % ScreenWidth;
+		public int Y => DistanceFromBeginning / ScreenWidth;
+
+		public bool IsLineBeginning => X == 0;
+
+		public CursorPosition(int distanceFromBeginning, int screenWidth)
 		{
-			X = x;
-			Y = y;
+			DistanceFromBeginning = distanceFromBeginning;
+			ScreenWidth = screenWidth;
+		}
+
+		public CursorPosition NextLine()
+		{
+			return new CursorPosition(
+				DistanceFromBeginning + ScreenWidth - X,
+				ScreenWidth);
 		}
 	}
 }
