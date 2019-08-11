@@ -69,7 +69,7 @@ namespace ConsoleMultiplexer.Controls
 
 		public Character Get(in CursorPosition cursorPosition)
 		{
-			return _buffer[cursorPosition - Start];
+			return _buffer[(cursorPosition - Start + _dataOffset) % _buffer.Length];
 		}
 	}
 }
