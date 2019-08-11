@@ -6,11 +6,9 @@ namespace ConsoleMultiplexer
 {
 	internal interface IControl
 	{
-		CursorPosition Start { get; }
+		CursorPosition Start { get; set; }
 		CursorPosition End { get; }
 
-		void SetPosition(in CursorPosition cursorPosition, in ScreenSize screenSize);
-
-		char Get(in CursorPosition cursorPosition);
+		Character Get(in CursorPosition cursorPosition);
 	}
 }
