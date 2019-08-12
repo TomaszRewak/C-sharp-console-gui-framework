@@ -41,8 +41,8 @@ namespace ConsoleMultiplexer.Controls
 
 		private void FoldBuffer()
 		{
-			_dataOffset = (_dataOffset + Start.ScreenWidth) % _buffer.Length;
-			_dataSize -= Start.ScreenWidth;
+			_dataOffset = (_dataOffset + Start.GetBufferWidth()) % _buffer.Length;
+			_dataSize -= Start.GetBufferWidth();
 		}
 
 		public void Add(in Character character)
