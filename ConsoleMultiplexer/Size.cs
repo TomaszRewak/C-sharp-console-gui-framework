@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	internal struct ScreenSize
+	public struct Size
 	{
 		int Width { get; }
 		int Height { get; }

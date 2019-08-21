@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	internal struct Character
+	public struct Character
 	{
 		public char Content { get; }
 

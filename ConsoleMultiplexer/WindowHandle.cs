@@ -66,6 +66,9 @@ namespace ConsoleMultiplexer
 					Paint(x, y, '▒');
 		}
 
+		private void RequestBuffer()
+		{ }
+
 		internal void Paint(int left, int top, char character)
 		{
 			Console.SetCursorPosition(Rect.Left + left, Rect.Top + top);
