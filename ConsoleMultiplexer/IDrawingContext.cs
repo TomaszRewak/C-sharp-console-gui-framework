@@ -6,7 +6,8 @@ namespace ConsoleMultiplexer
 {
 	public interface IDrawingContext
 	{
-		Size Size { get; }
+		Size MinSize { get; }
+		Size MaxSize { get; }
 
 		void Set(Position position, Character character);
 		void Flush();

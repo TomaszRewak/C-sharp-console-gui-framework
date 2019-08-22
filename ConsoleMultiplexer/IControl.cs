@@ -6,6 +6,8 @@ namespace ConsoleMultiplexer
 {
 	internal interface IControl
 	{
-		void Draw(IDrawingContext context);
+		IDrawingContext Context { get; set; }
+
+		void Draw();
 	}
 }

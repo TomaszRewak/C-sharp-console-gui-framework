@@ -4,14 +4,14 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	public struct ScreenRect
+	public struct Rect
 	{
 		public int Left { get; }
 		public int Top { get; }
 		public int Width { get; }
 		public int Height { get; }
 
-		public ScreenRect(int left, int top, int width, int height)
+		public Rect(int left, int top, int width, int height)
 		{
 			Left = left;
 			Top = top;

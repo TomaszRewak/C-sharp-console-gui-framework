@@ -4,12 +4,12 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	public struct Size
+	struct FixedRect
 	{
 		int Width { get; }
 		int Height { get; }
 
-		public Size(int width, int height)
+		public FixedRect(int width, int height)
 		{
 			Width = width;
 			Height = height;

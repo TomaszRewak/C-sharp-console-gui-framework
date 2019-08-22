@@ -6,10 +6,10 @@ namespace ConsoleMultiplexer
 {
 	public class WindowHandle : IDisposable
 	{
-		public ScreenRect Rect { get; }
+		public Rect Rect { get; }
 		public WindowBorder Border { get; }
 
-		public WindowHandle(in ScreenRect rect, WindowBorder border = WindowBorder.None)
+		public WindowHandle(in Rect rect, WindowBorder border = WindowBorder.None)
 		{
 			Rect = rect;
 			Border = border;
@@ -22,13 +22,13 @@ namespace ConsoleMultiplexer
 			ConsoleManager.Unregister(this);
 		}
 
-		internal void Repaint(in ScreenRect rect)
+		internal void Repaint(in Rect rect)
 		{
 			RepaintBorder(rect);
 			RepaintContent(rect);
 		}
 
-		private void RepaintBorder(in ScreenRect rect)
+		private void RepaintBorder(in Rect rect)
 		{
 			if (Border.HasFlag(WindowBorder.Top))
 				for (int i = 0; i < Rect.Width; i++)
@@ -59,7 +59,7 @@ namespace ConsoleMultiplexer
 				Paint(Rect.Width, Rect.Height, '╝');
 		}
 
-		private void RepaintContent(in ScreenRect rect)
+		private void RepaintContent(in Rect rect)
 		{
 			for (int x = 0; x < Rect.Width; x++)
 				for (int y = 0; y < Rect.Height; y++)
