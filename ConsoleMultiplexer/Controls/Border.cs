@@ -94,7 +94,7 @@ namespace ConsoleMultiplexer.Controls
 			_requiresRepainting = false;
 			_contentBuffer.ClearChanges();
 
-			var size = Size.Intersection(MaxSize, _contentBuffer.Size.Expand(2, 2));
+			var size = Size.Intersection(MaxSize, _contentBuffer.Size).Expand(2, 2);
 
 			if (Border.HasFlag(WindowBorder.Top))
 				for (int i = 1; i < size.Width - 1; i++)
@@ -123,6 +123,9 @@ namespace ConsoleMultiplexer.Controls
 
 			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Right))
 				BaseContext.Set(Position.At(size.Width - 1, size.Height - 1), Character.Plain('╝'));
+
+			foreach (var position in _contentBuffer.Size)
+				BaseContext.Set(position.Move(1, 1), _contentBuffer.Get(position));
 
 			BaseContext.Flush();
 		}
