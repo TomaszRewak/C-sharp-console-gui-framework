@@ -35,6 +35,12 @@ namespace ConsoleMultiplexer.DataStructures
 			_changes.Clear();
 		}
 
+		public void Clear()
+		{
+			ClearChanges();
+			Size = Size.Empty;
+		}
+
 		private ref Cell At(Position position)
 		{
 			return ref _buffer[position.X, position.Y];
