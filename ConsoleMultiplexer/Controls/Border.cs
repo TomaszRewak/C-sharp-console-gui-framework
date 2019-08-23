@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleMultiplexer.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -39,20 +40,16 @@ namespace ConsoleMultiplexer.Controls
 			Context.Clear();
 			Context.Flush();
 		}
-
-		private void DrawBox()
-		{
-
-		}
-
-		private void DrawContent()
-		{
-
-		}
 	}
 
 	internal class BorderContext : IDrawingContext
 	{
+		private CharacterBuffer _contentBuffer = new CharacterBuffer();
+		private bool _requiresRepainting = true;
+		private Size _previousContentSize;
+
+		public WindowBorder Border => WindowBorder.All;
+
 		public IDrawingContext BaseContext { get; }
 
 		public int? Width { get; }
@@ -64,8 +61,6 @@ namespace ConsoleMultiplexer.Controls
 		public Size MinSize => Size.Of(ContentWidth ?? 0, ContentHeight ?? 0);
 		public Size MaxSize => Size.Of(ContentWidth ?? int.MaxValue, ContentHeight ?? int.MaxValue);
 
-		private Size ActualContentSize 
-
 		public BorderContext(IDrawingContext baseContext, int? width, int? height)
 		{
 			BaseContext = baseContext;
@@ -76,17 +71,76 @@ namespace ConsoleMultiplexer.Controls
 
 		public void Clear()
 		{
-			BaseContext.Clear();
+			_contentBuffer.Clear();
 		}
 
 		public void Flush()
 		{
-			throw new NotImplementedException();
+			CheckIfRequiresRepainting();
+
+			if (_requiresRepainting)
+				Repaint();
+			else
+				FlushChanges();
 		}
 
-		public void Set(Position position, Character character)
+		public void Set(in Position position, in Character character)
 		{
-			throw new NotImplementedException();
+			_contentBuffer.Set(position, character);
+		}
+
+		private void Repaint()
+		{
+			_requiresRepainting = false;
+			_contentBuffer.ClearChanges();
+
+			var size = Size.Intersection(MaxSize, _contentBuffer.Size.Expand(2, 2));
+
+			if (Border.HasFlag(WindowBorder.Top))
+				for (int i = 1; i < size.Width - 1; i++)
+					BaseContext.Set(Position.At(i, 0), Character.Plain('═'));
+
+			if (Border.HasFlag(WindowBorder.Bottom))
+				for (int i = 1; i < size.Width - 1; i++)
+					BaseContext.Set(Position.At(i, size.Height - 1), Character.Plain('═'));
+
+			if (Border.HasFlag(WindowBorder.Left))
+				for (int i = 1; i < size.Height - 1; i++)
+					BaseContext.Set(Position.At(0, i), Character.Plain('║'));
+
+			if (Border.HasFlag(WindowBorder.Right))
+				for (int i = 1; i < size.Height - 1; i++)
+					BaseContext.Set(Position.At(size.Width - 1, i), Character.Plain('║'));
+
+			if (Border.HasFlag(WindowBorder.Top | WindowBorder.Left))
+				BaseContext.Set(Position.At(0, 0), Character.Plain('╔'));
+
+			if (Border.HasFlag(WindowBorder.Top | WindowBorder.Right))
+				BaseContext.Set(Position.At(size.Width - 1, 0), Character.Plain('╗'));
+
+			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Left))
+				BaseContext.Set(Position.At(0, size.Height - 1), Character.Plain('╚'));
+
+			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Right))
+				BaseContext.Set(Position.At(size.Width - 1, size.Height - 1), Character.Plain('╝'));
+
+			BaseContext.Flush();
+		}
+
+		private void FlushChanges()
+		{
+			foreach (var change in _contentBuffer.Changes)
+				BaseContext.Set(change.Move(1, 1), _contentBuffer.Get(change));
+			_contentBuffer.ClearChanges();
+
+			BaseContext.Flush();
+		}
+
+		private void CheckIfRequiresRepainting()
+		{
+			if (_contentBuffer.Size == _previousContentSize) return;
+			_previousContentSize = _contentBuffer.Size;
+			_requiresRepainting = true;
 		}
 	}
 }

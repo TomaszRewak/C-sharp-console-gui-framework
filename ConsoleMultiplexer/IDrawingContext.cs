@@ -9,7 +9,7 @@ namespace ConsoleMultiplexer
 		Size MinSize { get; }
 		Size MaxSize { get; }
 
-		void Set(Position position, Character character);
+		void Set(in Position position, in Character character);
 		void Flush();
 		void Clear();
 	}

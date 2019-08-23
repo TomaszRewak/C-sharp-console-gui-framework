@@ -21,5 +21,6 @@ namespace ConsoleMultiplexer
 		}
 
 		public static Character Empty => new Character(' ');
+		public static Character Plain(char character) => new Character(character);
 	}
 }

@@ -16,8 +16,10 @@ namespace ConsoleMultiplexer
 		}
 
 		public static Position Begin => new Position(0, 0);
+		public static Position At(int x, int y) => new Position(x, y);
 
 		public Position Next => new Position(X + 1, Y);
 		public Position NextLine => new Position(0, Y + 1);
+		public Position Move(int x, int y) => new Position(X + x, Y + x);
 	}
 }
