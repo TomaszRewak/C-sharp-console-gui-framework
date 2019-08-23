@@ -6,27 +6,75 @@ namespace ConsoleMultiplexer.DataStructures
 {
 	internal class Buffer2D<T>
 	{
-		private T[,] _buffer;
-		private Size _bufferSize;
+		private Cell[,] _buffer = new Cell[0, 0];
+		private Size _bufferSize = Size.Empty;
+		private List<Position> _changes = new List<Position>();
 
-		public Size Size { get; }
+		public Size Size { get; private set; }
+		public IEnumerable<Position> Changes => _changes;
 
 		public T Get(in Position position)
 		{
 			if (!Size.Contains(position)) throw new IndexOutOfRangeException(nameof(position));
 
-			return _buffer[position.X, position.Y];
+			return _buffer[position.X, position.Y].Value;
 		}
 
 		public void Set(in Position position, in T value)
 		{
-			if ()
+			AdjustBufferSize(position);
+
+			At(position).Value = value;
+
+			AdjustSize(position);
+			MarkAsChanged(position);
+		}
+
+		public void ClearChanges()
+		{
+			_changes.Clear();
+		}
+
+		private ref Cell At(Position position)
+		{
+			return ref _buffer[position.X, position.Y];
+		}
+
+		private void AdjustSize(in Position newPosition)
+		{
+			Size = Size.Combine(Size, Size.Containing(newPosition));
+		}
+
+		private void AdjustBufferSize(in Position position)
+		{
+			if (_bufferSize.Contains(position)) return;
+
+			var newBufferSize = Size.Of(
+				_bufferSize.Width < Size.Width ? Size.Width * 2 : _bufferSize.Width,
+				_bufferSize.Height < Size.Height ? Size.Height * 2 : _bufferSize.Height);
+			var newBuffer = new Cell[_bufferSize.Width, _bufferSize.Height];
+
+			foreach (var p in Size)
+				newBuffer[p.X, p.Y] = _buffer[p.X, p.Y];
+
+			_buffer = newBuffer;
+			_bufferSize = newBufferSize;
+		}
+
+		private void MarkAsChanged(in Position position)
+		{
+			ref var cell = ref At(position);
+
+			if (cell.Changed) return;
+
+			cell.Changed = true;
+			_changes.Add(position);
 		}
 
 		private struct Cell
 		{
-			T Value;
-			bool Changed;
+			public T Value;
+			public bool Changed;
 		}
 	}
 }
