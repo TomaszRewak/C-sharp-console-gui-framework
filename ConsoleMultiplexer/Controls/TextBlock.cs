@@ -6,7 +6,7 @@ namespace ConsoleMultiplexer.Controls
 {
 	public class TextBlock : IControl
 	{
-		public IDrawingContext Context { get; set; }
+		private UIContext _context = UIContext.Empty;
 
 		private string _text;
 		public string Text
@@ -17,23 +17,21 @@ namespace ConsoleMultiplexer.Controls
 				if (_text == value) return;
 				_text = value;
 
-				Draw();
+				PrintText();
 			}
 		}
 
-		public void Draw()
+		public void Draw(UIContext context)
 		{
-			if (Context == null) return;
-
-			Context.Clear();
+			_context = context;
 			PrintText();
-			Context.Flush();
 		}
 
 		private void PrintText()
 		{
-			Position end = Position.Begin;
+			_context.Clear();
 
+			Position end = Position.Begin;
 			foreach (var character in Text)
 			{
 				switch (character)
@@ -42,11 +40,13 @@ namespace ConsoleMultiplexer.Controls
 						end = end.NextLine;
 						break;
 					default:
-						Context.Set(end, new Character(character));
+						_context.Set(end, new Character(character));
 						end = end.Next;
 						break;
 				}
 			}
+
+			_context.Flush();
 		}
 	}
 }

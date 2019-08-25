@@ -6,8 +6,6 @@ namespace ConsoleMultiplexer
 {
 	public interface IControl
 	{
-		IDrawingContext Context { get; set; }
-
-		void Draw();
+		void Draw(UIContext drawingContext);
 	}
 }
