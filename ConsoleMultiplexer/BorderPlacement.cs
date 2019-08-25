@@ -3,7 +3,7 @@
 namespace ConsoleMultiplexer
 {
 	[Flags]
-	public enum WindowBorder
+	public enum BorderPlacement
 	{
 		None   = 0b0000,
 		Left   = 0b0001,

@@ -9,18 +9,7 @@ namespace ConsoleMultiplexer.Controls
 	public class Border : IControl, IDrawingContext
 	{
 		private CharacterBuffer _contentBuffer = new CharacterBuffer();
-		private Size _contentSize;
-
-
-		private IDrawingContext _context;
-		public IDrawingContext Context
-		{
-			get => _context;
-			set => Setter
-				.Set(ref _context, value)
-				.OnSizeChanged(c => Draw())
-				.Then(Draw);
-		}
+		private UIContext _context = UIContext.Empty;
 
 		private IControl _content;
 		public IControl Content
@@ -28,19 +17,66 @@ namespace ConsoleMultiplexer.Controls
 			get => _content;
 			set => Setter
 				.Set(ref _content, value)
-				.Then(RepaintContent);
+				.Then(Draw);
 		}
 
-		public void Draw()
+		private BorderPlacement _borderPlacement;
+		public BorderPlacement BorderPlacement
 		{
-			if (Context == null) return;
-
-			Context.Clear();
-			Context.Flush();
+			get => _borderPlacement;
+			set => Setter
+				.Set(ref _borderPlacement, value)
+				.Then(Draw);
 		}
-			   
-		Size IDrawingContext.MinSize => Context.MinSize.Shrink(2, 2);
-		Size IDrawingContext.MaxSize => Context.MaxSize.Shrink(2, 2);
+
+		public Size Size => Size.Intersection(_contentBuffer.Size.Expand(2, 2), _context.MinSize);
+
+		public void Draw(UIContext context)
+		{
+			_context = context;
+			Draw();
+		}
+
+		private void Draw()
+		{
+			Content.Draw(new UIContext(this, _context.MinSize.Shrink(2, 2), _context.MaxSize.Shrink(2, 2)));
+		}
+
+		private void DrawBorder()
+		{
+			if (BorderPlacement.HasFlag(BorderPlacement.Top))
+				for (int i = 1; i < Size.Width - 1; i++)
+					_context.Set(Position.At(i, 0), Character.Plain('═'));
+
+			if (BorderPlacement.HasFlag(BorderPlacement.Bottom))
+				for (int i = 1; i < Size.Width - 1; i++)
+					_context.Set(Position.At(i, Size.Height - 1), Character.Plain('═'));
+
+			if (BorderPlacement.HasFlag(BorderPlacement.Left))
+				for (int i = 1; i < Size.Height - 1; i++)
+					_context.Set(Position.At(0, i), Character.Plain('║'));
+
+			if (BorderPlacement.HasFlag(BorderPlacement.Right))
+				for (int i = 1; i < Size.Height - 1; i++)
+					_context.Set(Position.At(Size.Width - 1, i), Character.Plain('║'));
+
+			if (BorderPlacement.HasFlag(BorderPlacement.Top | BorderPlacement.Left))
+				_context.Set(Position.At(0, 0), Character.Plain('╔'));
+
+			if (BorderPlacement.HasFlag(BorderPlacement.Top | BorderPlacement.Right))
+				_context.Set(Position.At(Size.Width - 1, 0), Character.Plain('╗'));
+
+			if (BorderPlacement.HasFlag(BorderPlacement.Bottom | BorderPlacement.Left))
+				_context.Set(Position.At(0, Size.Height - 1), Character.Plain('╚'));
+
+			if (BorderPlacement.HasFlag(BorderPlacement.Bottom | BorderPlacement.Right))
+				_context.Set(Position.At(Size.Width - 1, Size.Height - 1), Character.Plain('╝'));
+		}
+
+		private void DrawBackground()
+		{
+
+		}
 
 		void IDrawingContext.Clear()
 		{
@@ -58,49 +94,6 @@ namespace ConsoleMultiplexer.Controls
 		void IDrawingContext.Set(in Position position, in Character character)
 		{
 			_contentBuffer.Set(position, character);
-		}
-
-		private void Repaint()
-		{
-
-
-			_requiresRepainting = false;
-			_contentBuffer.ClearChanges();
-
-			var size = Size.Intersection(MaxSize, _contentBuffer.Size).Expand(2, 2);
-
-			if (Border.HasFlag(WindowBorder.Top))
-				for (int i = 1; i < size.Width - 1; i++)
-					BaseContext.Set(Position.At(i, 0), Character.Plain('═'));
-
-			if (Border.HasFlag(WindowBorder.Bottom))
-				for (int i = 1; i < size.Width - 1; i++)
-					BaseContext.Set(Position.At(i, size.Height - 1), Character.Plain('═'));
-
-			if (Border.HasFlag(WindowBorder.Left))
-				for (int i = 1; i < size.Height - 1; i++)
-					BaseContext.Set(Position.At(0, i), Character.Plain('║'));
-
-			if (Border.HasFlag(WindowBorder.Right))
-				for (int i = 1; i < size.Height - 1; i++)
-					BaseContext.Set(Position.At(size.Width - 1, i), Character.Plain('║'));
-
-			if (Border.HasFlag(WindowBorder.Top | WindowBorder.Left))
-				BaseContext.Set(Position.At(0, 0), Character.Plain('╔'));
-
-			if (Border.HasFlag(WindowBorder.Top | WindowBorder.Right))
-				BaseContext.Set(Position.At(size.Width - 1, 0), Character.Plain('╗'));
-
-			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Left))
-				BaseContext.Set(Position.At(0, size.Height - 1), Character.Plain('╚'));
-
-			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Right))
-				BaseContext.Set(Position.At(size.Width - 1, size.Height - 1), Character.Plain('╝'));
-
-			foreach (var position in _contentBuffer.Size)
-				BaseContext.Set(position.Move(1, 1), _contentBuffer.Get(position));
-
-			BaseContext.Flush();
 		}
 
 		private void FlushChanges()

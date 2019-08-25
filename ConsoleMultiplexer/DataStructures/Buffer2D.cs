@@ -7,8 +7,8 @@ namespace ConsoleMultiplexer.DataStructures
 	internal class Buffer2D<T>
 	{
 		private Cell[,] _buffer = new Cell[0, 0];
-		private Size _bufferSize = Size.Empty;
 		private List<Position> _changes = new List<Position>();
+		private Size _bufferSize = Size.Empty;
 
 		public Size Size { get; private set; }
 		public IEnumerable<Position> Changes => _changes;
@@ -48,7 +48,7 @@ namespace ConsoleMultiplexer.DataStructures
 
 		private void AdjustSize(in Position newPosition)
 		{
-			Size = Size.Combine(Size, Size.Containing(newPosition));
+			Size = Size.Union(Size, Size.Containing(newPosition));
 		}
 
 		private void AdjustBufferSize(in Position position)

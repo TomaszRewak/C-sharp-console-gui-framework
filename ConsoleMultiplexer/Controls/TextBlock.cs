@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleMultiplexer.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,22 +13,18 @@ namespace ConsoleMultiplexer.Controls
 		public string Text
 		{
 			get => _text;
-			set
-			{
-				if (_text == value) return;
-				_text = value;
-
-				PrintText();
-			}
+			set => Setter
+				.Set(ref _text, value)
+				.Then(Draw);
 		}
 
 		public void Draw(UIContext context)
 		{
 			_context = context;
-			PrintText();
+			Draw();
 		}
 
-		private void PrintText()
+		private void Draw()
 		{
 			_context.Clear();
 

@@ -7,9 +7,9 @@ namespace ConsoleMultiplexer
 	public class WindowHandle : IDisposable
 	{
 		public Rect Rect { get; }
-		public WindowBorder Border { get; }
+		public BorderPlacement Border { get; }
 
-		public WindowHandle(in Rect rect, WindowBorder border = WindowBorder.None)
+		public WindowHandle(in Rect rect, BorderPlacement border = BorderPlacement.None)
 		{
 			Rect = rect;
 			Border = border;
@@ -30,32 +30,32 @@ namespace ConsoleMultiplexer
 
 		private void RepaintBorder(in Rect rect)
 		{
-			if (Border.HasFlag(WindowBorder.Top))
+			if (Border.HasFlag(BorderPlacement.Top))
 				for (int i = 0; i < Rect.Width; i++)
 					Paint(i, -1, '═');
 
-			if (Border.HasFlag(WindowBorder.Bottom))
+			if (Border.HasFlag(BorderPlacement.Bottom))
 				for (int i = 0; i < Rect.Width; i++)
 					Paint(i, Rect.Height, '═');
 
-			if (Border.HasFlag(WindowBorder.Left))
+			if (Border.HasFlag(BorderPlacement.Left))
 				for (int i = 0; i < Rect.Height; i++)
 					Paint(-1, i, '║');
 
-			if (Border.HasFlag(WindowBorder.Right))
+			if (Border.HasFlag(BorderPlacement.Right))
 				for (int i = 0; i < Rect.Height; i++)
 					Paint(Rect.Width, i, '║');
 
-			if (Border.HasFlag(WindowBorder.Top | WindowBorder.Left))
+			if (Border.HasFlag(BorderPlacement.Top | BorderPlacement.Left))
 				Paint(-1, -1, '╔');
 
-			if (Border.HasFlag(WindowBorder.Top | WindowBorder.Right))
+			if (Border.HasFlag(BorderPlacement.Top | BorderPlacement.Right))
 				Paint(Rect.Width, -1, '╗');
 
-			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Left))
+			if (Border.HasFlag(BorderPlacement.Bottom | BorderPlacement.Left))
 				Paint(-1, Rect.Height, '╚');
 
-			if (Border.HasFlag(WindowBorder.Bottom | WindowBorder.Right))
+			if (Border.HasFlag(BorderPlacement.Bottom | BorderPlacement.Right))
 				Paint(Rect.Width, Rect.Height, '╝');
 		}
 

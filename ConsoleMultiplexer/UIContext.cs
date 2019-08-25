@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	public class UIContext
+	public sealed class UIContext
 	{
 		private readonly IDrawingContext _drawingContext;
 

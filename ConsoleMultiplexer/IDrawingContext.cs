@@ -10,6 +10,6 @@ namespace ConsoleMultiplexer
 	{
 		void Set(in Position position, in Character character);
 		void Flush();
-		void Clear();
+		void Clear(Size size);
 	}
 }

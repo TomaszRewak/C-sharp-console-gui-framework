@@ -26,10 +26,12 @@ namespace ConsoleMultiplexer.Helpers
 			Changed = changed;
 		}
 
-		public void Then(Action action)
+		public SetterContext<T> Then(Action action)
 		{
 			if (Changed)
 				action();
+
+			return this;
 		}
 	}
 }
