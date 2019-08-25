@@ -8,8 +8,9 @@ namespace ConsoleMultiplexer
 
 	public interface IDrawingContext
 	{
+		void Resize(Size size);
 		void Set(in Position position, in Character character);
 		void Flush();
-		void Clear(Size size);
+		void Clear();
 	}
 }
