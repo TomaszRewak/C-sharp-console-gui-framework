@@ -36,6 +36,7 @@ namespace ConsoleMultiplexer
 		}
 
 		public Size Expand(int width, int height) => new Size(Width + width, Height + height);
+		public Size Shrink(int width, int height) => new Size(Width - width, Height - height);
 
 		public IEnumerator<Position> GetEnumerator()
 		{

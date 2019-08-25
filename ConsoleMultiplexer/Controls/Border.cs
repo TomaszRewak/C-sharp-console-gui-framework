@@ -1,36 +1,34 @@
 ﻿using ConsoleMultiplexer.DataStructures;
+using ConsoleMultiplexer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-	public class Border : IControl
+	public class Border : IControl, IDrawingContext
 	{
-		public IDrawingContext Context { get; set; }
+		private CharacterBuffer _contentBuffer = new CharacterBuffer();
+		private Size _contentSize;
 
-		private int? _width;
-		public int? Width
+
+		private IDrawingContext _context;
+		public IDrawingContext Context
 		{
-			get => _width;
-			set 
-			{
-				if (_width == value) return;
-				_width = value;
-				Draw();
-			}
+			get => _context;
+			set => Setter
+				.Set(ref _context, value)
+				.OnSizeChanged(c => Draw())
+				.Then(Draw);
 		}
 
-		private int? _height;
-		public int? Height
+		private IControl _content;
+		public IControl Content
 		{
-			get => _height;
-			set
-			{
-				if (_height == value) return;
-				_height = value;
-				Draw();
-			}
+			get => _content;
+			set => Setter
+				.Set(ref _content, value)
+				.Then(RepaintContent);
 		}
 
 		public void Draw()
@@ -40,57 +38,32 @@ namespace ConsoleMultiplexer.Controls
 			Context.Clear();
 			Context.Flush();
 		}
-	}
+			   
+		Size IDrawingContext.MinSize => Context.MinSize.Shrink(2, 2);
+		Size IDrawingContext.MaxSize => Context.MaxSize.Shrink(2, 2);
 
-	internal class BorderContext : IDrawingContext
-	{
-		private CharacterBuffer _contentBuffer = new CharacterBuffer();
-		private bool _requiresRepainting = true;
-		private Size _previousContentSize;
-
-		public WindowBorder Border => WindowBorder.All;
-
-		public IDrawingContext BaseContext { get; }
-
-		public int? Width { get; }
-		public int? Height { get; }
-
-		public int? ContentWidth => Width - 2;
-		public int? ContentHeight => Height - 2;
-
-		public Size MinSize => Size.Of(ContentWidth ?? 0, ContentHeight ?? 0);
-		public Size MaxSize => Size.Of(ContentWidth ?? int.MaxValue, ContentHeight ?? int.MaxValue);
-
-		public BorderContext(IDrawingContext baseContext, int? width, int? height)
-		{
-			BaseContext = baseContext;
-
-			Width = width;
-			Height = height;
-		}
-
-		public void Clear()
+		void IDrawingContext.Clear()
 		{
 			_contentBuffer.Clear();
 		}
 
-		public void Flush()
+		void IDrawingContext.Flush()
 		{
-			CheckIfRequiresRepainting();
-
-			if (_requiresRepainting)
+			if (_contentBuffer.Size == _contentSize)
 				Repaint();
 			else
 				FlushChanges();
 		}
 
-		public void Set(in Position position, in Character character)
+		void IDrawingContext.Set(in Position position, in Character character)
 		{
 			_contentBuffer.Set(position, character);
 		}
 
 		private void Repaint()
 		{
+
+
 			_requiresRepainting = false;
 			_contentBuffer.ClearChanges();
 
@@ -137,13 +110,6 @@ namespace ConsoleMultiplexer.Controls
 			_contentBuffer.ClearChanges();
 
 			BaseContext.Flush();
-		}
-
-		private void CheckIfRequiresRepainting()
-		{
-			if (_contentBuffer.Size == _previousContentSize) return;
-			_previousContentSize = _contentBuffer.Size;
-			_requiresRepainting = true;
 		}
 	}
 }

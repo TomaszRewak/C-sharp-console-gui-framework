@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	internal interface IControl
+	public interface IControl
 	{
 		IDrawingContext Context { get; set; }
 
