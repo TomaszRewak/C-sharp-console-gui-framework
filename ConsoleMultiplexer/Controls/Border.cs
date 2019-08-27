@@ -22,13 +22,12 @@ namespace ConsoleMultiplexer.Controls
 			{
 				get => Size;
 				set => Setter
-					.Set
+					.Set(ref _size, value)
+					.Then(SizeChanged);
 			}
 
-			public Size MinSize => throw new NotImplementedException();
-			public Size MaxSize => throw new NotImplementedException();
-
-			public event SizeLimitsChangedHandler SizeLimitsChanged;
+			public Size MinSize => Size;
+			public Size MaxSize => Size;
 
 			public void Dispose()
 			{
@@ -37,13 +36,20 @@ namespace ConsoleMultiplexer.Controls
 
 			public void Update()
 			{
-				throw new NotImplementedException();
+				_border?.Update();
 			}
 
 			public void Update(in Position position)
 			{
-				throw new NotImplementedException();
+				_border?.Update(position);
 			}
+
+			private void SizeChanged()
+			{
+				SizeLimitsChanged?.Invoke(this);
+			}
+
+			public event SizeLimitsChangedHandler SizeLimitsChanged;
 		}
 
 
