@@ -4,8 +4,19 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
+	public delegate void SizeChangedHandler(IControl control);
+	public delegate void CharacterChangedHandler(IControl control, Position position);
+
 	public interface IControl
 	{
-		void Draw(UIContext drawingContext);
+		Character this[Position position] { get; }
+
+		Size Size { get; }
+
+		Size MinSize { set; }
+		Size MaxSize { set; }
+
+		event SizeChangedHandler SizeChanged;
+		event CharacterChangedHandler CharacterChanged;
 	}
 }
