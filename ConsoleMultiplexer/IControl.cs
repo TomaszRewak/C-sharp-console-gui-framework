@@ -9,14 +9,9 @@ namespace ConsoleMultiplexer
 
 	public interface IControl
 	{
-		Character this[Position position] { get; }
-
+		IDrawingContext Context { set; }
 		Size Size { get; }
 
-		Size MinSize { set; }
-		Size MaxSize { set; }
-
-		event SizeChangedHandler SizeChanged;
-		event CharacterChangedHandler CharacterChanged;
+		Character this[Position position] { get; }
 	}
 }

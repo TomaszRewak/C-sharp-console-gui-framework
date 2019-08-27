@@ -6,19 +6,48 @@ using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-	public class Border : IControl, IDrawingContext
+	public sealed class Border : Control
 	{
-		private CharacterBuffer _contentBuffer = new CharacterBuffer();
-		private UIContext _context = UIContext.Empty;
-
-		private IControl _content;
-		public IControl Content
+		private class BorderContext : IDrawingContext, IDisposable
 		{
-			get => _content;
-			set => Setter
-				.Set(ref _content, value)
-				.Then(Draw);
+			private Border _border;
+
+			public BorderContext(Border border)
+			{
+				_border = border;
+			}
+
+			private Size _size;
+			public Size Size
+			{
+				get => Size;
+				set => Setter
+					.Set
+			}
+
+			public Size MinSize => throw new NotImplementedException();
+			public Size MaxSize => throw new NotImplementedException();
+
+			public event SizeLimitsChangedHandler SizeLimitsChanged;
+
+			public void Dispose()
+			{
+				_border = null;
+			}
+
+			public void Update()
+			{
+				throw new NotImplementedException();
+			}
+
+			public void Update(in Position position)
+			{
+				throw new NotImplementedException();
+			}
 		}
+
+
+		public IControl Content;
 
 		private BorderPlacement _borderPlacement;
 		public BorderPlacement BorderPlacement
@@ -26,83 +55,60 @@ namespace ConsoleMultiplexer.Controls
 			get => _borderPlacement;
 			set => Setter
 				.Set(ref _borderPlacement, value)
-				.Then(Draw);
+				.Then(UpdateContext);
 		}
 
-		public Size Size => Size.Intersection(_contentBuffer.Size.Expand(2, 2), _context.MinSize);
-
-		public void Draw(UIContext context)
+		public override Character this[Position position]
 		{
-			_context = context;
-			Draw();
+			get
+			{
+				if (!Size.Contains(position)) throw new IndexOutOfRangeException(nameof(position));
+
+				if (position.X == 0 && position.Y == 0 && BorderPlacement.HasFlag(BorderPlacement.Top | BorderPlacement.Left))
+					return Character.Plain('╔');
+
+				if (position.X == Size.Width - 1 && position.Y == 0 && BorderPlacement.HasFlag(BorderPlacement.Top | BorderPlacement.Right))
+					return Character.Plain('╗');
+
+				if (position.X == 0 && position.Y == Size.Height - 1 && BorderPlacement.HasFlag(BorderPlacement.Bottom | BorderPlacement.Left))
+					return Character.Plain('╚');
+
+				if (position.X == Size.Width - 1 && position.Y == Size.Height - 1 && BorderPlacement.HasFlag(BorderPlacement.Bottom | BorderPlacement.Right))
+					return Character.Plain('╝');
+
+				if (position.X == 0 && BorderPlacement.HasFlag(BorderPlacement.Left))
+					return Character.Plain('║');
+
+				if (position.X == Size.Width - 1 && BorderPlacement.HasFlag(BorderPlacement.Right))
+					return Character.Plain('║');
+
+				if (position.Y == 0 && BorderPlacement.HasFlag(BorderPlacement.Top))
+					return Character.Plain('═');
+
+				if (position.Y == Size.Height - 1 && BorderPlacement.HasFlag(BorderPlacement.Bottom))
+					return Character.Plain('═');
+
+				var contentPosition = position.Move(
+					BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0,
+					BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0);
+
+				if (Content?.Size.Contains(contentPosition) ?? false)
+					return Character.Empty;
+
+				return Content[contentPosition];
+			}
 		}
 
-		private void Draw()
+		protected override void Resize(Size MinSize, Size MaxSize)
 		{
-			Content.Draw(new UIContext(this, _context.MinSize.Shrink(2, 2), _context.MaxSize.Shrink(2, 2)));
+			using(Freeze())
+			{
+				Size = Size.Limit(MinSize, Content?.Size ?? Size.Empty, MaxSize);
+			}
 		}
 
-		private void DrawBorder()
-		{
-			if (BorderPlacement.HasFlag(BorderPlacement.Top))
-				for (int i = 1; i < Size.Width - 1; i++)
-					_context.Set(Position.At(i, 0), Character.Plain('═'));
+		private void UpdateContentSize
 
-			if (BorderPlacement.HasFlag(BorderPlacement.Bottom))
-				for (int i = 1; i < Size.Width - 1; i++)
-					_context.Set(Position.At(i, Size.Height - 1), Character.Plain('═'));
-
-			if (BorderPlacement.HasFlag(BorderPlacement.Left))
-				for (int i = 1; i < Size.Height - 1; i++)
-					_context.Set(Position.At(0, i), Character.Plain('║'));
-
-			if (BorderPlacement.HasFlag(BorderPlacement.Right))
-				for (int i = 1; i < Size.Height - 1; i++)
-					_context.Set(Position.At(Size.Width - 1, i), Character.Plain('║'));
-
-			if (BorderPlacement.HasFlag(BorderPlacement.Top | BorderPlacement.Left))
-				_context.Set(Position.At(0, 0), Character.Plain('╔'));
-
-			if (BorderPlacement.HasFlag(BorderPlacement.Top | BorderPlacement.Right))
-				_context.Set(Position.At(Size.Width - 1, 0), Character.Plain('╗'));
-
-			if (BorderPlacement.HasFlag(BorderPlacement.Bottom | BorderPlacement.Left))
-				_context.Set(Position.At(0, Size.Height - 1), Character.Plain('╚'));
-
-			if (BorderPlacement.HasFlag(BorderPlacement.Bottom | BorderPlacement.Right))
-				_context.Set(Position.At(Size.Width - 1, Size.Height - 1), Character.Plain('╝'));
-		}
-
-		private void DrawBackground()
-		{
-
-		}
-
-		void IDrawingContext.Clear()
-		{
-			_contentBuffer.Clear();
-		}
-
-		void IDrawingContext.Flush()
-		{
-			if (_contentBuffer.Size == _contentSize)
-				Repaint();
-			else
-				FlushChanges();
-		}
-
-		void IDrawingContext.Set(in Position position, in Character character)
-		{
-			_contentBuffer.Set(position, character);
-		}
-
-		private void FlushChanges()
-		{
-			foreach (var change in _contentBuffer.Changes)
-				BaseContext.Set(change.Move(1, 1), _contentBuffer.Get(change));
-			_contentBuffer.ClearChanges();
-
-			BaseContext.Flush();
-		}
+		private event SizeLimitsChangedHandler SizeLimitsChanged;
 	}
 }

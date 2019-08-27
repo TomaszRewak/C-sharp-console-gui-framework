@@ -8,22 +8,26 @@ namespace ConsoleMultiplexer.Helpers
 	{
 		public static SetterContext<T> Set<T>(ref T field, T value)
 		{
-			var different = !Equals(field, value);
+			var context = new SetterContext<T>(field, value);
 
-			if (different)
+			if (context.Changed)
 				field = value;
 
-			return new SetterContext<T>(different);
+			return context;
 		}
 	}
 
 	internal struct SetterContext<T>
 	{
-		public bool Changed { get; }
+		public T OldValue { get; }
+		public T NewValue { get; }
 
-		public SetterContext(bool changed)
+		public bool Changed => !Equals(OldValue, NewValue);
+
+		public SetterContext(in T oldValue, in T newValue)
 		{
-			Changed = changed;
+			OldValue = oldValue;
+			NewValue = newValue;
 		}
 
 		public SetterContext<T> Then(Action action)
@@ -32,6 +36,23 @@ namespace ConsoleMultiplexer.Helpers
 				action();
 
 			return this;
+		}
+	}
+
+	internal static class DrawingContextSetterExtension
+	{
+		public static SetterContext<IDrawingContext> OnSizeLimitsChange(this SetterContext<IDrawingContext> context, SizeLimitsChangedHandler sizeLimitsChanged)
+		{
+			if (!context.Changed)
+				return context;
+
+			if (context.OldValue != null)
+				context.OldValue.SizeLimitsChanged -= sizeLimitsChanged;
+
+			if (context.NewValue != null)
+				context.NewValue.SizeLimitsChanged += sizeLimitsChanged;
+
+			return context;
 		}
 	}
 }

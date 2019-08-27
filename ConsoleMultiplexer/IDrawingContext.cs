@@ -4,13 +4,16 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	public delegate void SizeChanged(IDrawingContext drawingContext);
+	public delegate void SizeLimitsChangedHandler(IDrawingContext drawingContext);
 
 	public interface IDrawingContext
 	{
-		Size Size { get; set; }
+		Size MinSize { get; }
+		Size MaxSize { get; }
 
-		void Set(in Position position, in Character character);
-		void Clear();
+		void Update();
+		void Update(in Position position);
+
+		event SizeLimitsChangedHandler SizeLimitsChanged;
 	}
 }
