@@ -11,7 +11,7 @@ namespace ConsoleMultiplexer
 		private bool _changedDuringFreeze;
 
 		public abstract Character this[Position position] { get; }
-		protected abstract void Resize(Size MinSize, Size MaxSize);
+		protected abstract void Resize();
 
 		private IDrawingContext _context;
 		public IDrawingContext Context
@@ -30,6 +30,9 @@ namespace ConsoleMultiplexer
 				.Set(ref _size, value)
 				.Then(Update);
 		}
+
+		public Size MinSize => _context?.MinSize ?? Size.Empty;
+		public Size MaxSize => _context?.MaxSize ?? Size.Empty;
 
 		protected void Update()
 		{
@@ -55,7 +58,7 @@ namespace ConsoleMultiplexer
 		private void OnSizeLimitsChanged(IDrawingContext context)
 		{
 			if (context == _context)
-				Resize(context.MinSize, context.MaxSize);
+				Resize();
 		}
 
 		protected struct FreezeContext : IDisposable

@@ -1,31 +1,40 @@
 ﻿using ConsoleMultiplexer.Controls;
 using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace ConsoleMultiplexer.Example
 {
 	class TestContext : IDrawingContext
 	{
-		public Size MinSize => new Size(30, 30);
+		public Size MinSize => new Size(100, 30);
 
-		public Size MaxSize => new Size(30, 30);
+		public Size MaxSize => new Size(100, 30);
+
+		Character[,] _memory = new Character[100, 30];
 
 		public void Update(IControl control)
 		{
 			for (int x = 0; x < control.Size.Width; x++)
 			{
-				for (int y = 0; y < control.Size.Width; y++)
+				for (int y = 0; y < control.Size.Height; y++)
 				{
-					Console.SetCursorPosition(x, y);
-					Console.Write(control[Position.At(x, y)].Content);
+					Update(control, Position.At(x, y));
 				}
 			}
 		}
 
 		public void Update(IControl control, in Position position)
 		{
-			Console.SetCursorPosition(position.X, position.Y);
-			Console.Write(control[position].Content);
+			var c = control[Position.At(position.X, position.Y)];
+
+			if (c.Content != _memory[position.X, position.Y].Content)
+			{
+				_memory[position.X, position.Y] = c;
+
+				Console.SetCursorPosition(position.X, position.Y);
+				Console.Write(c.Content);
+			}
 		}
 
 		public event SizeLimitsChangedHandler SizeLimitsChanged;
@@ -38,18 +47,48 @@ namespace ConsoleMultiplexer.Example
 			Console.SetWindowSize(1, 1);
 			Console.SetBufferSize(200, 5);
 			Console.SetWindowSize(200, 50);
+			Console.CursorVisible = false;
 
 			var testContext = new TestContext();
 
-			var border = new Border();
+			var textBlock = new TextBlock
+			{
+				Text = "Heheszki"
+			};
+
+			var border = new Border()
+			{
+				BorderPlacement = BorderPlacement.Left | BorderPlacement.Top | BorderPlacement.Right,
+				Content = new Border
+				{
+					Content = new Border
+					{
+						Content = textBlock
+					}
+				}
+			};
 
 			border.Context = testContext;
 			testContext.Update(border);
 
+			int frames = 0;
+			var watch = new Stopwatch();
+			watch.Start();
+
 			for (int i = 0; ; i++)
 			{
+				textBlock.Text = $"{i}";
+				testContext.Update(border);
 
-				Thread.Sleep(500);
+				if (watch.ElapsedMilliseconds > 1000)
+				{
+					Console.WriteLine(frames);
+					Thread.Sleep(1000);
+					watch.Restart();
+					frames = 0;
+				}
+
+				frames++;
 			}
 		}
 	}

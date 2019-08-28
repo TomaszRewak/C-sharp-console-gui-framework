@@ -20,7 +20,7 @@ namespace ConsoleMultiplexer.Controls
 			private Size _size;
 			public Size Size
 			{
-				get => Size;
+				get => _size;
 				set => Setter
 					.Set(ref _size, value)
 					.Then(SizeChanged);
@@ -126,11 +126,11 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		protected override void Resize(Size MinSize, Size MaxSize)
+		protected override void Resize()
 		{
 			using(Freeze())
 			{
-				Size = Size.Limit(MinSize, Content?.Size ?? Size.Empty, MaxSize);
+				Size = Size.Between(MinSize, Content?.Size ?? Size.Empty, MaxSize);
 
 				if (ContentContext != null)
 					ContentContext.Size = Size.Shrink(
@@ -141,6 +141,8 @@ namespace ConsoleMultiplexer.Controls
 
 		private void UpdateContext()
 		{
+			if (Content == null) return;
+
 			Content.Context = ContentContext = new BorderContext(this);
 		}
 
