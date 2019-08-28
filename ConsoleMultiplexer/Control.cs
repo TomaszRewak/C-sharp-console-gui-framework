@@ -34,7 +34,7 @@ namespace ConsoleMultiplexer
 		protected void Update()
 		{
 			if (_freezeCount == 0)
-				Context?.Update();
+				Context?.Update(this);
 			else
 				_changedDuringFreeze = true;
 		}
@@ -42,7 +42,7 @@ namespace ConsoleMultiplexer
 		protected void Update(Position position)
 		{
 			if (_freezeCount == 0)
-				Context?.Update(position);
+				Context?.Update(this, position);
 			else
 				_changedDuringFreeze = true;
 		}
@@ -55,7 +55,7 @@ namespace ConsoleMultiplexer
 		private void OnSizeLimitsChanged(IDrawingContext context)
 		{
 			if (context == _context)
-				Resize();
+				Resize(context.MinSize, context.MaxSize);
 		}
 
 		protected struct FreezeContext : IDisposable
@@ -75,7 +75,7 @@ namespace ConsoleMultiplexer
 				if (_control._freezeCount > 0 || !_control._changedDuringFreeze) return;
 
 				_control._changedDuringFreeze = false;
-				_control._context.Update();
+				_control._context.Update(_control);
 			}
 		}
 	}

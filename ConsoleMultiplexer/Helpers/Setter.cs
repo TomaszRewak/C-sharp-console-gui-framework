@@ -39,7 +39,7 @@ namespace ConsoleMultiplexer.Helpers
 		}
 	}
 
-	internal static class DrawingContextSetterExtension
+	internal static class SetterExtension
 	{
 		public static SetterContext<IDrawingContext> OnSizeLimitsChange(this SetterContext<IDrawingContext> context, SizeLimitsChangedHandler sizeLimitsChanged)
 		{
@@ -51,6 +51,18 @@ namespace ConsoleMultiplexer.Helpers
 
 			if (context.NewValue != null)
 				context.NewValue.SizeLimitsChanged += sizeLimitsChanged;
+
+			if (context.OldValue?.MinSize != context.NewValue.MinSize ||
+				context.OldValue?.MaxSize != context.NewValue.MaxSize)
+				sizeLimitsChanged?.Invoke(context.NewValue);
+
+			return context;
+		}
+
+		public static SetterContext<T> DisposeOld<T>(this SetterContext<T> context) where T : IDisposable
+		{
+			if (context.Changed)
+				context.OldValue?.Dispose();
 
 			return context;
 		}

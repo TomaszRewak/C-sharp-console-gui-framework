@@ -34,14 +34,20 @@ namespace ConsoleMultiplexer.Controls
 				_border = null;
 			}
 
-			public void Update()
+			public void Update(IControl control)
 			{
+				if (_border?.Content != control) return;
+
 				_border?.Update();
 			}
 
-			public void Update(in Position position)
+			public void Update(IControl control, in Position position)
 			{
-				_border?.Update(position);
+				if (_border?.Content != control) return;
+
+				_border?.Update(position.Move(
+					_border.BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0,
+					_border.BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0));
 			}
 
 			private void SizeChanged()
@@ -52,10 +58,25 @@ namespace ConsoleMultiplexer.Controls
 			public event SizeLimitsChangedHandler SizeLimitsChanged;
 		}
 
+		private IControl _content;
+		public IControl Content
+		{
+			get => _content;
+			set => Setter
+				.Set(ref _content, value)
+				.Then(UpdateContext);
+		}
 
-		public IControl Content;
+		private BorderContext _contentContext;
+		private BorderContext ContentContext
+		{
+			get => _contentContext;
+			set => Setter
+				.Set(ref _contentContext, value)
+				.DisposeOld();
+		}
 
-		private BorderPlacement _borderPlacement;
+		private BorderPlacement _borderPlacement = BorderPlacement.All;
 		public BorderPlacement BorderPlacement
 		{
 			get => _borderPlacement;
@@ -95,11 +116,11 @@ namespace ConsoleMultiplexer.Controls
 					return Character.Plain('═');
 
 				var contentPosition = position.Move(
-					BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0,
-					BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0);
+					BorderPlacement.HasFlag(BorderPlacement.Left) ? -1 : 0,
+					BorderPlacement.HasFlag(BorderPlacement.Top) ? -1 : 0);
 
-				if (Content?.Size.Contains(contentPosition) ?? false)
-					return Character.Empty;
+				if (!Content?.Size.Contains(contentPosition) ?? true)
+					return Character.Plain('.');
 
 				return Content[contentPosition];
 			}
@@ -110,10 +131,18 @@ namespace ConsoleMultiplexer.Controls
 			using(Freeze())
 			{
 				Size = Size.Limit(MinSize, Content?.Size ?? Size.Empty, MaxSize);
+
+				if (ContentContext != null)
+					ContentContext.Size = Size.Shrink(
+						(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
+						(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0));
 			}
 		}
 
-		private void UpdateContentSize
+		private void UpdateContext()
+		{
+			Content.Context = ContentContext = new BorderContext(this);
+		}
 
 		private event SizeLimitsChangedHandler SizeLimitsChanged;
 	}
