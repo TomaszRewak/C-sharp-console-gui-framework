@@ -33,7 +33,7 @@ namespace ConsoleMultiplexer.Example
 				_memory[position.X, position.Y] = c;
 
 				Console.SetCursorPosition(position.X, position.Y);
-				Console.Write(c.Content);
+				Console.Write($"\x1b[38;2;23;100;170m{c.Content}");
 			}
 		}
 
