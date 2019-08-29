@@ -8,7 +8,7 @@ namespace ConsoleMultiplexer.Controls
 {
 	public sealed class Border : Control
 	{
-		private class BorderContext : IDrawingContext, IDisposable
+		private class BorderContext : IDrawingContext
 		{
 			private Border _border;
 
@@ -28,11 +28,6 @@ namespace ConsoleMultiplexer.Controls
 
 			public Size MinSize => Size;
 			public Size MaxSize => Size;
-
-			public void Dispose()
-			{
-				_border = null;
-			}
 
 			public void Update(IControl control)
 			{
@@ -58,22 +53,20 @@ namespace ConsoleMultiplexer.Controls
 			public event SizeLimitsChangedHandler SizeLimitsChanged;
 		}
 
+		private readonly BorderContext _contentContext;
+
+		public Border()
+		{
+			_contentContext = new BorderContext(this);
+		}
+
 		private IControl _content;
 		public IControl Content
 		{
 			get => _content;
 			set => Setter
 				.Set(ref _content, value)
-				.Then(UpdateContext);
-		}
-
-		private BorderContext _contentContext;
-		private BorderContext ContentContext
-		{
-			get => _contentContext;
-			set => Setter
-				.Set(ref _contentContext, value)
-				.DisposeOld();
+				.ThenSetContext(_contentContext);
 		}
 
 		private BorderPlacement _borderPlacement = BorderPlacement.All;
@@ -82,7 +75,7 @@ namespace ConsoleMultiplexer.Controls
 			get => _borderPlacement;
 			set => Setter
 				.Set(ref _borderPlacement, value)
-				.Then(UpdateContext);
+				.Then(Resize);
 		}
 
 		public override Character this[Position position]
@@ -132,18 +125,10 @@ namespace ConsoleMultiplexer.Controls
 			{
 				Size = Size.Between(MinSize, Content?.Size ?? Size.Empty, MaxSize);
 
-				if (ContentContext != null)
-					ContentContext.Size = Size.Shrink(
-						(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
-						(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0));
+				_contentContext.Size = Size.Shrink(
+					(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
+					(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0));
 			}
-		}
-
-		private void UpdateContext()
-		{
-			if (Content == null) return;
-
-			Content.Context = ContentContext = new BorderContext(this);
 		}
 
 		private event SizeLimitsChangedHandler SizeLimitsChanged;

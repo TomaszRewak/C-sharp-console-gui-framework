@@ -20,6 +20,6 @@ namespace ConsoleMultiplexer
 
 		public Position Next => new Position(X + 1, Y);
 		public Position NextLine => new Position(0, Y + 1);
-		public Position Move(int x, int y) => new Position(X + x, Y + x);
+		public Position Move(int x, int y) => new Position(X + x, Y + y);
 	}
 }

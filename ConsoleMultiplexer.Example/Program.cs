@@ -86,6 +86,7 @@ namespace ConsoleMultiplexer.Example
 					Thread.Sleep(1000);
 					watch.Restart();
 					frames = 0;
+					border.BorderPlacement ^= BorderPlacement.Left;
 				}
 
 				frames++;

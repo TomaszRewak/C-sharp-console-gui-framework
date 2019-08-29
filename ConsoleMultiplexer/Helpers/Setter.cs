@@ -59,10 +59,10 @@ namespace ConsoleMultiplexer.Helpers
 			return context;
 		}
 
-		public static SetterContext<T> DisposeOld<T>(this SetterContext<T> context) where T : IDisposable
+		public static SetterContext<IControl> ThenSetContext(this SetterContext<IControl> context, IDrawingContext drawingContext)
 		{
 			if (context.Changed)
-				context.OldValue?.Dispose();
+				context.NewValue.Context = drawingContext;
 
 			return context;
 		}
