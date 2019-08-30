@@ -51,21 +51,26 @@ namespace ConsoleMultiplexer.Example
 
 			var testContext = new TestContext();
 
-			var textBlock = new TextBlock
+			var textBlock1 = new TextBlock
 			{
-				Text = "Heheszki"
+				Text = "Heheszki1"
 			};
+
+			var textBlock2 = new TextBlock
+			{
+				Text = "Heheszki2"
+			};
+
+			var stackPanel = new VerticalStackPanel();
+			stackPanel.Add(new Border { Content = new TextBlock { Text = "Counter" } });
+			stackPanel.Add(textBlock1);
+			stackPanel.Add(new Border { Content = new TextBlock { Text = "Stoper" } });
+			stackPanel.Add(textBlock2);
 
 			var border = new Border()
 			{
 				BorderPlacement = BorderPlacement.Left | BorderPlacement.Top | BorderPlacement.Right,
-				Content = new Border
-				{
-					Content = new Border
-					{
-						Content = textBlock
-					}
-				}
+				Content = stackPanel
 			};
 
 			border.Context = testContext;
@@ -77,12 +82,12 @@ namespace ConsoleMultiplexer.Example
 
 			for (int i = 0; ; i++)
 			{
-				textBlock.Text = $"{i}";
+				textBlock1.Text = $"{i}";
 				testContext.Update(border);
 
 				if (watch.ElapsedMilliseconds > 1000)
 				{
-					Console.WriteLine(frames);
+					textBlock2.Text = $"{frames}";
 					Thread.Sleep(1000);
 					watch.Restart();
 					frames = 0;

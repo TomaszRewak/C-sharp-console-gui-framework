@@ -8,52 +8,7 @@ namespace ConsoleMultiplexer.Controls
 {
 	public sealed class Border : Control
 	{
-		private class BorderContext : IDrawingContext
-		{
-			private Border _border;
-
-			public BorderContext(Border border)
-			{
-				_border = border;
-			}
-
-			private Size _size;
-			public Size Size
-			{
-				get => _size;
-				set => Setter
-					.Set(ref _size, value)
-					.Then(SizeChanged);
-			}
-
-			public Size MinSize => Size;
-			public Size MaxSize => Size;
-
-			public void Update(IControl control)
-			{
-				if (_border?.Content != control) return;
-
-				_border?.Update();
-			}
-
-			public void Update(IControl control, in Position position)
-			{
-				if (_border?.Content != control) return;
-
-				_border?.Update(position.Move(
-					_border.BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0,
-					_border.BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0));
-			}
-
-			private void SizeChanged()
-			{
-				SizeLimitsChanged?.Invoke(this);
-			}
-
-			public event SizeLimitsChangedHandler SizeLimitsChanged;
-		}
-
-		private readonly BorderContext _contentContext;
+				private readonly BorderContext _contentContext;
 
 		public Border()
 		{
@@ -132,5 +87,50 @@ namespace ConsoleMultiplexer.Controls
 		}
 
 		private event SizeLimitsChangedHandler SizeLimitsChanged;
+
+		private class BorderContext : IDrawingContext
+		{
+			private Border _border;
+
+			public BorderContext(Border border)
+			{
+				_border = border;
+			}
+
+			private Size _size;
+			public Size Size
+			{
+				get => _size;
+				set => Setter
+					.Set(ref _size, value)
+					.Then(NotifySizeChanged);
+			}
+
+			public Size MinSize => Size;
+			public Size MaxSize => Size;
+
+			public void Update(IControl control)
+			{
+				if (_border?.Content != control) return;
+
+				_border?.Update();
+			}
+
+			public void Update(IControl control, in Position position)
+			{
+				if (_border?.Content != control) return;
+
+				_border?.Update(position.Move(
+					_border.BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0,
+					_border.BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0));
+			}
+
+			private void NotifySizeChanged()
+			{
+				SizeLimitsChanged?.Invoke(this);
+			}
+
+			public event SizeLimitsChangedHandler SizeLimitsChanged;
+		}
 	}
 }

@@ -78,7 +78,7 @@ namespace ConsoleMultiplexer
 				if (_control._freezeCount > 0 || !_control._changedDuringFreeze) return;
 
 				_control._changedDuringFreeze = false;
-				_control._context.Update(_control);
+				_control._context?.Update(_control);
 			}
 		}
 	}
