@@ -40,7 +40,7 @@ namespace ConsoleMultiplexer.Controls
 			get
 			{
 				foreach (var child in _children)
-					if (child.Top >= position.Y)
+					if (position.Y < child.Top + child.Height)
 						return child.Control[position.Move(0, -child.Top)];
 
 				return Character.Empty;
@@ -88,7 +88,7 @@ namespace ConsoleMultiplexer.Controls
 					.Then(NotifySizeChanged);
 			}
 
-			public Size MinSize => new Size(Width, 1);
+			public Size MinSize => new Size(Width, 0);
 			public Size MaxSize => new Size(Width, int.MaxValue);
 
 			public void Update(IControl control)

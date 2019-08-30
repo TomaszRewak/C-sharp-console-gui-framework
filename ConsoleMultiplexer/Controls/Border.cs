@@ -8,7 +8,7 @@ namespace ConsoleMultiplexer.Controls
 {
 	public sealed class Border : Control
 	{
-				private readonly BorderContext _contentContext;
+		private readonly BorderContext _contentContext;
 
 		public Border()
 		{
@@ -76,17 +76,27 @@ namespace ConsoleMultiplexer.Controls
 
 		protected override void Resize()
 		{
-			using(Freeze())
+			using (Freeze())
 			{
-				Size = Size.Between(MinSize, Content?.Size ?? Size.Empty, MaxSize);
-
-				_contentContext.Size = Size.Shrink(
+				_contentContext.MinSize = MinSize.Shrink(
 					(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
 					(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0));
+
+				_contentContext.MaxSize = MaxSize.Shrink(
+					(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
+					(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0));
+
+				_contentContext?.NotifySizeChanged();
+
+				Size = Size.Between(
+					MinSize,
+					Content?.Size.Expand(
+						(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
+						(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0)
+					) ?? Size.Empty,
+					MaxSize);
 			}
 		}
-
-		private event SizeLimitsChangedHandler SizeLimitsChanged;
 
 		private class BorderContext : IDrawingContext
 		{
@@ -97,17 +107,8 @@ namespace ConsoleMultiplexer.Controls
 				_border = border;
 			}
 
-			private Size _size;
-			public Size Size
-			{
-				get => _size;
-				set => Setter
-					.Set(ref _size, value)
-					.Then(NotifySizeChanged);
-			}
-
-			public Size MinSize => Size;
-			public Size MaxSize => Size;
+			public Size MinSize { get; set; }
+			public Size MaxSize { get; set; }
 
 			public void Update(IControl control)
 			{
@@ -125,7 +126,7 @@ namespace ConsoleMultiplexer.Controls
 					_border.BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0));
 			}
 
-			private void NotifySizeChanged()
+			public void NotifySizeChanged()
 			{
 				SizeLimitsChanged?.Invoke(this);
 			}
