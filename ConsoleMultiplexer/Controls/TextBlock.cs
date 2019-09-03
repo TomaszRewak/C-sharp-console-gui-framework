@@ -31,10 +31,7 @@ namespace ConsoleMultiplexer.Controls
 		{
 			var newSize = Size.Clip(MinSize, new Size(Text.Length, 1), MaxSize);
 
-			if (newSize != Size)
-				Size = newSize;
-			else
-				Update(Size.AsRect());
+			Redraw(newSize);
 		}
 	}
 }

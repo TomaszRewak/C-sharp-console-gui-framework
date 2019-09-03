@@ -15,19 +15,30 @@ namespace ConsoleMultiplexer.Helpers
 
 			return context;
 		}
+
+		public static SetterContext<IDrawingContext> SetContext(ref IDrawingContext field, IDrawingContext value, SizeLimitsChangedHandler onSizeLimitsChanged)
+		{
+			var context = new SetterContext<IDrawingContext>(field, value);
+
+			if (context.Changed)
+			{
+				if (field != null) field.SizeLimitsChanged -= onSizeLimitsChanged;
+				if (value != null) value.SizeLimitsChanged += onSizeLimitsChanged;
+
+				field = value;
+			}
+
+			return context;
+		}
 	}
 
 	internal struct SetterContext<T>
 	{
-		public T OldValue { get; }
-		public T NewValue { get; }
-
-		public bool Changed => !Equals(OldValue, NewValue);
+		public bool Changed { get; private set; }
 
 		public SetterContext(in T oldValue, in T newValue)
 		{
-			OldValue = oldValue;
-			NewValue = newValue;
+			Changed = !Equals(oldValue, newValue);
 		}
 
 		public SetterContext<T> Then(Action action)
@@ -36,35 +47,6 @@ namespace ConsoleMultiplexer.Helpers
 				action();
 
 			return this;
-		}
-	}
-
-	internal static class SetterExtension
-	{
-		public static SetterContext<IDrawingContext> OnSizeLimitsChange(this SetterContext<IDrawingContext> context, SizeLimitsChangedHandler sizeLimitsChanged)
-		{
-			if (!context.Changed)
-				return context;
-
-			if (context.OldValue != null)
-				context.OldValue.SizeLimitsChanged -= sizeLimitsChanged;
-
-			if (context.NewValue != null)
-				context.NewValue.SizeLimitsChanged += sizeLimitsChanged;
-
-			if (context.OldValue?.MinSize != context.NewValue?.MinSize ||
-				context.OldValue?.MaxSize != context.NewValue?.MaxSize)
-				sizeLimitsChanged?.Invoke(context.NewValue);
-
-			return context;
-		}
-
-		public static SetterContext<IControl> ThenSetContext(this SetterContext<IControl> context, IDrawingContext drawingContext)
-		{
-			if (context.Changed)
-				context.NewValue.SetContext(drawingContext);
-
-			return context;
 		}
 	}
 }

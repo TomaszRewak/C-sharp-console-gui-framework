@@ -18,26 +18,13 @@ namespace ConsoleMultiplexer
 		{
 			private get => _context;
 			set => Setter
-				.Set(ref _context, value)
-				.OnSizeLimitsChange(OnSizeLimitsChanged);
+				.SetContext(ref _context, value, OnSizeLimitsChanged)
+				.Then(UpdateSizeLimits);
 		}
 
-		private Size _size;
-		public Size Size
-		{
-			get => _size;
-			set => Setter
-				.Set(ref _size, value)
-				.Then(Redraw);
-		}
-
-		public Size MinSize => _context?.MinSize ?? Size.Empty;
-		public Size MaxSize => _context?.MaxSize ?? Size.Empty;
-
-		public void SetContext(IDrawingContext context)
-		{
-			Context = context;
-		}
+		public Size Size { get; private set; }
+		public Size MinSize { get; private set; }
+		public Size MaxSize { get; private set; }
 
 		protected void Redraw()
 		{
@@ -45,6 +32,15 @@ namespace ConsoleMultiplexer
 				Context?.Redraw(this);
 			else
 				_changedDuringFreeze = true;
+		}
+
+		protected void Redraw(in Size newSize)
+		{
+			if (Size != newSize)
+			{
+				Size = newSize;
+
+			}
 		}
 
 		protected void Update(in Rect rect)
@@ -62,8 +58,17 @@ namespace ConsoleMultiplexer
 
 		private void OnSizeLimitsChanged(IDrawingContext context)
 		{
-			if (context == _context)
-				Resize();
+			UpdateSizeLimits();
+		}
+
+		private void UpdateSizeLimits()
+		{
+			if (MinSize == _context?.MinSize && MaxSize == _context?.MaxSize) return;
+
+			MinSize = _context?.MinSize ?? Size.Empty;
+			MaxSize = _context?.MaxSize ?? Size.Empty;
+
+			Resize();
 		}
 
 		protected struct FreezeContext : IDisposable
