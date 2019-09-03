@@ -29,18 +29,12 @@ namespace ConsoleMultiplexer.Controls
 
 		protected override void Resize()
 		{
-			var newSize = Size.Between(MinSize, Size.Of(Text.Length, 1), MaxSize);
+			var newSize = Size.Clip(MinSize, new Size(Text.Length, 1), MaxSize);
 
 			if (newSize != Size)
 				Size = newSize;
 			else
-				Redraw();
-		}
-
-		private void Redraw()
-		{
-			foreach (var position in Size.WithHeight(1))
-				Update(position);
+				Update(Size.AsRect());
 		}
 	}
 }

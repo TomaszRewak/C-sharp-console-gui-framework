@@ -47,10 +47,10 @@ namespace ConsoleMultiplexer
 				_changedDuringFreeze = true;
 		}
 
-		protected void Update(Position position)
+		protected void Update(in Rect rect)
 		{
 			if (_freezeCount == 0)
-				Context?.Update(this, position);
+				Context?.Update(this, rect);
 			else
 				_changedDuringFreeze = true;
 		}

@@ -16,11 +16,10 @@ namespace ConsoleMultiplexer
 		}
 
 		public static Size Empty => new Size(0, 0);
-		public static Size Of(int width, int height) => new Size(width, height);
 		public static Size Containing(in Position position) => new Size(position.X + 1, position.Y + 1);
 		public static Size Union(in Size lhs, in Size rhs) => new Size(Math.Max(lhs.Width, rhs.Width), Math.Max(lhs.Height, rhs.Height));
 		public static Size Intersection(in Size lhs, in Size rhs) => new Size(Math.Min(lhs.Width, rhs.Width), Math.Min(lhs.Height, rhs.Height));
-		public static Size Between(in Size min, in Size value, in Size max) => Size.Union(min, Size.Intersection(max, value));
+		public static Size Clip(in Size min, in Size value, in Size max) => Size.Union(min, Size.Intersection(max, value));
 
 		public bool Contains(in Size size)
 		{
@@ -35,6 +34,8 @@ namespace ConsoleMultiplexer
 				position.X < Width &&
 				position.Y < Height;
 		}
+
+		public Rect AsRect() => new Rect(0, 0, Width, Height);
 
 		public Size Expand(int width, int height) => new Size(Width + width, Height + height);
 		public Size Shrink(int width, int height) => new Size(Width - width, Height - height);
