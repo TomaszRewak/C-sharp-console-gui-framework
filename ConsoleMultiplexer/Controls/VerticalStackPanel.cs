@@ -19,7 +19,7 @@ namespace ConsoleMultiplexer.Controls
 				_children.Add(new VerticalStackPanelContext(this, control));
 
 				Resize();
-				Update();
+				Redraw();
 			}
 		}
 
@@ -31,7 +31,7 @@ namespace ConsoleMultiplexer.Controls
 				_children.RemoveAll(c => c.Control == control);
 
 				Resize();
-				Update();
+				Redraw();
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace ConsoleMultiplexer.Controls
 			{
 				_stackPanel = stackPanel;
 				Control = control;
-				Control.Context = this;
+				Control.SetContext(this);
 			}
 
 			public IControl Control { get; }
@@ -91,11 +91,11 @@ namespace ConsoleMultiplexer.Controls
 			public Size MinSize => new Size(Width, 0);
 			public Size MaxSize => new Size(Width, int.MaxValue);
 
-			public void Update(IControl control)
+			public void Redraw(IControl control)
 			{
 				if (control != Control) return;
 
-				_stackPanel.Update();
+				_stackPanel.Redraw();
 			}
 
 			public void Update(IControl control, in Position position)

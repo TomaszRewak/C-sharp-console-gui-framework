@@ -52,8 +52,8 @@ namespace ConsoleMultiplexer.Helpers
 			if (context.NewValue != null)
 				context.NewValue.SizeLimitsChanged += sizeLimitsChanged;
 
-			if (context.OldValue?.MinSize != context.NewValue.MinSize ||
-				context.OldValue?.MaxSize != context.NewValue.MaxSize)
+			if (context.OldValue?.MinSize != context.NewValue?.MinSize ||
+				context.OldValue?.MaxSize != context.NewValue?.MaxSize)
 				sizeLimitsChanged?.Invoke(context.NewValue);
 
 			return context;
@@ -62,7 +62,7 @@ namespace ConsoleMultiplexer.Helpers
 		public static SetterContext<IControl> ThenSetContext(this SetterContext<IControl> context, IDrawingContext drawingContext)
 		{
 			if (context.Changed)
-				context.NewValue.Context = drawingContext;
+				context.NewValue.SetContext(drawingContext);
 
 			return context;
 		}

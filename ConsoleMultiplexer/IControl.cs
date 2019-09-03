@@ -9,9 +9,10 @@ namespace ConsoleMultiplexer
 
 	public interface IControl
 	{
-		IDrawingContext Context { set; }
+		Character this[Position position] { get; }
+
 		Size Size { get; }
 
-		Character this[Position position] { get; }
+		void SetContext(IDrawingContext context);
 	}
 }

@@ -13,7 +13,7 @@ namespace ConsoleMultiplexer.Example
 
 		Character[,] _memory = new Character[100, 30];
 
-		public void Update(IControl control)
+		public void Redraw(IControl control)
 		{
 			for (int x = 0; x < control.Size.Width; x++)
 			{
@@ -74,7 +74,7 @@ namespace ConsoleMultiplexer.Example
 			};
 
 			border.Context = testContext;
-			testContext.Update(border);
+			testContext.Redraw(border);
 
 			int frames = 0;
 			var watch = new Stopwatch();
@@ -83,7 +83,7 @@ namespace ConsoleMultiplexer.Example
 			for (int i = 0; ; i++)
 			{
 				textBlock1.Text = $"{i}";
-				testContext.Update(border);
+				testContext.Redraw(border);
 
 				if (watch.ElapsedMilliseconds > 1000)
 				{

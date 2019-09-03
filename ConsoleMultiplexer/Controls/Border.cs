@@ -110,11 +110,11 @@ namespace ConsoleMultiplexer.Controls
 			public Size MinSize { get; set; }
 			public Size MaxSize { get; set; }
 
-			public void Update(IControl control)
+			public void Redraw(IControl control)
 			{
 				if (_border?.Content != control) return;
 
-				_border?.Update();
+				_border?.Redraw();
 			}
 
 			public void Update(IControl control, in Position position)

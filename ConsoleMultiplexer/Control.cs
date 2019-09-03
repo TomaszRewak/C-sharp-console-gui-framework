@@ -28,16 +28,21 @@ namespace ConsoleMultiplexer
 			get => _size;
 			set => Setter
 				.Set(ref _size, value)
-				.Then(Update);
+				.Then(Redraw);
 		}
 
 		public Size MinSize => _context?.MinSize ?? Size.Empty;
 		public Size MaxSize => _context?.MaxSize ?? Size.Empty;
 
-		protected void Update()
+		public void SetContext(IDrawingContext context)
+		{
+			Context = context;
+		}
+
+		protected void Redraw()
 		{
 			if (_freezeCount == 0)
-				Context?.Update(this);
+				Context?.Redraw(this);
 			else
 				_changedDuringFreeze = true;
 		}
@@ -78,7 +83,7 @@ namespace ConsoleMultiplexer
 				if (_control._freezeCount > 0 || !_control._changedDuringFreeze) return;
 
 				_control._changedDuringFreeze = false;
-				_control._context?.Update(_control);
+				_control._context?.Redraw(_control);
 			}
 		}
 	}

@@ -11,7 +11,7 @@ namespace ConsoleMultiplexer
 		Size MinSize { get; }
 		Size MaxSize { get; }
 
-		void Update(IControl control);
+		void Redraw(IControl control);
 		void Update(IControl control, in Position position);
 
 		event SizeLimitsChangedHandler SizeLimitsChanged;
