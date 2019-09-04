@@ -88,7 +88,7 @@ namespace ConsoleMultiplexer.Controls
 
 				_contentContext?.NotifySizeChanged();
 
-				Size = Size.Clip(
+				Size = Size.Bound(
 					MinSize,
 					Content?.Size.Expand(
 						(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),

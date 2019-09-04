@@ -8,7 +8,8 @@ namespace ConsoleMultiplexer
 	public abstract class Control : IControl
 	{
 		private int _freezeCount;
-		private bool _changedDuringFreeze;
+		private Rect _updatedRect;
+		private Size _previousSize;
 
 		public abstract Character this[Position position] { get; }
 		protected abstract void Resize();
@@ -28,27 +29,22 @@ namespace ConsoleMultiplexer
 
 		protected void Redraw()
 		{
-			if (_freezeCount == 0)
-				Context?.Redraw(this);
-			else
-				_changedDuringFreeze = true;
+			Redraw(Size);
 		}
 
 		protected void Redraw(in Size newSize)
 		{
-			if (Size != newSize)
+			using (Freeze())
 			{
 				Size = newSize;
-
+				_updatedRect = Rect.OfSize(newSize);
 			}
 		}
 
 		protected void Update(in Rect rect)
 		{
-			if (_freezeCount == 0)
-				Context?.Update(this, rect);
-			else
-				_changedDuringFreeze = true;
+			using (Freeze())
+				_updatedRect = Rect.Surround(_updatedRect, rect);
 		}
 
 		protected FreezeContext Freeze()
@@ -75,9 +71,20 @@ namespace ConsoleMultiplexer
 		{
 			private readonly Control _control;
 
+			private bool RequiresRedraw => _control.Size != _control._previousSize;
+			private bool RequiresUpdate => !_control._updatedRect.IsEmpty;
+			private bool IsUnfreezed => _control._freezeCount == 0;
+
 			public FreezeContext(Control control)
 			{
 				_control = control;
+
+				if (IsUnfreezed)
+				{
+					_control._previousSize = _control.Size;
+					_control._updatedRect = Rect.Empty;
+				}
+
 				_control._freezeCount++;
 			}
 
@@ -85,11 +92,16 @@ namespace ConsoleMultiplexer
 			{
 				_control._freezeCount--;
 
-				if (_control._freezeCount > 0 || !_control._changedDuringFreeze) return;
+				if (!IsUnfreezed) return;
 
-				_control._changedDuringFreeze = false;
-				_control._context?.Redraw(_control);
+				if (RequiresRedraw)
+					Redraw();
+				else if (RequiresUpdate)
+					Update();
 			}
+
+			private void Redraw() => _control.Context?.Redraw(_control);
+			private void Update() => _control.Context.Update(_control, _control._updatedRect);
 		}
 	}
 }

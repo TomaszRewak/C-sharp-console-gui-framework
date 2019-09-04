@@ -29,7 +29,7 @@ namespace ConsoleMultiplexer.Controls
 
 		protected override void Resize()
 		{
-			var newSize = Size.Clip(MinSize, new Size(Text.Length, 1), MaxSize);
+			var newSize = Size.Bound(MinSize, new Size(Text.Length, 1), MaxSize);
 
 			Redraw(newSize);
 		}
