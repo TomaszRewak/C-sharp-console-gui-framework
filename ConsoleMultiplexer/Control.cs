@@ -34,6 +34,8 @@ namespace ConsoleMultiplexer
 
 		protected void Redraw(in Size newSize)
 		{
+			if (!(newSize >= MinSize && newSize <= MaxSize)) throw new ArgumentOutOfRangeException(nameof(newSize));
+
 			using (Freeze())
 			{
 				Size = newSize;

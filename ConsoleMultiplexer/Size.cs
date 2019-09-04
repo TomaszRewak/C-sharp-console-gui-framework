@@ -51,5 +51,12 @@ namespace ConsoleMultiplexer
 
 		public static bool operator ==(in Size lhs, in Size rhs) => lhs.Equals(rhs);
 		public static bool operator !=(in Size lhs, in Size rhs) => !(lhs == rhs);
+		public static bool operator <=(in Size lhs, in Size rhs) => lhs.Width <= rhs.Width && lhs.Height <= rhs.Height;
+		public static bool operator >=(in Size lhs, in Size rhs) => lhs.Width >= rhs.Width && lhs.Height >= rhs.Height;
+
+		public override string ToString()
+		{
+			return $"({Width}, {Height})";
+		}
 	}
 }
