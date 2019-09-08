@@ -8,12 +8,12 @@ namespace ConsoleMultiplexer
 	{
 		public char Content { get; }
 
-		public ConsoleColor? Foreground { get; }
-		public ConsoleColor? Background { get; }
+		public Color? Foreground { get; }
+		public Color? Background { get; }
 
 		public bool IsNewLine => Content == '\n';
 
-		public Character(char content, ConsoleColor? foreground = null, ConsoleColor? background = null)
+		public Character(char content, Color? foreground = null, Color? background = null)
 		{
 			Content = content;
 			Foreground = foreground;

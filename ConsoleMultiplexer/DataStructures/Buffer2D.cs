@@ -48,14 +48,14 @@ namespace ConsoleMultiplexer.DataStructures
 
 		private void AdjustSize(in Position newPosition)
 		{
-			Size = Size.Union(Size, Size.Containing(newPosition));
+			Size = Size.Max(Size, Size.Containing(newPosition));
 		}
 
 		private void AdjustBufferSize(in Position position)
 		{
 			if (_bufferSize.Contains(position)) return;
 
-			var newBufferSize = Size.Of(
+			var newBufferSize = new Size(
 				_bufferSize.Width < Size.Width ? Size.Width * 2 : _bufferSize.Width,
 				_bufferSize.Height < Size.Height ? Size.Height * 2 : _bufferSize.Height);
 			var newBuffer = new Cell[_bufferSize.Width, _bufferSize.Height];

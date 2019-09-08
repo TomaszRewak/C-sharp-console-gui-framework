@@ -24,8 +24,8 @@ namespace ConsoleMultiplexer
 		}
 
 		public Size Size { get; private set; }
-		public Size MinSize { get; private set; }
-		public Size MaxSize { get; private set; }
+		protected Size MinSize { get; private set; }
+		protected Size MaxSize { get; private set; }
 
 		protected void Redraw()
 		{
@@ -34,12 +34,10 @@ namespace ConsoleMultiplexer
 
 		protected void Redraw(in Size newSize)
 		{
-			if (!(newSize >= MinSize && newSize <= MaxSize)) throw new ArgumentOutOfRangeException(nameof(newSize));
-
 			using (Freeze())
 			{
-				Size = newSize;
-				_updatedRect = Rect.OfSize(newSize);
+				Size = Size.Clip(MinSize, newSize, MaxSize);
+				_updatedRect = Rect.OfSize(Size);
 			}
 		}
 

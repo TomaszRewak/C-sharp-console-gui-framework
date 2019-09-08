@@ -21,7 +21,7 @@ namespace ConsoleMultiplexer.Controls
 			get => _content;
 			set => Setter
 				.Set(ref _content, value)
-				.ThenSetContext(_contentContext);
+				.Then(BindContent);
 		}
 
 		private BorderPlacement _borderPlacement = BorderPlacement.All;
@@ -33,39 +33,48 @@ namespace ConsoleMultiplexer.Controls
 				.Then(Resize);
 		}
 
+		private Color? _borderColor;
+		public Color? BorderColor
+		{
+			get => _borderColor;
+			set => Setter
+				.Set(ref _borderColor, value)
+				.Then(Redraw);
+		}
+
 		public override Character this[Position position]
 		{
 			get
 			{
 				if (!Size.Contains(position)) throw new IndexOutOfRangeException(nameof(position));
 
-				if (position.X == 0 && position.Y == 0 && BorderPlacement.HasFlag(BorderPlacement.Top | BorderPlacement.Left))
-					return Character.Plain('╔');
+				if (position.X == 0 && position.Y == 0 && BorderPlacement.HasBorder(BorderPlacement.Top | BorderPlacement.Left))
+					return new Character('╔', BorderColor);
 
-				if (position.X == Size.Width - 1 && position.Y == 0 && BorderPlacement.HasFlag(BorderPlacement.Top | BorderPlacement.Right))
-					return Character.Plain('╗');
+				if (position.X == Size.Width - 1 && position.Y == 0 && BorderPlacement.HasBorder(BorderPlacement.Top | BorderPlacement.Right))
+					return new Character('╗', BorderColor);
 
-				if (position.X == 0 && position.Y == Size.Height - 1 && BorderPlacement.HasFlag(BorderPlacement.Bottom | BorderPlacement.Left))
-					return Character.Plain('╚');
+				if (position.X == 0 && position.Y == Size.Height - 1 && BorderPlacement.HasBorder(BorderPlacement.Bottom | BorderPlacement.Left))
+					return new Character('╚', BorderColor);
 
-				if (position.X == Size.Width - 1 && position.Y == Size.Height - 1 && BorderPlacement.HasFlag(BorderPlacement.Bottom | BorderPlacement.Right))
-					return Character.Plain('╝');
+				if (position.X == Size.Width - 1 && position.Y == Size.Height - 1 && BorderPlacement.HasBorder(BorderPlacement.Bottom | BorderPlacement.Right))
+					return new Character('╝', BorderColor);
 
-				if (position.X == 0 && BorderPlacement.HasFlag(BorderPlacement.Left))
-					return Character.Plain('║');
+				if (position.X == 0 && BorderPlacement.HasBorder(BorderPlacement.Left))
+					return new Character('║', BorderColor);
 
-				if (position.X == Size.Width - 1 && BorderPlacement.HasFlag(BorderPlacement.Right))
-					return Character.Plain('║');
+				if (position.X == Size.Width - 1 && BorderPlacement.HasBorder(BorderPlacement.Right))
+					return new Character('║', BorderColor);
 
-				if (position.Y == 0 && BorderPlacement.HasFlag(BorderPlacement.Top))
-					return Character.Plain('═');
+				if (position.Y == 0 && BorderPlacement.HasBorder(BorderPlacement.Top))
+					return new Character('═', BorderColor);
 
-				if (position.Y == Size.Height - 1 && BorderPlacement.HasFlag(BorderPlacement.Bottom))
-					return Character.Plain('═');
+				if (position.Y == Size.Height - 1 && BorderPlacement.HasBorder(BorderPlacement.Bottom))
+					return new Character('═', BorderColor);
 
 				var contentPosition = position.Move(
-					BorderPlacement.HasFlag(BorderPlacement.Left) ? -1 : 0,
-					BorderPlacement.HasFlag(BorderPlacement.Top) ? -1 : 0);
+					BorderPlacement.HasBorder(BorderPlacement.Left) ? -1 : 0,
+					BorderPlacement.HasBorder(BorderPlacement.Top) ? -1 : 0);
 
 				if (!Content?.Size.Contains(contentPosition) ?? true)
 					return Character.Plain('.');
@@ -78,29 +87,26 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
-				_contentContext.MinSize = MinSize.Shrink(
-					(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
-					(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0));
-
-				_contentContext.MaxSize = MaxSize.Shrink(
-					(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
-					(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0));
+				_contentContext.MinSize = MinSize.AsRect().Remove(BorderPlacement.AsOffset()).Size;
+				_contentContext.MaxSize = MaxSize.AsRect().Remove(BorderPlacement.AsOffset()).Size;
 
 				_contentContext?.NotifySizeChanged();
 
-				Size = Size.Bound(
-					MinSize,
-					Content?.Size.Expand(
-						(BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Right) ? 1 : 0),
-						(BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0) + (BorderPlacement.HasFlag(BorderPlacement.Bottom) ? 1 : 0)
-					) ?? Size.Empty,
-					MaxSize);
+				var newSize = Content?.Size.AsRect().Add(BorderPlacement.AsOffset()).Size ?? Size.Empty;
+
+				Redraw(newSize);
 			}
+		}
+
+		private void BindContent()
+		{
+			if (Content == null) return;
+			Content.Context = _contentContext;
 		}
 
 		private class BorderContext : IDrawingContext
 		{
-			private Border _border;
+			private readonly Border _border;
 
 			public BorderContext(Border border)
 			{
@@ -112,18 +118,16 @@ namespace ConsoleMultiplexer.Controls
 
 			public void Redraw(IControl control)
 			{
-				if (_border?.Content != control) return;
+				if (_border.Content != control) return;
 
-				_border?.Redraw();
+				_border.Redraw(control.Size.AsRect().Add(_border.BorderPlacement.AsOffset()).Size);
 			}
 
-			public void Update(IControl control, in Position position)
+			public void Update(IControl control, in Rect rect)
 			{
-				if (_border?.Content != control) return;
+				if (_border.Content != control) return;
 
-				_border?.Update(position.Move(
-					_border.BorderPlacement.HasFlag(BorderPlacement.Left) ? 1 : 0,
-					_border.BorderPlacement.HasFlag(BorderPlacement.Top) ? 1 : 0));
+				_border.Update(rect.Move(_border.BorderPlacement.AsVector()));
 			}
 
 			public void NotifySizeChanged()

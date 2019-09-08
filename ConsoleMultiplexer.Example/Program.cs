@@ -8,32 +8,46 @@ namespace ConsoleMultiplexer.Example
 	class TestContext : IDrawingContext
 	{
 		public Size MinSize => new Size(100, 30);
-
 		public Size MaxSize => new Size(100, 30);
 
 		Character[,] _memory = new Character[100, 30];
 
-		public void Redraw(IControl control)
+		private IControl _control;
+		public IControl Control
 		{
-			for (int x = 0; x < control.Size.Width; x++)
+			get => _control;
+			set
 			{
-				for (int y = 0; y < control.Size.Height; y++)
-				{
-					Update(control, Position.At(x, y));
-				}
+				_control = value;
+				_control.Context = this;
+				Redraw(_control);
 			}
 		}
 
-		public void Update(IControl control, in Position position)
+		public void Redraw(IControl control)
 		{
-			var c = control[Position.At(position.X, position.Y)];
+			if (control != _control) return;
 
-			if (c.Content != _memory[position.X, position.Y].Content)
+			Update(control, control.Size.AsRect());
+		}
+
+		public void Update(IControl control, in Rect rect)
+		{
+			if (control != _control) return;
+
+			foreach (var position in rect)
 			{
-				_memory[position.X, position.Y] = c;
+				var c = control[Position.At(position.X, position.Y)];
 
-				Console.SetCursorPosition(position.X, position.Y);
-				Console.Write($"\x1b[38;2;23;100;170m{c.Content}");
+				if (c.Content != _memory[position.X, position.Y].Content)
+				{
+					_memory[position.X, position.Y] = c;
+
+					var color = c.Foreground ?? Color.White;
+
+					Console.SetCursorPosition(position.X, position.Y);
+					Console.Write($"\x1b[38;2;{color.Red};{color.Green};{color.Blue}m{c.Content}");
+				}
 			}
 		}
 
@@ -53,28 +67,58 @@ namespace ConsoleMultiplexer.Example
 
 			var textBlock1 = new TextBlock
 			{
-				Text = "Heheszki1"
+				Text = "Heheszki1",
+				Color = new Color(87, 200, 157)
+			};
+
+			var border1 = new Border
+			{
+				BorderPlacement = BorderPlacement.All,
+				Content = textBlock1
 			};
 
 			var textBlock2 = new TextBlock
 			{
-				Text = "Heheszki2"
+				Text = "Heheszki2",
+				Color = new Color(157, 42, 157)
 			};
 
-			var stackPanel = new VerticalStackPanel();
-			stackPanel.Add(new Border { Content = new TextBlock { Text = "Counter" } });
-			stackPanel.Add(textBlock1);
-			stackPanel.Add(new Border { Content = new TextBlock { Text = "Stoper" } });
-			stackPanel.Add(textBlock2);
-
-			var border = new Border()
+			var border2 = new Border
 			{
-				BorderPlacement = BorderPlacement.Left | BorderPlacement.Top | BorderPlacement.Right,
-				Content = stackPanel
+				BorderPlacement = BorderPlacement.Left,
+				Content = textBlock2,
+				BorderColor = new Color(200, 0, 0)
 			};
 
-			border.Context = testContext;
-			testContext.Redraw(border);
+			var stackPanel1 = new VerticalStackPanel();
+			stackPanel1.Add(border1);
+			stackPanel1.Add(border2);
+
+			var border3 = new Border
+			{
+				BorderPlacement = BorderPlacement.All,
+				Content = stackPanel1,
+				BorderColor = new Color(100, 100, 50)
+			};
+
+			//var textBlock2 = new TextBlock
+			//{
+			//	Text = "Heheszki2"
+			//};
+
+			//var stackPanel = new VerticalStackPanel();
+			//stackPanel.Add(new Border { Content = new TextBlock { Text = "Counter" } });
+			//stackPanel.Add(textBlock1);
+			//stackPanel.Add(new Border { Content = new TextBlock { Text = "Stoper" } });
+			//stackPanel.Add(textBlock2);
+
+			//var border = new Border()
+			//{
+			//	BorderPlacement = BorderPlacement.Left | BorderPlacement.Top | BorderPlacement.Right,
+			//	Content = stackPanel
+			//};
+
+			testContext.Control = border3;
 
 			int frames = 0;
 			var watch = new Stopwatch();
@@ -83,7 +127,6 @@ namespace ConsoleMultiplexer.Example
 			for (int i = 0; ; i++)
 			{
 				textBlock1.Text = $"{i}";
-				testContext.Redraw(border);
 
 				if (watch.ElapsedMilliseconds > 1000)
 				{
@@ -91,7 +134,7 @@ namespace ConsoleMultiplexer.Example
 					Thread.Sleep(1000);
 					watch.Restart();
 					frames = 0;
-					border.BorderPlacement ^= BorderPlacement.Left;
+					border3.BorderPlacement ^= BorderPlacement.Left;
 				}
 
 				frames++;

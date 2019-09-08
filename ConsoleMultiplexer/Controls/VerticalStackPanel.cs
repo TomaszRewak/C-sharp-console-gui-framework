@@ -19,7 +19,6 @@ namespace ConsoleMultiplexer.Controls
 				_children.Add(new VerticalStackPanelContext(this, control));
 
 				Resize();
-				Redraw();
 			}
 		}
 
@@ -31,7 +30,6 @@ namespace ConsoleMultiplexer.Controls
 				_children.RemoveAll(c => c.Control == control);
 
 				Resize();
-				Redraw();
 			}
 		}
 
@@ -51,16 +49,19 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
-				Size = MaxSize;
-
 				int top = 0;
 				foreach (var child in _children)
 				{
-					child.Width = Size.Width;
 					child.Top = top;
+
+					child.MinSize = new Size(MaxSize.Width, 0);
+					child.MaxSize = new Size(MaxSize.Width, Math.Max(0, MaxSize.Height - top));
+					child.NotifySizeChanged();
 
 					top += child.Height;
 				}
+
+				Redraw(new Size(MaxSize.Width, top));
 			}
 		}
 
@@ -72,40 +73,31 @@ namespace ConsoleMultiplexer.Controls
 			{
 				_stackPanel = stackPanel;
 				Control = control;
-				Control.SetContext(this);
+				Control.Context = this;
 			}
 
 			public IControl Control { get; }
 			public int Top { get; set; }
 			public int Height => Control.Size.Height;
 
-			private int _width;
-			public int Width
-			{
-				get => _width;
-				set => Setter
-					.Set(ref _width, value)
-					.Then(NotifySizeChanged);
-			}
-
-			public Size MinSize => new Size(Width, 0);
-			public Size MaxSize => new Size(Width, int.MaxValue);
+			public Size MinSize { get; set; }
+			public Size MaxSize { get; set; }
 
 			public void Redraw(IControl control)
 			{
 				if (control != Control) return;
 
-				_stackPanel.Redraw();
+				_stackPanel.Resize();
 			}
 
-			public void Update(IControl control, in Position position)
+			public void Update(IControl control, in Rect rect)
 			{
 				if (control != Control) return;
 
-				_stackPanel.Update(position.Move(0, Top));
+				_stackPanel.Update(rect.Move(new Vector(0, Top)));
 			}
 
-			private void NotifySizeChanged()
+			public void NotifySizeChanged()
 			{
 				SizeLimitsChanged?.Invoke(this);
 			}

@@ -6,21 +6,21 @@ namespace ConsoleMultiplexer.Helpers
 {
 	internal class Setter
 	{
-		public static SetterContext<T> Set<T>(ref T field, T value)
+		public static SetterContext Set<T>(ref T field, T value)
 		{
-			var context = new SetterContext<T>(field, value);
+			var changed = !Equals(field, value);
 
-			if (context.Changed)
+			if (changed)
 				field = value;
 
-			return context;
+			return new SetterContext(changed);
 		}
 
-		public static SetterContext<IDrawingContext> SetContext(ref IDrawingContext field, IDrawingContext value, SizeLimitsChangedHandler onSizeLimitsChanged)
+		public static SetterContext SetContext(ref IDrawingContext field, IDrawingContext value, SizeLimitsChangedHandler onSizeLimitsChanged)
 		{
-			var context = new SetterContext<IDrawingContext>(field, value);
+			var changed = !Equals(field, value);
 
-			if (context.Changed)
+			if (changed)
 			{
 				if (field != null) field.SizeLimitsChanged -= onSizeLimitsChanged;
 				if (value != null) value.SizeLimitsChanged += onSizeLimitsChanged;
@@ -28,20 +28,20 @@ namespace ConsoleMultiplexer.Helpers
 				field = value;
 			}
 
-			return context;
+			return new SetterContext(changed);
 		}
 	}
 
-	internal struct SetterContext<T>
+	internal struct SetterContext
 	{
 		public bool Changed { get; private set; }
 
-		public SetterContext(in T oldValue, in T newValue)
+		public SetterContext(bool changed)
 		{
-			Changed = !Equals(oldValue, newValue);
+			Changed = changed;
 		}
 
-		public SetterContext<T> Then(Action action)
+		public SetterContext Then(Action action)
 		{
 			if (Changed)
 				action();

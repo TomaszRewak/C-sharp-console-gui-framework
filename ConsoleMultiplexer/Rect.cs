@@ -16,6 +16,7 @@ namespace ConsoleMultiplexer
 		public int Bottom => Top + Height - 1;
 		public Position LeftTopCorner => new Position(Left, Top);
 		public Position RightBottomCorner => new Position(Right, Bottom);
+		public Size Size => new Size(Width, Height); 
 
 		public Rect(int left, int top, int width, int height)
 		{
@@ -58,6 +59,40 @@ namespace ConsoleMultiplexer
 			var height = Math.Max(Bottom, position.Y) - top + 1;
 
 			return new Rect(left, top, width, height);
+		}
+
+		public Rect Remove(in Offset offset)
+		{
+			return new Rect(
+				Left + offset.Left,
+				Top + offset.Top,
+				Math.Max(0, Width - offset.Left - offset.Right),
+				Math.Max(0, Height - offset.Top - offset.Bottom));
+		}
+
+		public Rect Add(in Offset offset)
+		{
+			return new Rect(
+				Left + offset.Left,
+				Top + offset.Top,
+				Math.Max(0, Width + offset.Left + offset.Right),
+				Math.Max(0, Height + offset.Top + offset.Bottom));
+		}
+
+		public Rect Move(in Vector vector)
+		{
+			return new Rect(
+				Left + vector.X,
+				Top + vector.Y,
+				Width,
+				Height);
+		}
+
+		public IEnumerator<Position> GetEnumerator()
+		{
+			for (int x = 0; x < Width; x++)
+				for (int y = 0; y < Height; y++)
+					yield return new Position(x + Left, y + Top);
 		}
 	}
 }

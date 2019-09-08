@@ -16,6 +16,15 @@ namespace ConsoleMultiplexer.Controls
 				.Then(Resize);
 		}
 
+		private Color? _color;
+		public Color? Color
+		{
+			get => _color;
+			set => Setter
+				.Set(ref _color, value)
+				.Then(Redraw);
+		}
+
 		public override Character this[Position position]
 		{
 			get
@@ -23,15 +32,13 @@ namespace ConsoleMultiplexer.Controls
 				if (Text == null) return Character.Empty;
 				if (position.X >= Text.Length) return Character.Empty;
 				if (position.Y >= 1) return Character.Empty;
-				return Character.Plain(Text[position.X]);
+				return new Character(Text[position.X], foreground: Color);
 			}
 		}
 
 		protected override void Resize()
 		{
-			var newSize = Size.Bound(MinSize, new Size(Text.Length, 1), MaxSize);
-
-			Redraw(newSize);
+			Redraw(new Size(Text.Length, 1));
 		}
 	}
 }
