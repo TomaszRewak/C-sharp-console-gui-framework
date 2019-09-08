@@ -47,7 +47,7 @@ namespace ConsoleMultiplexer.Controls
 					new Size(0, MinSize.Height),
 					MaxSize);
 
-				Redraw(MaxSize);
+				Redraw(Size.Clip(MinSize, Content?.Size ?? Size.Empty, MaxSize));
 			}
 		}
 
