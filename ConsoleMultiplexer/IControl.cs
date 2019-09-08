@@ -13,6 +13,6 @@ namespace ConsoleMultiplexer
 
 		Size Size { get; }
 
-		IDrawingContext Context { set; }
+		IDrawingContext Context { get; set; }
 	}
 }

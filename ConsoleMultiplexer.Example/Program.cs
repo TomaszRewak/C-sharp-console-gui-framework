@@ -39,9 +39,9 @@ namespace ConsoleMultiplexer.Example
 			{
 				var c = control[Position.At(position.X, position.Y)];
 
-				if (c.Content != _memory[position.X, position.Y].Content)
+				//if (c.Content != _memory[position.X, position.Y].Content)
 				{
-					_memory[position.X, position.Y] = c;
+					//_memory[position.X, position.Y] = c;
 
 					var color = c.Foreground ?? Color.White;
 
@@ -85,8 +85,11 @@ namespace ConsoleMultiplexer.Example
 
 			var border2 = new Border
 			{
-				BorderPlacement = BorderPlacement.Left,
-				Content = textBlock2,
+				BorderPlacement = BorderPlacement.Left | BorderPlacement.Right,
+				Content = new HorizontalAlignment
+				{
+					Content = textBlock2
+				},
 				BorderColor = new Color(200, 0, 0)
 			};
 

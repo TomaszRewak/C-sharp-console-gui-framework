@@ -17,7 +17,7 @@ namespace ConsoleMultiplexer
 		private IDrawingContext _context;
 		public IDrawingContext Context
 		{
-			private get => _context;
+			get => _context;
 			set => Setter
 				.SetContext(ref _context, value, OnSizeLimitsChanged)
 				.Then(UpdateSizeLimits);

@@ -30,6 +30,20 @@ namespace ConsoleMultiplexer.Helpers
 
 			return new SetterContext(changed);
 		}
+
+		public static SetterContext SetDisposable<T>(ref T field, T value) where T : IDisposable
+		{
+			var changed = !Equals(field, value);
+
+			if (changed)
+			{
+				field?.Dispose();
+
+				field = value;
+			}
+
+			return new SetterContext(changed);
+		}
 	}
 
 	internal struct SetterContext

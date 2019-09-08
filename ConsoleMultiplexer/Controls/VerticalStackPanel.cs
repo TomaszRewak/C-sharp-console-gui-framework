@@ -6,15 +6,13 @@ using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-
-
 	public class VerticalStackPanel : Control
 	{
 		private readonly List<VerticalStackPanelContext> _children = new List<VerticalStackPanelContext>();
 
 		public void Add(IControl control)
 		{
-			using(Freeze())
+			using (Freeze())
 			{
 				_children.Add(new VerticalStackPanelContext(this, control));
 

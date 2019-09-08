@@ -31,6 +31,8 @@ namespace ConsoleMultiplexer
 		public bool Contains(in Position position)
 		{
 			return
+				position.X >= 0 &&
+				position.Y >= 0 &&
 				position.X < Width &&
 				position.Y < Height;
 		}

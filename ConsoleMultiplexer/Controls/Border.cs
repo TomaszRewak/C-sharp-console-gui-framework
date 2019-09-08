@@ -8,11 +8,12 @@ namespace ConsoleMultiplexer.Controls
 {
 	public sealed class Border : Control
 	{
-		private readonly BorderContext _contentContext;
-
-		public Border()
+		private DrawingContext _contentContext;
+		private DrawingContext ContentContext
 		{
-			_contentContext = new BorderContext(this);
+			get => _contentContext;
+			set => Setter
+				.SetDisposable(ref _contentContext, value);
 		}
 
 		private IControl _content;
@@ -77,7 +78,7 @@ namespace ConsoleMultiplexer.Controls
 					BorderPlacement.HasBorder(BorderPlacement.Top) ? -1 : 0);
 
 				if (!Content?.Size.Contains(contentPosition) ?? true)
-					return Character.Plain('.');
+					return Character.Empty;
 
 				return Content[contentPosition];
 			}
@@ -87,55 +88,27 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
-				_contentContext.MinSize = MinSize.AsRect().Remove(BorderPlacement.AsOffset()).Size;
-				_contentContext.MaxSize = MaxSize.AsRect().Remove(BorderPlacement.AsOffset()).Size;
+				ContentContext?.SetLimits(
+					MinSize.AsRect().Remove(BorderPlacement.AsOffset()).Size,
+					MaxSize.AsRect().Remove(BorderPlacement.AsOffset()).Size);
 
-				_contentContext?.NotifySizeChanged();
-
-				var newSize = Content?.Size.AsRect().Add(BorderPlacement.AsOffset()).Size ?? Size.Empty;
-
-				Redraw(newSize);
+				Redraw(Content?.Size.AsRect().Add(BorderPlacement.AsOffset()).Size ?? Size.Empty);
 			}
 		}
 
 		private void BindContent()
 		{
-			if (Content == null) return;
-			Content.Context = _contentContext;
+			ContentContext = new DrawingContext(Content, OnContentRedrawRequested, OnContentUpdateRequested);
 		}
 
-		private class BorderContext : IDrawingContext
+		private void OnContentRedrawRequested()
 		{
-			private readonly Border _border;
+			Redraw(Content.Size.AsRect().Add(BorderPlacement.AsOffset()).Size);
+		}
 
-			public BorderContext(Border border)
-			{
-				_border = border;
-			}
-
-			public Size MinSize { get; set; }
-			public Size MaxSize { get; set; }
-
-			public void Redraw(IControl control)
-			{
-				if (_border.Content != control) return;
-
-				_border.Redraw(control.Size.AsRect().Add(_border.BorderPlacement.AsOffset()).Size);
-			}
-
-			public void Update(IControl control, in Rect rect)
-			{
-				if (_border.Content != control) return;
-
-				_border.Update(rect.Move(_border.BorderPlacement.AsVector()));
-			}
-
-			public void NotifySizeChanged()
-			{
-				SizeLimitsChanged?.Invoke(this);
-			}
-
-			public event SizeLimitsChangedHandler SizeLimitsChanged;
+		private void OnContentUpdateRequested(Rect rect)
+		{
+			Update(rect.Move(BorderPlacement.AsVector()));
 		}
 	}
 }
