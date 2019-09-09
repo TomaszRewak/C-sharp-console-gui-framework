@@ -10,7 +10,7 @@ namespace ConsoleMultiplexer.Example
 		public Size MinSize => new Size(100, 30);
 		public Size MaxSize => new Size(100, 30);
 
-		Character[,] _memory = new Character[100, 30];
+		//Character[,] _memory = new Character[100, 30];
 
 		private IControl _control;
 		public IControl Control
@@ -73,7 +73,7 @@ namespace ConsoleMultiplexer.Example
 
 			var border1 = new Border
 			{
-				BorderPlacement = BorderPlacement.All,
+				BorderPlacement = BorderPlacement.All ^ BorderPlacement.Bottom,
 				Content = textBlock1
 			};
 

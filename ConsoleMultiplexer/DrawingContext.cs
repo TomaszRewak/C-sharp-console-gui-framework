@@ -31,7 +31,17 @@ namespace ConsoleMultiplexer
 		public Size MinSize { get; private set; }
 		public Size MaxSize { get; private set; }
 
-		public void SetLimits(Size minSize, Size maxSize)
+		public Vector Offset { get; private set; }
+
+		public Character this[Position position]
+		{
+			get
+			{
+				return Control[position.Move(-Offset)];
+			}
+		}
+
+		public void SetLimits(in Size minSize, in Size maxSize)
 		{
 			if (MinSize == minSize && MaxSize == maxSize) return;
 
@@ -39,6 +49,16 @@ namespace ConsoleMultiplexer
 			MaxSize = maxSize;
 
 			SizeLimitsChanged?.Invoke(this);
+		}
+
+		public void SetOffset(in Vector offset)
+		{
+			Offset = offset;
+		}
+
+		public bool Contains(in Position position)
+		{
+			return Control.Size.Contains(position.Move(-Offset));
 		}
 
 		public void Redraw(IControl control)
@@ -52,7 +72,7 @@ namespace ConsoleMultiplexer
 		{
 			if (control != Control) return;
 
-			_onUpdateRequested?.Invoke(rect);
+			_onUpdateRequested?.Invoke(rect.Move(Offset));
 		}
 
 		public event SizeLimitsChangedHandler SizeLimitsChanged;

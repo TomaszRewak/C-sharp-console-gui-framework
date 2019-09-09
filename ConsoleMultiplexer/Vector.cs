@@ -14,5 +14,7 @@ namespace ConsoleMultiplexer
 			X = x;
 			Y = y;
 		}
+
+		public static Vector operator -(in Vector vector) => new Vector(-vector.X, -vector.Y);
 	}
 }

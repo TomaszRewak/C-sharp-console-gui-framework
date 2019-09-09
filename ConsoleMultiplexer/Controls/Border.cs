@@ -49,6 +49,9 @@ namespace ConsoleMultiplexer.Controls
 			{
 				if (!Size.Contains(position)) throw new IndexOutOfRangeException(nameof(position));
 
+				if (ContentContext.Contains(position))
+					return ContentContext[position];
+
 				if (position.X == 0 && position.Y == 0 && BorderPlacement.HasBorder(BorderPlacement.Top | BorderPlacement.Left))
 					return new Character('╔', BorderColor);
 
@@ -73,14 +76,7 @@ namespace ConsoleMultiplexer.Controls
 				if (position.Y == Size.Height - 1 && BorderPlacement.HasBorder(BorderPlacement.Bottom))
 					return new Character('═', BorderColor);
 
-				var contentPosition = position.Move(
-					BorderPlacement.HasBorder(BorderPlacement.Left) ? -1 : 0,
-					BorderPlacement.HasBorder(BorderPlacement.Top) ? -1 : 0);
-
-				if (!Content?.Size.Contains(contentPosition) ?? true)
-					return Character.Empty;
-
-				return Content[contentPosition];
+				return Character.Empty;
 			}
 		}
 
@@ -88,6 +84,7 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
+				ContentContext?.SetOffset(BorderPlacement.AsVector());
 				ContentContext?.SetLimits(
 					MinSize.AsRect().Remove(BorderPlacement.AsOffset()).Size,
 					MaxSize.AsRect().Remove(BorderPlacement.AsOffset()).Size);
@@ -108,7 +105,7 @@ namespace ConsoleMultiplexer.Controls
 
 		private void OnContentUpdateRequested(Rect rect)
 		{
-			Update(rect.Move(BorderPlacement.AsVector()));
+			Update(rect);
 		}
 	}
 }
