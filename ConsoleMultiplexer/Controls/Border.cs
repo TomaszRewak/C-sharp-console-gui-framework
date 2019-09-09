@@ -47,7 +47,7 @@ namespace ConsoleMultiplexer.Controls
 		{
 			get
 			{
-				if (!Size.Contains(position)) throw new IndexOutOfRangeException(nameof(position));
+				//if (!Size.Contains(position)) throw new IndexOutOfRangeException(nameof(position));
 
 				if (ContentContext.Contains(position))
 					return ContentContext[position];
@@ -95,12 +95,7 @@ namespace ConsoleMultiplexer.Controls
 
 		private void BindContent()
 		{
-			ContentContext = new DrawingContext(Content, OnContentRedrawRequested, OnContentUpdateRequested);
-		}
-
-		private void OnContentRedrawRequested()
-		{
-			Redraw(Content.Size.AsRect().Add(BorderPlacement.AsOffset()).Size);
+			ContentContext = new DrawingContext(Content, Resize, OnContentUpdateRequested);
 		}
 
 		private void OnContentUpdateRequested(Rect rect)

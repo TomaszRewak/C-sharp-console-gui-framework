@@ -12,7 +12,8 @@ namespace ConsoleMultiplexer.Controls
 		{
 			get => _contentContext;
 			set => Setter
-				.SetDisposable(ref _contentContext, value);
+				.SetDisposable(ref _contentContext, value)
+				.Then(Resize);
 		}
 
 		private IControl _content;
@@ -47,23 +48,22 @@ namespace ConsoleMultiplexer.Controls
 					new Size(0, MinSize.Height),
 					MaxSize);
 
-				Redraw(Size.Clip(MinSize, Content?.Size ?? Size.Empty, MaxSize));
+				var newSize = Size.Clip(MinSize, Content?.Size ?? Size.Empty, MaxSize);
+
+				ContentContext?.SetOffset(new Vector((Size.Width - Content?.Size.Width ?? 0) / 2, 0));
+
+				Redraw(newSize);
 			}
 		}
 
 		private void BindContent()
 		{
-			ContentContext = new DrawingContext(Content, OnContentRedrawRequested, OnContentUpdateRequested);
-		}
-
-		private void OnContentRedrawRequested()
-		{
-			Redraw(Size.Clip(MinSize, Content?.Size ?? Size.Empty, MaxSize));
+			ContentContext = new DrawingContext(Content, Resize, OnContentUpdateRequested);
 		}
 
 		private void OnContentUpdateRequested(Rect rect)
 		{
-			Update(rect.Move(new Vector(ContentOffset, 0)));
+			Update(rect);
 		}
 	}
 }
