@@ -43,13 +43,16 @@ namespace ConsoleMultiplexer.Example
 				{
 					//_memory[position.X, position.Y] = c;
 
+					var content = c.Content ?? ' ';
 					var foreground = c.Foreground ?? Color.White;
 					var background = c.Background ?? Color.Black;
 
 					Console.SetCursorPosition(position.X, position.Y);
-					Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{c.Content}");
+					Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
 				}
 			}
+
+			Console.BackgroundColor = ConsoleColor.Black;
 		}
 
 		public event SizeLimitsChangedHandler SizeLimitsChanged;

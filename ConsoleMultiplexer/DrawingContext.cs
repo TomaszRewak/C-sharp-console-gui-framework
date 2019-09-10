@@ -80,7 +80,7 @@ namespace ConsoleMultiplexer
 		{
 			if (control != Child) return;
 
-			Parent.OnUpdate(this, rect.Move(Offset));
+			Parent?.OnUpdate(this, rect.Move(Offset));
 		}
 
 		public event SizeLimitsChangedHandler SizeLimitsChanged;
