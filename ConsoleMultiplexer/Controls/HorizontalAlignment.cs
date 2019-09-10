@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-	public class HorizontalAlignment : Control
+	public class HorizontalAlignment : Control, IDrawingContextListener
 	{
 		private DrawingContext _contentContext;
 		private DrawingContext ContentContext
@@ -58,10 +58,15 @@ namespace ConsoleMultiplexer.Controls
 
 		private void BindContent()
 		{
-			ContentContext = new DrawingContext(Content, Resize, OnContentUpdateRequested);
+			ContentContext = new DrawingContext(this, Content);
 		}
 
-		private void OnContentUpdateRequested(Rect rect)
+		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
+		{
+			Resize();
+		}
+
+		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 		{
 			Update(rect);
 		}

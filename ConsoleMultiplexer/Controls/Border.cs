@@ -6,9 +6,9 @@ using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-	public sealed class Border : Control
+	public sealed class Border : Control, IDrawingContextListener
 	{
-		private DrawingContext _contentContext;
+		private DrawingContext _contentContext = DrawingContext.Dummy;
 		private DrawingContext ContentContext
 		{
 			get => _contentContext;
@@ -95,10 +95,15 @@ namespace ConsoleMultiplexer.Controls
 
 		private void BindContent()
 		{
-			ContentContext = new DrawingContext(Content, Resize, OnContentUpdateRequested);
+			ContentContext = new DrawingContext(this, Content);
 		}
 
-		private void OnContentUpdateRequested(Rect rect)
+		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
+		{
+			Resize();
+		}
+
+		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 		{
 			Update(rect);
 		}

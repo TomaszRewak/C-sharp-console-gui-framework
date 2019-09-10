@@ -121,7 +121,13 @@ namespace ConsoleMultiplexer.Example
 			//	Content = stackPanel
 			//};
 
-			testContext.Control = border3;
+			var border4 = new Border();
+
+			var canvas = new Canvas();
+			canvas.Add(border3, new Rect(20, 10, 70, 20));
+			canvas.Add(border4, new Rect(40, 5, 60, 10));
+
+			testContext.Control = canvas;
 
 			int frames = 0;
 			var watch = new Stopwatch();

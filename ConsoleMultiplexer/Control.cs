@@ -101,7 +101,7 @@ namespace ConsoleMultiplexer
 			}
 
 			private void Redraw() => _control.Context?.Redraw(_control);
-			private void Update() => _control.Context.Update(_control, _control._updatedRect);
+			private void Update() => _control.Context?.Update(_control, _control._updatedRect);
 		}
 	}
 }

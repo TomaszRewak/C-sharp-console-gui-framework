@@ -4,28 +4,33 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
+	internal interface IDrawingContextListener
+	{
+		void OnRedraw(DrawingContext drawingContext);
+		void OnUpdate(DrawingContext drawingContext, Rect rect);
+	}
+
 	internal class DrawingContext : IDrawingContext, IDisposable
 	{
-		private Action _onRedrawRequested;
-		private Action<Rect> _onUpdateRequested;
+		public IDrawingContextListener Parent { get; private set; }
+		public IControl Child { get; private set; }
 
-		public IControl Control { get; }
-
-		public DrawingContext(IControl control, Action onRedrawRequested, Action<Rect> onUpdateRequested)
+		public DrawingContext(IDrawingContextListener parent, IControl control)
 		{
 			if (control == null) return;
 
-			_onRedrawRequested = onRedrawRequested;
-			_onUpdateRequested = onUpdateRequested;
+			Parent = parent;
 
-			Control = control;
-			Control.Context = this;
+			Child = control;
+			Child.Context = this;
 		}
+
+		public static DrawingContext Dummy => new DrawingContext(null, null);
 
 		public void Dispose()
 		{
-			_onRedrawRequested = null;
-			_onUpdateRequested = null;
+			Parent = null;
+			Child = null;
 		}
 
 		public Size MinSize { get; private set; }
@@ -37,7 +42,7 @@ namespace ConsoleMultiplexer
 		{
 			get
 			{
-				return Control[position.Move(-Offset)];
+				return Child[position.Move(-Offset)];
 			}
 		}
 
@@ -58,21 +63,23 @@ namespace ConsoleMultiplexer
 
 		public bool Contains(in Position position)
 		{
-			return Control.Size.Contains(position.Move(-Offset));
+			if (Child == null) return false;
+
+			return Child.Size.Contains(position.Move(-Offset));
 		}
 
 		public void Redraw(IControl control)
 		{
-			if (control != Control) return;
+			if (control != Child) return;
 
-			_onRedrawRequested?.Invoke();
+			Parent?.OnRedraw(this);
 		}
 
 		public void Update(IControl control, in Rect rect)
 		{
-			if (control != Control) return;
+			if (control != Child) return;
 
-			_onUpdateRequested?.Invoke(rect.Move(Offset));
+			Parent.OnUpdate(this, rect.Move(Offset));
 		}
 
 		public event SizeLimitsChangedHandler SizeLimitsChanged;

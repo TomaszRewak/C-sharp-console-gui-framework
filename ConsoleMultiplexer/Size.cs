@@ -20,6 +20,7 @@ namespace ConsoleMultiplexer
 		public static Size Max(in Size lhs, in Size rhs) => new Size(Math.Max(lhs.Width, rhs.Width), Math.Max(lhs.Height, rhs.Height));
 		public static Size Min(in Size lhs, in Size rhs) => new Size(Math.Min(lhs.Width, rhs.Width), Math.Min(lhs.Height, rhs.Height));
 		public static Size Clip(in Size min, in Size value, in Size max) => Size.Max(min, Size.Min(max, value));
+		public static Size Of(Array array) => new Size(array.GetLength(0), array.GetLength(1));
 
 		public bool Contains(in Size size)
 		{

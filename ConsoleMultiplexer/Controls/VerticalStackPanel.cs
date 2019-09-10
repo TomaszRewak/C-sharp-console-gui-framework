@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-	public class VerticalStackPanel : Control
+	public class VerticalStackPanel : Control, IDrawingContextListener
 	{
 		private readonly List<DrawingContext> _children = new List<DrawingContext>();
 
@@ -14,7 +14,7 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
-				_children.Add(new DrawingContext(control, Resize, OnUpdateRequested));
+				_children.Add(new DrawingContext(this, control));
 
 				Resize();
 			}
@@ -25,7 +25,7 @@ namespace ConsoleMultiplexer.Controls
 
 			using (Freeze())
 			{
-				_children.RemoveAll(c => c.Control == control);
+				_children.RemoveAll(c => c.Child == control);
 
 				Resize();
 			}
@@ -55,14 +55,19 @@ namespace ConsoleMultiplexer.Controls
 						new Size(MaxSize.Width, 0),
 						new Size(MaxSize.Width, Math.Max(0, MaxSize.Height - top)));
 
-					top += child.Control.Size.Height;
+					top += child.Child.Size.Height;
 				}
 
 				Redraw(new Size(MaxSize.Width, top));
 			}
 		}
 
-		private void OnUpdateRequested(Rect rect)
+		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
+		{
+			Resize();
+		}
+
+		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 		{
 			Update(rect);
 		}

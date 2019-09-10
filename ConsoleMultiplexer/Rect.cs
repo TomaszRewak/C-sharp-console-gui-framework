@@ -16,7 +16,8 @@ namespace ConsoleMultiplexer
 		public int Bottom => Top + Height - 1;
 		public Position LeftTopCorner => new Position(Left, Top);
 		public Position RightBottomCorner => new Position(Right, Bottom);
-		public Size Size => new Size(Width, Height); 
+		public Size Size => new Size(Width, Height);
+		public Vector Offset => new Vector(Left, Top);
 
 		public Rect(int left, int top, int width, int height)
 		{
