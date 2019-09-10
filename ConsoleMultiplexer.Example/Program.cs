@@ -43,10 +43,11 @@ namespace ConsoleMultiplexer.Example
 				{
 					//_memory[position.X, position.Y] = c;
 
-					var color = c.Foreground ?? Color.White;
+					var foreground = c.Foreground ?? Color.White;
+					var background = c.Background ?? Color.Black;
 
 					Console.SetCursorPosition(position.X, position.Y);
-					Console.Write($"\x1b[38;2;{color.Red};{color.Green};{color.Blue}m{c.Content}");
+					Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{c.Content}");
 				}
 			}
 		}
@@ -121,7 +122,13 @@ namespace ConsoleMultiplexer.Example
 			//	Content = stackPanel
 			//};
 
-			var border4 = new Border();
+			var border4 = new Border
+			{
+				Content = new Background
+				{
+					Fill = new Character('.', new Color(123, 54, 34), new Color(65, 25, 235))
+				}
+			};
 
 			var canvas = new Canvas();
 			canvas.Add(border3, new Rect(20, 10, 70, 20));

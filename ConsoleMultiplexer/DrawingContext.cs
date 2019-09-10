@@ -35,8 +35,9 @@ namespace ConsoleMultiplexer
 
 		public Size MinSize { get; private set; }
 		public Size MaxSize { get; private set; }
-
 		public Vector Offset { get; private set; }
+
+		public Size Size => Child?.Size ?? Size.Empty;
 
 		public Character this[Position position]
 		{

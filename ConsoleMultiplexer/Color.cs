@@ -18,5 +18,6 @@ namespace ConsoleMultiplexer
 		}
 
 		public static Color White => new Color(255, 255, 255);
+		public static Color Black => new Color(0, 0, 0);
 	}
 }
