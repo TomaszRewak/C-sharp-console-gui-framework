@@ -97,11 +97,14 @@ namespace ConsoleMultiplexer.Example
 				BorderColor = new Color(200, 0, 0)
 			};
 
+			var textBox = new TextBox();
+
 			var stackPanel1 = new VerticalStackPanel();
 			stackPanel1.Add(new TextBlock { Text = "Test1" });
 			stackPanel1.Add(new TextBlock { Text = "Test2" });
 			stackPanel1.Add(border1);
 			stackPanel1.Add(border2);
+			stackPanel1.Add(textBox);
 
 			var border3 = new Border
 			{
@@ -164,10 +167,15 @@ namespace ConsoleMultiplexer.Example
 				if (watch.ElapsedMilliseconds > 1000)
 				{
 					textBlock2.Text = $"{frames}";
-					Thread.Sleep(1000);
 					watch.Restart();
 					frames = 0;
 					border3.BorderPlacement ^= BorderPlacement.Left;
+				}
+
+				if (Console.KeyAvailable)
+				{
+					var key = Console.ReadKey(true);
+					textBox.OnInput(new InputEvent(key));
 				}
 
 				frames++;
