@@ -14,7 +14,7 @@ namespace ConsoleMultiplexer
 		public bool IsNewLine => Content == '\n';
 		public bool IsEmpty => !Content.HasValue;
 
-		public Character(char content, Color? foreground = null, Color? background = null)
+		public Character(char? content, Color? foreground = null, Color? background = null)
 		{
 			Content = content;
 			Foreground = foreground;

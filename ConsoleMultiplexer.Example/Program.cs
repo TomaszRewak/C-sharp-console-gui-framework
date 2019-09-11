@@ -98,6 +98,8 @@ namespace ConsoleMultiplexer.Example
 			};
 
 			var stackPanel1 = new VerticalStackPanel();
+			stackPanel1.Add(new TextBlock { Text = "Test1" });
+			stackPanel1.Add(new TextBlock { Text = "Test2" });
 			stackPanel1.Add(border1);
 			stackPanel1.Add(border2);
 
@@ -129,7 +131,19 @@ namespace ConsoleMultiplexer.Example
 			{
 				Content = new Background
 				{
-					Fill = new Character('.', new Color(123, 54, 34), new Color(65, 25, 235))
+					Fill = new Character('.', new Color(123, 54, 34), new Color(65, 25, 235)),
+					Content = new HorizontalAlignment
+					{
+						Content = new Style
+						{
+							Foreground = new Color(64, 132, 54),
+							Background = new Color(65, 31, 64),
+							Content = new TextBlock
+							{
+								Text = "Test"
+							}
+						}
+					}
 				}
 			};
 
