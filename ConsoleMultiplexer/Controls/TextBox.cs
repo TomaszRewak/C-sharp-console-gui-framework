@@ -34,7 +34,8 @@ namespace ConsoleMultiplexer.Controls
 				.Then(Redraw);
 		}
 
-		private Size TextSize => new Size(Text?.Length ?? 0, 1);
+		private int TextLength => Text?.Length ?? 0;
+		private Size TextSize => new Size(TextLength, 1);
 
 		public override Character this[Position position]
 		{
@@ -56,6 +57,9 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
+				CaretStart = Math.Max(CaretStart, 0);
+				CaretEnd = Math.Min(CaretEnd, TextLength);
+
 				switch (inputEvent.Key.Key)
 				{
 					case ConsoleKey.LeftArrow when inputEvent.Key.Modifiers.HasFlag(ConsoleModifiers.Control):
@@ -69,6 +73,14 @@ namespace ConsoleMultiplexer.Controls
 						break;
 					case ConsoleKey.RightArrow:
 						CaretStart = CaretEnd = Math.Min(Text.Length, CaretEnd + 1);
+						break;
+					case ConsoleKey.Backspace when CaretStart != CaretEnd:
+						Text = $"{Text.Substring(0, CaretStart)}{Text.Substring(CaretEnd)}";
+						CaretEnd = CaretStart;
+						break;
+					case ConsoleKey.Backspace when CaretStart > 0:
+						Text = $"{Text.Substring(0, CaretStart - 1)}{Text.Substring(CaretStart)}";
+						CaretStart = CaretEnd = CaretStart - 1;
 						break;
 					default:
 						Text = Text ?? "";
