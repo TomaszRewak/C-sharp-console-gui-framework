@@ -172,11 +172,12 @@ namespace ConsoleMultiplexer.Example
 					border3.BorderPlacement ^= BorderPlacement.Left;
 				}
 
-				if (Console.KeyAvailable)
+				while (Console.KeyAvailable)
 				{
 					var key = Console.ReadKey(true);
 					textBox.OnInput(new InputEvent(key));
 				}
+				Console.CursorVisible = false;
 
 				frames++;
 			}
