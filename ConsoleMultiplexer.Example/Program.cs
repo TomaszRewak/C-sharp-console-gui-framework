@@ -150,14 +150,12 @@ namespace ConsoleMultiplexer.Example
 				}
 			};
 
-			var border5 = new Border
+			var scrollPanel = new VerticalScrollPanel
 			{
-				Content = new VerticalScrollPanel
+				Top = 0,
+				Content = new VerticalStackPanel
 				{
-					Top = 0,
-					Content = new VerticalStackPanel
-					{
-						Children = new[] {
+					Children = new[] {
 							new TextBlock {Text = "Test 1"},
 							new TextBlock {Text = "Test 2"},
 							new TextBlock {Text = "Test 3"},
@@ -174,8 +172,12 @@ namespace ConsoleMultiplexer.Example
 							new TextBlock {Text = "Test 14"},
 							new TextBlock {Text = "Test 15"}
 						}
-					}
 				}
+			};
+
+			var border5 = new Border
+			{
+				Content = scrollPanel
 			};
 
 			var canvas = new Canvas();
@@ -199,6 +201,7 @@ namespace ConsoleMultiplexer.Example
 					watch.Restart();
 					frames = 0;
 					border3.BorderPlacement ^= BorderPlacement.Left;
+					scrollPanel.Top = (scrollPanel.Top + 1) % 8;
 				}
 
 				while (Console.KeyAvailable)
