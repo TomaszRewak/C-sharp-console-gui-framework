@@ -34,6 +34,24 @@ namespace ConsoleMultiplexer.Controls
 				.Then(Initialize);
 		}
 
+		private Character _scrollBarForeground = new Character('▓', foreground: Color.LightBlue);
+		public Character ScrollBarForeground
+		{
+			get => _scrollBarForeground;
+			set => Setter
+				.Set(ref _scrollBarForeground, value)
+				.Then(RedrawScrollBar);
+		}
+
+		private Character _scrollBarBackground = new Character('▒', foreground: Color.Gray);
+		public Character ScrollBarBackground
+		{
+			get => _scrollBarBackground;
+			set => Setter
+				.Set(ref _scrollBarBackground, value)
+				.Then(RedrawScrollBar);
+		}
+
 		public override Character this[Position position]
 		{
 			get
@@ -41,12 +59,12 @@ namespace ConsoleMultiplexer.Controls
 				if (position.X != Size.Width - 1)
 					return ContentContext[position];
 
-				if (Content == null) return new Character('#');
-				if (Content.Size.Height <= Size.Height) return new Character('#');
-				if (position.Y * Content.Size.Height < Top * Size.Height) return Character.Empty;
-				if (position.Y * Content.Size.Height > (Top + Size.Height) * Size.Height) return Character.Empty;
+				if (Content == null) return ScrollBarForeground;
+				if (Content.Size.Height <= Size.Height) return ScrollBarForeground;
+				if (position.Y * Content.Size.Height < Top * Size.Height) return ScrollBarBackground;
+				if (position.Y * Content.Size.Height > (Top + Size.Height) * Size.Height) return ScrollBarBackground;
 
-				return new Character('#');
+				return ScrollBarForeground;
 			}
 		}
 
@@ -54,7 +72,7 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using(Freeze())
 			{
-				ContentContext.SetLimits(MaxSize.Shrink(1, 0), MaxSize.Shrink(1, 0).WithInfitineHeight);
+				ContentContext.SetLimits(MaxSize.Shrink(1, 0), MaxSize.Shrink(1, 0).WithInfitineHeight());
 				ContentContext.SetOffset(new Vector(0, -Top));
 
 				Resize(Size.Clip(MinSize, ContentContext.Size.Expand(1, 0), MaxSize));
@@ -64,6 +82,11 @@ namespace ConsoleMultiplexer.Controls
 		private void BindContent()
 		{
 			ContentContext = new DrawingContext(this, Content);
+		}
+
+		private void RedrawScrollBar()
+		{
+			Update(Size.WithWidth(1).AsRect().Move(Size.Width - 1, 0));
 		}
 
 		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)

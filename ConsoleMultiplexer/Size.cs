@@ -45,8 +45,8 @@ namespace ConsoleMultiplexer
 		public Size WithHeight(int height) => new Size(Width, height);
 		public Size WithWidth(int width) => new Size(width, Height);
 
-		public Size WithInfitineHeight => new Size(Width, int.MaxValue);
-		public Size WithInfitineWidth => new Size(int.MaxValue, Height);
+		public Size WithInfitineHeight() => new Size(Width, int.MaxValue);
+		public Size WithInfitineWidth() => new Size(int.MaxValue, Height);
 
 		public IEnumerator<Position> GetEnumerator()
 		{

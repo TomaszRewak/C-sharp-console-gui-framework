@@ -80,14 +80,16 @@ namespace ConsoleMultiplexer
 				Math.Max(0, Height + offset.Top + offset.Bottom));
 		}
 
-		public Rect Move(in Vector vector)
+		public Rect Move(int x, int y)
 		{
 			return new Rect(
-				Left + vector.X,
-				Top + vector.Y,
+				Left + x,
+				Top + y,
 				Width,
 				Height);
 		}
+
+		public Rect Move(in Vector vector) => Move(vector.X, vector.Y);
 
 		public IEnumerator<Position> GetEnumerator()
 		{
