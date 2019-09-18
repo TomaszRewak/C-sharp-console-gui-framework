@@ -5,14 +5,15 @@ using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-	public class Style : Control, IDrawingContextListener
+	public class VerticalScrollPanel : Control, IDrawingContextListener
 	{
 		private DrawingContext _contentContext = DrawingContext.Dummy;
 		private DrawingContext ContentContext
 		{
 			get => _contentContext;
 			set => Setter
-				.SetDisposable(ref _contentContext, value);
+				.SetDisposable(ref _contentContext, value)
+				.Then(Initialize);
 		}
 
 		private IControl _content;
@@ -24,48 +25,39 @@ namespace ConsoleMultiplexer.Controls
 				.Then(BindContent);
 		}
 
-		private Color? _background;
-		public Color? Background
+		private int _top;
+		public int Top
 		{
-			get => _background;
+			get => _top;
 			set => Setter
-				.Set(ref _background, value)
-				.Then(Redraw);
-		}
-
-		private Color? _foreground;
-		public Color? Foreground
-		{
-			get => _foreground;
-			set => Setter
-				.Set(ref _foreground, value)
-				.Then(Redraw);
+				.Set(ref _top, value)
+				.Then(Initialize);
 		}
 
 		public override Character this[Position position]
 		{
 			get
 			{
-				if (!ContentContext.Contains(position)) return Character.Empty;
+				if (position.X != Size.Width - 1)
+					return ContentContext[position];
 
-				var character = ContentContext[position];
+				if (Content == null) return new Character('#');
+				if (Content.Size.Height <= Size.Height) return new Character('#');
+				if (position.Y * Content.Size.Height < Top * Size.Height) return Character.Empty;
+				if (position.Y * Content.Size.Height > (Top + Size.Height) * Size.Height) return Character.Empty;
 
-				if (character.IsEmpty) return Character.Empty;
-
-				return new Character(
-					character.Content, 
-					Foreground ?? character.Foreground, 
-					Background ?? character.Background);
+				return new Character('#');
 			}
 		}
 
 		protected override void Initialize()
 		{
-			using (Freeze())
+			using(Freeze())
 			{
-				ContentContext.SetLimits(MinSize, MaxSize);
+				ContentContext.SetLimits(MaxSize.Shrink(1, 0), MaxSize.Shrink(1, 0).WithInfitineHeight);
+				ContentContext.SetOffset(new Vector(0, -Top));
 
-				Resize(Size.Clip(MinSize, ContentContext.Size, MaxSize));
+				Resize(Size.Clip(MinSize, ContentContext.Size.Expand(1, 0), MaxSize));
 			}
 		}
 

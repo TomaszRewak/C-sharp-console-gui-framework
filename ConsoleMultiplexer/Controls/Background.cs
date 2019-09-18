@@ -45,13 +45,13 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		protected override void Resize()
+		protected override void Initialize()
 		{
 			using (Freeze())
 			{
 				ContentContext.SetLimits(MinSize, MaxSize);
 
-				Redraw(Size.Clip(MinSize, ContentContext.Size, MaxSize));
+				Resize(Size.Clip(MinSize, ContentContext.Size, MaxSize));
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace ConsoleMultiplexer.Controls
 
 		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
 		{
-			Resize();
+			Initialize();
 		}
 
 		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)

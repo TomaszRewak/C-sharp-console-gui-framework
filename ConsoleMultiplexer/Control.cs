@@ -12,7 +12,7 @@ namespace ConsoleMultiplexer
 		private Size _previousSize;
 
 		public abstract Character this[Position position] { get; }
-		protected abstract void Resize();
+		protected abstract void Initialize();
 
 		private IDrawingContext _context;
 		public IDrawingContext Context
@@ -29,10 +29,10 @@ namespace ConsoleMultiplexer
 
 		protected void Redraw()
 		{
-			Redraw(Size);
+			Resize(Size);
 		}
 
-		protected void Redraw(in Size newSize)
+		protected void Resize(in Size newSize)
 		{
 			using (Freeze())
 			{
@@ -64,7 +64,7 @@ namespace ConsoleMultiplexer
 			MinSize = _context?.MinSize ?? Size.Empty;
 			MaxSize = _context?.MaxSize ?? Size.Empty;
 
-			Resize();
+			Initialize();
 		}
 
 		protected struct FreezeContext : IDisposable

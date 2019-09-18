@@ -10,13 +10,25 @@ namespace ConsoleMultiplexer.Controls
 	{
 		private readonly List<DrawingContext> _children = new List<DrawingContext>();
 
+		public IEnumerable<IControl> Children
+		{
+			get => _children.Select(c => c.Child);
+			set
+			{
+				foreach (var child in _children) child.Dispose();
+				foreach (var child in value) _children.Add(new DrawingContext(this, child));
+
+				Initialize();
+			}
+		}
+
 		public void Add(IControl control)
 		{
 			using (Freeze())
 			{
 				_children.Add(new DrawingContext(this, control));
 
-				Resize();
+				Initialize();
 			}
 		}
 
@@ -25,9 +37,14 @@ namespace ConsoleMultiplexer.Controls
 
 			using (Freeze())
 			{
-				_children.RemoveAll(c => c.Child == control);
+				var child = _children.FirstOrDefault(c => c.Child == control);
 
-				Resize();
+				if (child == null) return;
+
+				child.Dispose();
+				_children.Remove(child);
+
+				Initialize();
 			}
 		}
 
@@ -43,7 +60,7 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		protected override void Resize()
+		protected override void Initialize()
 		{
 			using (Freeze())
 			{
@@ -58,13 +75,13 @@ namespace ConsoleMultiplexer.Controls
 					top += child.Child.Size.Height;
 				}
 
-				Redraw(new Size(MaxSize.Width, top));
+				Resize(new Size(MaxSize.Width, top));
 			}
 		}
 
 		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
 		{
-			Resize();
+			Initialize();
 		}
 
 		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)

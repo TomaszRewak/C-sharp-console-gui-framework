@@ -13,7 +13,7 @@ namespace ConsoleMultiplexer.Controls
 			get => _text;
 			set => Setter
 				.Set(ref _text, value)
-				.Then(Resize);
+				.Then(Initialize);
 		}
 
 		private int _caretStart;
@@ -93,9 +93,9 @@ namespace ConsoleMultiplexer.Controls
 			inputEvent.Handled();
 		}
 
-		protected override void Resize()
+		protected override void Initialize()
 		{
-			Redraw(Size.Clip(MinSize, TextSize, MaxSize));
+			Resize(Size.Clip(MinSize, TextSize, MaxSize));
 		}
 	}
 }

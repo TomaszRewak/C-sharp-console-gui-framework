@@ -40,12 +40,12 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		protected override void Resize()
+		protected override void Initialize()
 		{
 			if (MinSize == Size) return;
 
 			UpdateZBuffer(MinSize);
-			Redraw(MinSize);
+			Resize(MinSize);
 		}
 
 		private void UpdateZBuffer(Size newSize)

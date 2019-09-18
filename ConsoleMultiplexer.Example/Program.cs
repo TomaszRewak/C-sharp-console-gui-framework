@@ -150,9 +150,38 @@ namespace ConsoleMultiplexer.Example
 				}
 			};
 
+			var border5 = new Border
+			{
+				Content = new VerticalScrollPanel
+				{
+					Top = 0,
+					Content = new VerticalStackPanel
+					{
+						Children = new[] {
+							new TextBlock {Text = "Test 1"},
+							new TextBlock {Text = "Test 2"},
+							new TextBlock {Text = "Test 3"},
+							new TextBlock {Text = "Test 4"},
+							new TextBlock {Text = "Test 5"},
+							new TextBlock {Text = "Test 6"},
+							new TextBlock {Text = "Test 7"},
+							new TextBlock {Text = "Test 8"},
+							new TextBlock {Text = "Test 9"},
+							new TextBlock {Text = "Test 10"},
+							new TextBlock {Text = "Test 11"},
+							new TextBlock {Text = "Test 12"},
+							new TextBlock {Text = "Test 13"},
+							new TextBlock {Text = "Test 14"},
+							new TextBlock {Text = "Test 15"}
+						}
+					}
+				}
+			};
+
 			var canvas = new Canvas();
 			canvas.Add(border3, new Rect(20, 10, 70, 20));
 			canvas.Add(border4, new Rect(40, 5, 60, 10));
+			canvas.Add(border5, new Rect(30, 16, 40, 10));
 
 			testContext.Control = canvas;
 

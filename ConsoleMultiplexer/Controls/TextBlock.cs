@@ -13,7 +13,7 @@ namespace ConsoleMultiplexer.Controls
 			get => _text;
 			set => Setter
 				.Set(ref _text, value)
-				.Then(Resize);
+				.Then(Initialize);
 		}
 
 		private Color? _color;
@@ -36,9 +36,9 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		protected override void Resize()
+		protected override void Initialize()
 		{
-			Redraw(new Size(Text.Length, 1));
+			Resize(new Size(Text.Length, 1));
 		}
 	}
 }

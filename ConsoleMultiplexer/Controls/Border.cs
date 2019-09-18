@@ -13,7 +13,8 @@ namespace ConsoleMultiplexer.Controls
 		{
 			get => _contentContext;
 			set => Setter
-				.SetDisposable(ref _contentContext, value);
+				.SetDisposable(ref _contentContext, value)
+				.Then(Initialize);
 		}
 
 		private IControl _content;
@@ -31,7 +32,7 @@ namespace ConsoleMultiplexer.Controls
 			get => _borderPlacement;
 			set => Setter
 				.Set(ref _borderPlacement, value)
-				.Then(Resize);
+				.Then(Initialize);
 		}
 
 		private Color? _borderColor;
@@ -80,7 +81,7 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		protected override void Resize()
+		protected override void Initialize()
 		{
 			using (Freeze())
 			{
@@ -89,7 +90,7 @@ namespace ConsoleMultiplexer.Controls
 					MinSize.AsRect().Remove(BorderPlacement.AsOffset()).Size,
 					MaxSize.AsRect().Remove(BorderPlacement.AsOffset()).Size);
 
-				Redraw(Content?.Size.AsRect().Add(BorderPlacement.AsOffset()).Size ?? Size.Empty);
+				Resize(Content?.Size.AsRect().Add(BorderPlacement.AsOffset()).Size ?? Size.Empty);
 			}
 		}
 
@@ -100,7 +101,7 @@ namespace ConsoleMultiplexer.Controls
 
 		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
 		{
-			Resize();
+			Initialize();
 		}
 
 		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)

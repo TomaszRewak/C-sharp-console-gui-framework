@@ -13,7 +13,7 @@ namespace ConsoleMultiplexer.Controls
 			get => _contentContext;
 			set => Setter
 				.SetDisposable(ref _contentContext, value)
-				.Then(Resize);
+				.Then(Initialize);
 		}
 
 		private IControl _content;
@@ -40,7 +40,7 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		protected override void Resize()
+		protected override void Initialize()
 		{
 			using (Freeze())
 			{
@@ -52,7 +52,7 @@ namespace ConsoleMultiplexer.Controls
 
 				ContentContext?.SetOffset(new Vector((Size.Width - Content?.Size.Width ?? 0) / 2, 0));
 
-				Redraw(newSize);
+				Resize(newSize);
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace ConsoleMultiplexer.Controls
 
 		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
 		{
-			Resize();
+			Initialize();
 		}
 
 		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
