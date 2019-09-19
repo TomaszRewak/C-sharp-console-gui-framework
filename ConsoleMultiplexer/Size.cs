@@ -44,7 +44,6 @@ namespace ConsoleMultiplexer
 		public Size Shrink(int width, int height) => new Size(Width - width, Height - height);
 		public Size WithHeight(int height) => new Size(Width, height);
 		public Size WithWidth(int width) => new Size(width, Height);
-
 		public Size WithInfitineHeight() => new Size(Width, int.MaxValue);
 		public Size WithInfitineWidth() => new Size(int.MaxValue, Height);
 

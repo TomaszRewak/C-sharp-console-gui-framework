@@ -22,6 +22,8 @@ namespace ConsoleMultiplexer
 		public Position NextLine => new Position(0, Y + 1);
 		public Position Move(int x, int y) => new Position(X + x, Y + y);
 		public Position Move(Vector vector) => new Position(X + vector.X, Y + vector.Y);
+		public Position Wrap(int width) => new Position(X % width, X / width);
+		public Position UnWrap(int width) => new Position(X + Y * width, 0);
 		public Vector AsVector() => new Vector(X, Y);
 	}
 }

@@ -180,10 +180,34 @@ namespace ConsoleMultiplexer.Example
 				Content = scrollPanel
 			};
 
+			var textBlock4 = new TextBlock
+			{
+				Text = "Heheszki2",
+				Color = new Color(157, 42, 157)
+			};
+
+			var border6 = new Border
+			{
+				Content = new WrapPanel
+				{
+					Children = new[] {
+						new TextBlock {Text = "Test 1"},
+						new TextBlock {Text = "Test 2"},
+						new TextBlock {Text = "Test 3"},
+						textBlock4,
+						new TextBlock {Text = "Test 4"},
+						new TextBlock {Text = "Test 5"},
+						new TextBlock {Text = "Test 6"},
+						new TextBlock {Text = "Test 7"},
+					}
+				}
+			};
+
 			var canvas = new Canvas();
 			canvas.Add(border3, new Rect(20, 10, 70, 20));
 			canvas.Add(border4, new Rect(40, 5, 60, 10));
 			canvas.Add(border5, new Rect(30, 16, 40, 10));
+			canvas.Add(border6, new Rect(5, 5, 10, 15));
 
 			testContext.Control = canvas;
 
@@ -201,6 +225,7 @@ namespace ConsoleMultiplexer.Example
 					watch.Restart();
 					frames = 0;
 					border3.BorderPlacement ^= BorderPlacement.Left;
+					textBlock4.Text = new Random().Next().ToString();
 				}
 
 				while (Console.KeyAvailable)

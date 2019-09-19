@@ -1,12 +1,11 @@
-﻿using ConsoleMultiplexer.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-	public class VerticalStackPanel : Control, IDrawingContextListener
+	public class WrapPanel : Control, IDrawingContextListener
 	{
 		private readonly List<DrawingContext> _children = new List<DrawingContext>();
 		public IEnumerable<IControl> Children
@@ -21,39 +20,15 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		public void Add(IControl control)
-		{
-			using (Freeze())
-			{
-				_children.Add(new DrawingContext(this, control));
-
-				Initialize();
-			}
-		}
-
-		public void Remove(IControl control)
-		{
-
-			using (Freeze())
-			{
-				var child = _children.FirstOrDefault(c => c.Child == control);
-
-				if (child == null) return;
-
-				child.Dispose();
-				_children.Remove(child);
-
-				Initialize();
-			}
-		}
-
 		public override Character this[Position position]
 		{
 			get
 			{
+				var localPosition = position.UnWrap(Size.Width);
+
 				foreach (var child in _children)
-					if (child.Contains(position))
-						return child[position];
+					if (child.Contains(localPosition))
+						return child[localPosition];
 
 				return Character.Empty;
 			}
@@ -63,18 +38,18 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
-				int top = 0;
+				int left = 0;
 				foreach (var child in _children)
 				{
-					child.SetOffset(new Vector(0, top));
+					child.SetOffset(new Vector(left, 0));
 					child.SetLimits(
-						new Size(MaxSize.Width, 0),
-						new Size(MaxSize.Width, Math.Max(0, MaxSize.Height - top)));
+						new Size(0, 1),
+						new Size(Math.Max(0, MaxSize.Width * MaxSize.Height - left), 1));
 
-					top += child.Child.Size.Height;
+					left += child.Size.Width;
 				}
 
-				Resize(new Size(MaxSize.Width, top));
+				Resize(new Size(left, 1));
 			}
 		}
 
@@ -85,7 +60,10 @@ namespace ConsoleMultiplexer.Controls
 
 		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 		{
-			Update(rect);
+			var begin = rect.LeftTopCorner.Wrap(Size.Width);
+			var end = rect.RightBottomCorner.Wrap(Size.Width);
+
+			Update(new Rect(0, begin.Y, Size.Width, end.Y - begin.Y + 1));
 		}
 	}
 }
