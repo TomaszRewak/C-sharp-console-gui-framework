@@ -36,6 +36,12 @@ namespace ConsoleMultiplexer.Controls
 
 		protected override void Initialize()
 		{
+			if (MaxSize.Width == 0)
+			{
+				Redraw();
+				return;
+			}
+
 			using (Freeze())
 			{
 				int left = 0;
@@ -48,8 +54,7 @@ namespace ConsoleMultiplexer.Controls
 
 					left += child.Size.Width;
 				}
-
-				Resize(new Size(left, 1));
+				Resize(new Size(Math.Min(left, MaxSize.Width), left / MaxSize.Width + 1));
 			}
 		}
 
@@ -60,6 +65,12 @@ namespace ConsoleMultiplexer.Controls
 
 		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 		{
+			if (Size.Width == 0)
+			{
+				Redraw();
+				return;
+			}
+
 			var begin = rect.LeftTopCorner.Wrap(Size.Width);
 			var end = rect.RightBottomCorner.Wrap(Size.Width);
 

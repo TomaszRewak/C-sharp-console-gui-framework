@@ -104,7 +104,17 @@ namespace ConsoleMultiplexer.Example
 			stackPanel1.Add(new TextBlock { Text = "Test2" });
 			stackPanel1.Add(border1);
 			stackPanel1.Add(border2);
-			stackPanel1.Add(textBox);
+			stackPanel1.Add(new WrapPanel
+			{
+				Children = new IControl[] {
+					new TextBlock
+					{
+						Color = Color.LightBlue,
+						Text = @"D:\test> "
+					},
+					textBox
+				}
+			});
 
 			var border3 = new Border
 			{
@@ -206,7 +216,7 @@ namespace ConsoleMultiplexer.Example
 			var canvas = new Canvas();
 			canvas.Add(border3, new Rect(20, 10, 70, 20));
 			canvas.Add(border4, new Rect(40, 5, 60, 10));
-			canvas.Add(border5, new Rect(30, 16, 40, 10));
+			canvas.Add(border5, new Rect(35, 16, 40, 10));
 			canvas.Add(border6, new Rect(5, 5, 10, 15));
 
 			testContext.Control = canvas;
