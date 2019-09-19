@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer.Controls
 {
-	public class VerticalScrollPanel : Control, IDrawingContextListener
+	public class VerticalScrollPanel : Control, IDrawingContextListener, IInputListener
 	{
 		private DrawingContext _contentContext = DrawingContext.Dummy;
 		private DrawingContext ContentContext
@@ -97,6 +97,23 @@ namespace ConsoleMultiplexer.Controls
 		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 		{
 			Update(rect);
+		}
+		
+		void IInputListener.OnInput(InputEvent inputEvent)
+		{
+			switch(inputEvent.Key.Key)
+			{
+				case ConsoleKey.UpArrow:
+					Top -= 1;
+					return;
+				case ConsoleKey.DownArrow:
+					Top += 1;
+					break;
+				default:
+					return;
+			}
+
+			inputEvent.Handled = true;
 		}
 	}
 }

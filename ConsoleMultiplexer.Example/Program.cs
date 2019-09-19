@@ -201,13 +201,14 @@ namespace ConsoleMultiplexer.Example
 					watch.Restart();
 					frames = 0;
 					border3.BorderPlacement ^= BorderPlacement.Left;
-					scrollPanel.Top = (scrollPanel.Top + 1) % 8;
 				}
 
 				while (Console.KeyAvailable)
 				{
 					var key = Console.ReadKey(true);
-					textBox.OnInput(new InputEvent(key));
+					var inputEvent = new InputEvent(key);
+					if (!inputEvent.Handled) (textBox as IInputListener).OnInput(inputEvent);
+					if (!inputEvent.Handled) (scrollPanel as IInputListener).OnInput(inputEvent);
 				}
 				Console.CursorVisible = false;
 

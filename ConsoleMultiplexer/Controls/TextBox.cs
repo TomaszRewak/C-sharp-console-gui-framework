@@ -53,7 +53,7 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		public void OnInput(InputEvent inputEvent)
+		void IInputListener.OnInput(InputEvent inputEvent)
 		{
 			using (Freeze())
 			{
@@ -62,6 +62,9 @@ namespace ConsoleMultiplexer.Controls
 
 				switch (inputEvent.Key.Key)
 				{
+					case ConsoleKey.UpArrow:
+					case ConsoleKey.DownArrow:
+						return;
 					case ConsoleKey.LeftArrow when inputEvent.Key.Modifiers.HasFlag(ConsoleModifiers.Control):
 						CaretStart = Math.Max(0, CaretStart - 1);
 						break;
@@ -90,7 +93,7 @@ namespace ConsoleMultiplexer.Controls
 				}
 			}
 
-			inputEvent.Handled();
+			inputEvent.Handled = true;
 		}
 
 		protected override void Initialize()
