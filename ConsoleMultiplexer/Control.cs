@@ -15,7 +15,7 @@ namespace ConsoleMultiplexer
 		protected abstract void Initialize();
 
 		private IDrawingContext _context;
-		public IDrawingContext Context
+		IDrawingContext IControl.Context
 		{
 			get => _context;
 			set => Setter
@@ -100,8 +100,8 @@ namespace ConsoleMultiplexer
 					Update();
 			}
 
-			private void Redraw() => _control.Context?.Redraw(_control);
-			private void Update() => _control.Context?.Update(_control, _control._updatedRect);
+			private void Redraw() => _control._context?.Redraw(_control);
+			private void Update() => _control._context?.Update(_control, _control._updatedRect);
 		}
 	}
 }
