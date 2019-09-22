@@ -1,5 +1,4 @@
-﻿using ConsoleMultiplexer.DataStructures;
-using ConsoleMultiplexer.Helpers;
+﻿using ConsoleMultiplexer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;

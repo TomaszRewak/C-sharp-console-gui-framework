@@ -16,7 +16,9 @@ namespace ConsoleMultiplexer
 	public static class BorderPalcementExtension
 	{
 		public static bool HasBorder(this BorderPlacement self, BorderPlacement border) => (self & border) == border;
+
 		public static int Offset(this BorderPlacement self, BorderPlacement border) => HasBorder(self, border) ? 1 : 0;
+
 		public static Offset AsOffset(this BorderPlacement self)
 		{
 			return new Offset(
@@ -25,6 +27,7 @@ namespace ConsoleMultiplexer
 				self.Offset(BorderPlacement.Right),
 				self.Offset(BorderPlacement.Bottom));
 		}
+
 		public static Vector AsVector(this BorderPlacement self)
 		{
 			return new Vector(
