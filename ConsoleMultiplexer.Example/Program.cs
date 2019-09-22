@@ -1,4 +1,7 @@
 ﻿using ConsoleMultiplexer.Controls;
+using ConsoleMultiplexer.Data;
+using ConsoleMultiplexer.Input;
+using ConsoleMultiplexer.Space;
 using System;
 using System.Diagnostics;
 using System.Threading;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleMultiplexer
+namespace ConsoleMultiplexer.Space
 {
 	public struct Rect
 	{
@@ -40,7 +40,7 @@ namespace ConsoleMultiplexer
 
 		public static Rect Intersect(in Rect lhs, in Rect rhs)
 		{
-			if (lhs.IsEmpty || rhs.IsEmpty) return Rect.Empty;
+			if (lhs.IsEmpty || rhs.IsEmpty) return Empty;
 
 			var left = Math.Max(lhs.Left, rhs.Left);
 			var top = Math.Max(lhs.Top, rhs.Top);

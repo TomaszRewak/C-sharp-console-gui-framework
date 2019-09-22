@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ConsoleMultiplexer.Data;
+using ConsoleMultiplexer.Space;
+using System;
 
-namespace ConsoleMultiplexer
+namespace ConsoleMultiplexer.Common
 {
 	internal interface IDrawingContextListener
 	{

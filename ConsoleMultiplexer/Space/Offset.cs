@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleMultiplexer
+namespace ConsoleMultiplexer.Space
 {
 	public struct Offset
 	{

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleMultiplexer.Space;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

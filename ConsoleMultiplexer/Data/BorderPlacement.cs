@@ -1,6 +1,7 @@
-﻿using System;
+﻿using ConsoleMultiplexer.Space;
+using System;
 
-namespace ConsoleMultiplexer
+namespace ConsoleMultiplexer.Data
 {
 	[Flags]
 	public enum BorderPlacement
@@ -17,7 +18,7 @@ namespace ConsoleMultiplexer
 	{
 		public static bool HasBorder(this BorderPlacement self, BorderPlacement border) => (self & border) == border;
 
-		public static int Offset(this BorderPlacement self, BorderPlacement border) => HasBorder(self, border) ? 1 : 0;
+		public static int Offset(this BorderPlacement self, BorderPlacement border) => self.HasBorder(border) ? 1 : 0;
 
 		public static Offset AsOffset(this BorderPlacement self)
 		{

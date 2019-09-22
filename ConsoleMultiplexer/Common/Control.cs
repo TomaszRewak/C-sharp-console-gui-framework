@@ -1,9 +1,9 @@
-﻿using ConsoleMultiplexer.Helpers;
+﻿using ConsoleMultiplexer.Data;
+using ConsoleMultiplexer.Helpers;
+using ConsoleMultiplexer.Space;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ConsoleMultiplexer
+namespace ConsoleMultiplexer.Common
 {
 	public abstract class Control : IControl
 	{
@@ -12,7 +12,7 @@ namespace ConsoleMultiplexer
 		private Size _previousSize;
 
 		public abstract Character this[Position position] { get; }
-		public Character this[int x, int y] => this[new Position(x , y)];
+		public Character this[int x, int y] => this[new Position(x, y)];
 
 		protected abstract void Initialize();
 

@@ -1,4 +1,6 @@
 ﻿using ConsoleMultiplexer.Controls;
+using ConsoleMultiplexer.Data;
+using ConsoleMultiplexer.Space;
 using Moq;
 using NUnit.Framework;
 using System;

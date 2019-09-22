@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleMultiplexer
+namespace ConsoleMultiplexer.Input
 {
 	public interface IInputListener
 	{
