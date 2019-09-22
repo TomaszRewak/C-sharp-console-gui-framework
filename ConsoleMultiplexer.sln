@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMultiplexer.Example", "ConsoleMultiplexer.Example\ConsoleMultiplexer.Example.csproj", "{E8F3510F-8D4A-46B4-8E34-8ABE157C6B7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleMultiplexer.Example", "ConsoleMultiplexer.Example\ConsoleMultiplexer.Example.csproj", "{E8F3510F-8D4A-46B4-8E34-8ABE157C6B7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMultiplexer", "ConsoleMultiplexer\ConsoleMultiplexer.csproj", "{E3D8BC25-7EA1-4F81-9C31-BCF2DCBF77A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleMultiplexer", "ConsoleMultiplexer\ConsoleMultiplexer.csproj", "{E3D8BC25-7EA1-4F81-9C31-BCF2DCBF77A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMultiplexer.Test", "ConsoleMultiplexer.Test\ConsoleMultiplexer.Test.csproj", "{ABC28308-500E-48E9-AD7E-AA8977370D35}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E3D8BC25-7EA1-4F81-9C31-BCF2DCBF77A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3D8BC25-7EA1-4F81-9C31-BCF2DCBF77A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3D8BC25-7EA1-4F81-9C31-BCF2DCBF77A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC28308-500E-48E9-AD7E-AA8977370D35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC28308-500E-48E9-AD7E-AA8977370D35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC28308-500E-48E9-AD7E-AA8977370D35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC28308-500E-48E9-AD7E-AA8977370D35}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

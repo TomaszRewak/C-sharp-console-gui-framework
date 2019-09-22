@@ -54,7 +54,7 @@ namespace ConsoleMultiplexer
 					yield return new Position(x, y);
 		}
 
-		public static bool operator ==(in Size lhs, in Size rhs) => lhs.Equals(rhs);
+		public static bool operator ==(in Size lhs, in Size rhs) => lhs.Width == rhs.Width && lhs.Height == rhs.Height;
 		public static bool operator !=(in Size lhs, in Size rhs) => !(lhs == rhs);
 		public static bool operator <=(in Size lhs, in Size rhs) => lhs.Width <= rhs.Width && lhs.Height <= rhs.Height;
 		public static bool operator >=(in Size lhs, in Size rhs) => lhs.Width >= rhs.Width && lhs.Height >= rhs.Height;
@@ -62,6 +62,16 @@ namespace ConsoleMultiplexer
 		public override string ToString()
 		{
 			return $"({Width}, {Height})";
+		}
+
+		public override bool Equals(object obj) => obj is Size size && this == size;
+
+		public override int GetHashCode()
+		{
+			var hashCode = 859600377;
+			hashCode = hashCode * -1521134295 + Width.GetHashCode();
+			hashCode = hashCode * -1521134295 + Height.GetHashCode();
+			return hashCode;
 		}
 	}
 }
