@@ -8,69 +8,11 @@ using System.Threading;
 
 namespace ConsoleMultiplexer.Example
 {
-	class TestContext : IDrawingContext
-	{
-		public Size MinSize => new Size(100, 30);
-		public Size MaxSize => new Size(100, 30);
-
-		//Character[,] _memory = new Character[100, 30];
-
-		private IControl _control;
-		public IControl Control
-		{
-			get => _control;
-			set
-			{
-				_control = value;
-				_control.Context = this;
-				Redraw(_control);
-			}
-		}
-
-		public void Redraw(IControl control)
-		{
-			if (control != _control) return;
-
-			Update(control, control.Size.AsRect());
-		}
-
-		public void Update(IControl control, in Rect rect)
-		{
-			if (control != _control) return;
-
-			foreach (var position in rect)
-			{
-				var c = control[Position.At(position.X, position.Y)];
-
-				//if (c.Content != _memory[position.X, position.Y].Content)
-				{
-					//_memory[position.X, position.Y] = c;
-
-					var content = c.Content ?? ' ';
-					var foreground = c.Foreground ?? Color.White;
-					var background = c.Background ?? Color.Black;
-
-					Console.SetCursorPosition(position.X, position.Y);
-					Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
-				}
-			}
-
-			Console.BackgroundColor = ConsoleColor.Black;
-		}
-
-		public event SizeLimitsChangedHandler SizeLimitsChanged;
-	}
-
 	class Program
 	{
 		static void Main(string[] args)
 		{
-			Console.SetWindowSize(1, 1);
-			Console.SetBufferSize(200, 5);
-			Console.SetWindowSize(200, 50);
-			Console.CursorVisible = false;
-
-			var testContext = new TestContext();
+			var consoleManager = new ConsoleManager();
 
 			var textBlock1 = new TextBlock
 			{
@@ -222,7 +164,7 @@ namespace ConsoleMultiplexer.Example
 			canvas.Add(border5, new Rect(35, 16, 40, 10));
 			canvas.Add(border6, new Rect(5, 5, 10, 15));
 
-			testContext.Control = canvas;
+			consoleManager.Content = canvas;
 
 			int frames = 0;
 			var watch = new Stopwatch();

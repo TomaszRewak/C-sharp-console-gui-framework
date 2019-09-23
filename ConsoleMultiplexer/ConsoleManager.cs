@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	public class ConsoleManager : IDrawingContextListener, IDisposable
+	public class ConsoleManager : IDrawingContextListener
 	{
 		private DrawingContext _contentContext = DrawingContext.Dummy;
 		private DrawingContext ContentContext
@@ -16,7 +16,7 @@ namespace ConsoleMultiplexer
 			get => _contentContext;
 			set => Setter
 				.SetDisposable(ref _contentContext, value)
-				.Then(Redraw);
+				.Then(Initialize);
 		}
 
 		private IControl _content;
@@ -28,44 +28,41 @@ namespace ConsoleMultiplexer
 				.Then(BindContent);
 		}
 
-		public Size Size { get; set; }
+		private Size _size;
+		public Size Size
+		{
+			get => _size;
+			set => Setter
+				.Set(ref _size, ClipSize(value))
+				.Then(Initialize);
+		}
 
-		public Size MinSize => new Size(100, 30);
-		public Size MaxSize => new Size(100, 30);
+		public ConsoleManager()
+		{
+			Size = new Size(Console.WindowWidth, Console.WindowHeight);
+			Console.CursorVisible = false;
+		}
 
 		//Character[,] _memory = new Character[100, 30];
 
-		private IControl _control;
-		public IControl Control
+		private void Initialize()
 		{
-			get => _control;
-			set
-			{
-				_control = value;
-				_control.Context = this;
-				Redraw(_control);
-			}
+			ContentContext.SetLimits(Size, Size);
+			Redraw();
 		}
 
-		public void Redraw()
+		private void Redraw()
 		{
-			if (control != _control) return;
-
-			Update(control, control.Size.AsRect());
+			Update(ContentContext.Size.AsRect());
 		}
 
-		public void Update(Rect rect)
+		private void Update(Rect rect)
 		{
-
-		}
-
-		public void Update(IControl control, in Rect rect)
-		{
-			if (control != _control) return;
+			CheckConsoleSize();
 
 			foreach (var position in rect)
 			{
-				var c = control[Position.At(position.X, position.Y)];
+				var c = ContentContext[position];
 
 				//if (c.Content != _memory[position.X, position.Y].Content)
 				{
@@ -75,25 +72,46 @@ namespace ConsoleMultiplexer
 					var foreground = c.Foreground ?? Color.White;
 					var background = c.Background ?? Color.Black;
 
-					Console.SetCursorPosition(position.X, position.Y);
-					Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
+					try
+					{
+						Console.SetCursorPosition(position.X, position.Y);
+						Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
+					}
+					catch (ArgumentOutOfRangeException)
+					{ }
 				}
 			}
 
 			Console.BackgroundColor = ConsoleColor.Black;
 		}
 
-		private void BindContent()
+		private void CheckConsoleSize()
 		{
-			ContentContext = new DrawingContext(this, Control);
+			if (Console.BufferWidth == Size.Width && Console.BufferHeight == Size.Height)
+				return;
+
+			try
+			{
+				Console.SetWindowSize(Size.Width, Size.Height);
+				Console.SetBufferSize(Size.Width, Size.Height);
+			}
+			catch (ArgumentOutOfRangeException) { }
+			catch (System.IO.IOException) { }
 		}
 
-		public void OnRedraw(DrawingContext drawingContext)
+		private void BindContent()
+		{
+			ContentContext = new DrawingContext(this, Content);
+		}
+
+		private static Size ClipSize(in Size size) => Size.Clip(new Size(1, 1), size, new Size(Console.LargestWindowWidth, Console.LargestWindowHeight));
+
+		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
 		{
 			Redraw();
 		}
 
-		public void OnUpdate(DrawingContext drawingContext, Rect rect)
+		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 		{
 			Update(rect);
 		}
