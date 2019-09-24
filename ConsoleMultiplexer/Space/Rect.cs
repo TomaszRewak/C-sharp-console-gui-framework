@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleMultiplexer.Space
 {
-	public struct Rect
+	public readonly struct Rect
 	{
 		public int Left { get; }
 		public int Top { get; }
