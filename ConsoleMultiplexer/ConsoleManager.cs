@@ -87,16 +87,17 @@ namespace ConsoleMultiplexer
 
 		private void CheckConsoleSize()
 		{
-			if (Console.BufferWidth == Size.Width && Console.BufferHeight == Size.Height)
-				return;
-
 			try
 			{
-				Console.SetWindowSize(Size.Width, Size.Height);
-				Console.SetBufferSize(Size.Width, Size.Height);
+				if (Console.BufferWidth != Console.WindowWidth || Console.BufferHeight != Console.WindowHeight)
+					return;
+
+				Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
 			}
 			catch (ArgumentOutOfRangeException) { }
 			catch (System.IO.IOException) { }
+
+			Size = new Size(Console.WindowWidth, Console.WindowHeight);
 		}
 
 		private void BindContent()
