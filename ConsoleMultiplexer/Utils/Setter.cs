@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleMultiplexer.Helpers
+namespace ConsoleMultiplexer.Utils
 {
 	internal class Setter
 	{

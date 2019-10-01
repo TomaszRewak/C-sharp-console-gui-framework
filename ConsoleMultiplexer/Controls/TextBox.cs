@@ -1,8 +1,8 @@
 ﻿using ConsoleMultiplexer.Common;
 using ConsoleMultiplexer.Data;
-using ConsoleMultiplexer.Helpers;
 using ConsoleMultiplexer.Input;
 using ConsoleMultiplexer.Space;
+using ConsoleMultiplexer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,7 +1,7 @@
 ﻿using ConsoleMultiplexer.Common;
 using ConsoleMultiplexer.Data;
-using ConsoleMultiplexer.Helpers;
 using ConsoleMultiplexer.Space;
+using ConsoleMultiplexer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,13 +10,16 @@ namespace ConsoleMultiplexer
 {
 	public class ConsoleManager : IDrawingContextListener
 	{
+		private bool _frozen;
+
 		private DrawingContext _contentContext = DrawingContext.Dummy;
 		private DrawingContext ContentContext
 		{
 			get => _contentContext;
 			set => Setter
 				.SetDisposable(ref _contentContext, value)
-				.Then(Initialize);
+				.Then(Initialize)
+				.Then(Redraw);
 		}
 
 		private IControl _content;
@@ -34,7 +37,8 @@ namespace ConsoleMultiplexer
 			get => _size;
 			set => Setter
 				.Set(ref _size, ClipSize(value))
-				.Then(Initialize);
+				.Then(Initialize)
+				.Then(Redraw);
 		}
 
 		public ConsoleManager()
@@ -58,6 +62,8 @@ namespace ConsoleMultiplexer
 
 		private void Update(Rect rect)
 		{
+			Console.CursorVisible = false;
+
 			CheckConsoleSize();
 
 			foreach (var position in rect)
@@ -83,6 +89,7 @@ namespace ConsoleMultiplexer
 			}
 
 			Console.BackgroundColor = ConsoleColor.Black;
+			Console.SetCursorPosition(0, 0);
 		}
 
 		private void CheckConsoleSize()
@@ -90,9 +97,7 @@ namespace ConsoleMultiplexer
 			try
 			{
 				if (Console.BufferWidth != Console.WindowWidth || Console.BufferHeight != Console.WindowHeight)
-					return;
-
-				Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
+					Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
 			}
 			catch (ArgumentOutOfRangeException) { }
 			catch (System.IO.IOException) { }
