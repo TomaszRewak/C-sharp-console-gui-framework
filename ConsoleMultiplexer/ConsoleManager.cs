@@ -1,4 +1,5 @@
 ﻿using ConsoleMultiplexer.Common;
+using ConsoleMultiplexer.Controls;
 using ConsoleMultiplexer.Data;
 using ConsoleMultiplexer.Space;
 using ConsoleMultiplexer.Utils;
@@ -8,19 +9,9 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	public class ConsoleManager : IDrawingContextListener
+	public class ConsoleManager : IDrawingContext
 	{
-		private bool _frozen;
-
-		private DrawingContext _contentContext = DrawingContext.Dummy;
-		private DrawingContext ContentContext
-		{
-			get => _contentContext;
-			set => Setter
-				.SetDisposable(ref _contentContext, value)
-				.Then(Initialize)
-				.Then(Redraw);
-		}
+		private ConsoleWrapper _consoleWrapper;
 
 		private IControl _content;
 		public IControl Content
@@ -37,8 +28,7 @@ namespace ConsoleMultiplexer
 			get => _size;
 			set => Setter
 				.Set(ref _size, ClipSize(value))
-				.Then(Initialize)
-				.Then(Redraw);
+				.Then(Initialize);
 		}
 
 		public ConsoleManager()
