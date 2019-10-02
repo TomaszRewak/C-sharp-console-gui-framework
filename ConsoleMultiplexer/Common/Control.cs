@@ -7,7 +7,7 @@ namespace ConsoleMultiplexer.Common
 {
 	public abstract class Control : IControl
 	{
-		private int _freezeCount;
+		private FreezeLock _freezeLock;
 		private Rect _updatedRect;
 		private Size _previousSize;
 
@@ -75,26 +75,25 @@ namespace ConsoleMultiplexer.Common
 
 			private bool RequiresRedraw => _control.Size != _control._previousSize;
 			private bool RequiresUpdate => !_control._updatedRect.IsEmpty;
-			private bool IsUnfreezed => _control._freezeCount == 0;
 
 			public FreezeContext(Control control)
 			{
 				_control = control;
 
-				if (IsUnfreezed)
+				if (_control._freezeLock.IsUnfrozen)
 				{
 					_control._previousSize = _control.Size;
 					_control._updatedRect = Rect.Empty;
 				}
 
-				_control._freezeCount++;
+				_control._freezeLock.Freeze();
 			}
 
 			public void Dispose()
 			{
-				_control._freezeCount--;
+				_control._freezeLock.Unfreeze();
 
-				if (!IsUnfreezed) return;
+				if (_control._freezeLock.IsFrozen) return;
 
 				if (RequiresRedraw)
 					Redraw();
