@@ -190,7 +190,6 @@ namespace ConsoleMultiplexer.Example
 					if (!inputEvent.Handled) (textBox as IInputListener).OnInput(inputEvent);
 					if (!inputEvent.Handled) (scrollPanel as IInputListener).OnInput(inputEvent);
 				}
-				Console.CursorVisible = false;
 
 				frames++;
 			}

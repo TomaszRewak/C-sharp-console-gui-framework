@@ -1,4 +1,5 @@
-﻿using ConsoleMultiplexer.Common;
+﻿using ConsoleMultiplexer.Buffering;
+using ConsoleMultiplexer.Common;
 using ConsoleMultiplexer.Controls;
 using ConsoleMultiplexer.Data;
 using ConsoleMultiplexer.Space;
@@ -11,6 +12,9 @@ namespace ConsoleMultiplexer
 {
 	public class ConsoleManager : IDrawingContextListener
 	{
+		private readonly ConsoleBuffer _buffer = new ConsoleBuffer();
+		private FreezeLock freezeLock;
+
 		private DrawingContext _contentContext = DrawingContext.Dummy;
 		private DrawingContext ContentContext
 		{
@@ -29,26 +33,19 @@ namespace ConsoleMultiplexer
 				.Then(BindContent);
 		}
 
-		private Size _size;
-		public Size Size
-		{
-			get => _size;
-			set => Setter
-				.Set(ref _size, ClipSize(value))
-				.Then(Initialize);
-		}
-
-		public ConsoleManager()
-		{
-			Size = new Size(Console.WindowWidth, Console.WindowHeight);
-			Console.CursorVisible = false;
-		}
-
 		//Character[,] _memory = new Character[100, 30];
 
 		private void Initialize()
 		{
-			ContentContext.SetLimits(Size, Size);
+			var consoleSize = new Size(Console.WindowWidth, Console.WindowHeight);
+
+			_buffer.Initialize(consoleSize);
+			Console.Clear();
+
+			freezeLock.Freeze();
+			ContentContext.SetLimits(consoleSize, consoleSize);
+			freezeLock.Unfreeze();
+
 			Redraw();
 		}
 
@@ -59,47 +56,33 @@ namespace ConsoleMultiplexer
 
 		private void Update(Rect rect)
 		{
-			Console.CursorVisible = false;
+			rect = ClipRect(rect);
 
-			CheckConsoleSize();
+			Console.CursorVisible = false;
 
 			foreach (var position in rect)
 			{
-				var c = ContentContext[position];
+				var character = ContentContext[position];
 
-				//if (c.Content != _memory[position.X, position.Y].Content)
+				if (!_buffer.Update(position, character)) continue;
+
+				var content = character.Content ?? ' ';
+				var foreground = character.Foreground ?? Color.White;
+				var background = character.Background ?? Color.Black;
+
+				try
 				{
-					//_memory[position.X, position.Y] = c;
-
-					var content = c.Content ?? ' ';
-					var foreground = c.Foreground ?? Color.White;
-					var background = c.Background ?? Color.Black;
-
-					try
-					{
-						Console.SetCursorPosition(position.X, position.Y);
-						Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
-					}
-					catch (ArgumentOutOfRangeException)
-					{ }
+					Console.SetCursorPosition(position.X, position.Y);
+					Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
 				}
+				catch (ArgumentOutOfRangeException)
+				{ }
 			}
-
-			Console.BackgroundColor = ConsoleColor.Black;
-			Console.SetCursorPosition(0, 0);
 		}
 
-		private void CheckConsoleSize()
+		public void AdjustSize()
 		{
-			try
-			{
-				if (Console.BufferWidth != Console.WindowWidth || Console.BufferHeight != Console.WindowHeight)
-					Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
-			}
-			catch (ArgumentOutOfRangeException) { }
-			catch (System.IO.IOException) { }
-
-			Size = new Size(Console.WindowWidth, Console.WindowHeight);
+			Initialize();
 		}
 
 		private void BindContent()
@@ -107,15 +90,19 @@ namespace ConsoleMultiplexer
 			ContentContext = new DrawingContext(this, Content);
 		}
 
-		private static Size ClipSize(in Size size) => Size.Clip(new Size(1, 1), size, new Size(Console.LargestWindowWidth, Console.LargestWindowHeight));
+		private static Rect ClipRect(in Rect rect) => Rect.Intersect(rect, new Rect(0, 0, Console.WindowWidth, Console.WindowHeight));
 
 		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
 		{
+			if (freezeLock.IsFrozen) return;
+
 			Redraw();
 		}
 
 		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 		{
+			if (freezeLock.IsFrozen) return;
+
 			Update(rect);
 		}
 	}
