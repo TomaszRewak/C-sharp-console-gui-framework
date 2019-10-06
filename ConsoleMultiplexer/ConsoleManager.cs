@@ -9,9 +9,16 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	public class ConsoleManager : IDrawingContext
+	public class ConsoleManager : IDrawingContextListener
 	{
-		private ConsoleWrapper _consoleWrapper;
+		private DrawingContext _contentContext = DrawingContext.Dummy;
+		private DrawingContext ContentContext
+		{
+			get => _contentContext;
+			set => Setter
+				.Set(ref _contentContext, value)
+				.Then(Initialize);
+		}
 
 		private IControl _content;
 		public IControl Content
@@ -111,7 +118,5 @@ namespace ConsoleMultiplexer
 		{
 			Update(rect);
 		}
-
-		public event SizeLimitsChangedHandler SizeLimitsChanged;
 	}
 }
