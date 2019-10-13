@@ -8,6 +8,20 @@ using System.Threading;
 
 namespace ConsoleMultiplexer.Example
 {
+	class Person
+	{
+		public string Name { get; set; }
+		public string Surname { get; set; }
+		public DateTime BirthDate { get; set; }
+
+		public Person(string name, string surname, DateTime birthDate)
+		{
+			Name = name;
+			Surname = surname;
+			BirthDate = birthDate;
+		}
+	}
+
 	class Program
 	{
 		static void Main(string[] args)
@@ -183,12 +197,32 @@ namespace ConsoleMultiplexer.Example
 				Content = grid
 			};
 
+			var border8 = new Border
+			{
+				Content = new DataGrid<Person>
+				{
+					Columns = new[]
+					{
+						new DataGrid<Person>.ColumnDefinition("Name", 10, p=> p.Name),
+						new DataGrid<Person>.ColumnDefinition("Surname", 10, p=> p.Surname),
+						new DataGrid<Person>.ColumnDefinition("Birth date", 10, p => p.BirthDate.ToShortDateString(), background: p => DateTime.Now.Year < p.BirthDate.Year + 18 ? new Color(255, 0,0) : new Color(0, 0, 255))
+					},
+					Data = new[]
+					{
+						new Person("John", "Connor", new DateTime(1985, 2, 28)),
+						new Person("Ellen", "Ripley", new DateTime(2092, 1, 1)),
+						new Person("Jan", "Kowalski", new DateTime(1990, 4, 10)),
+					}
+				}
+			};
+
 			var canvas = new Canvas();
 			canvas.Add(border3, new Rect(20, 10, 70, 20));
 			canvas.Add(border4, new Rect(40, 5, 60, 10));
 			canvas.Add(border5, new Rect(35, 16, 40, 10));
 			canvas.Add(border6, new Rect(5, 5, 10, 15));
 			canvas.Add(border7, new Rect(80, 20, 20, 15));
+			canvas.Add(border8, new Rect(20, 40, 100, 10));
 
 			consoleManager.Content = canvas;
 
