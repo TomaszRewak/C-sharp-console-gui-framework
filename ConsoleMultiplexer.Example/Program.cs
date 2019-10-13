@@ -216,6 +216,16 @@ namespace ConsoleMultiplexer.Example
 				}
 			};
 
+			var border9 = new Border
+			{
+				Content = new DockPanel
+				{
+					Placement = DockPanel.DockedContorlPlacement.Botton,
+					DockedControl = new WrapPanel { Children = new[] { new TextBlock { Text = "Docked text" } } },
+					FillingControl = new Background { Fill = new Character(null, background: new Color(100, 110, 120)) }
+				}
+			};
+
 			var canvas = new Canvas();
 			canvas.Add(border3, new Rect(20, 10, 70, 20));
 			canvas.Add(border4, new Rect(40, 5, 60, 10));
@@ -223,6 +233,7 @@ namespace ConsoleMultiplexer.Example
 			canvas.Add(border6, new Rect(5, 5, 10, 15));
 			canvas.Add(border7, new Rect(80, 20, 20, 15));
 			canvas.Add(border8, new Rect(20, 40, 100, 10));
+			canvas.Add(border9, new Rect(5, 30, 7, 15));
 
 			consoleManager.Content = canvas;
 
