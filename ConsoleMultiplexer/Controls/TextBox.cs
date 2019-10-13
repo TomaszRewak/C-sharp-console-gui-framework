@@ -11,7 +11,7 @@ namespace ConsoleMultiplexer.Controls
 {
 	public class TextBox : Control, IInputListener
 	{
-		private string _text;
+		private string _text = string.Empty;
 		public string Text
 		{
 			get => _text;
@@ -89,6 +89,8 @@ namespace ConsoleMultiplexer.Controls
 						Text = $"{Text.Substring(0, CaretStart - 1)}{Text.Substring(CaretStart)}";
 						CaretStart = CaretEnd = CaretStart - 1;
 						break;
+					case ConsoleKey key when char.IsControl(inputEvent.Key.KeyChar):
+						return;
 					default:
 						Text = Text ?? "";
 						Text = $"{Text.Substring(0, CaretStart)}{inputEvent.Key.KeyChar}{Text.Substring(CaretEnd)}";
