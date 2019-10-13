@@ -188,7 +188,7 @@ namespace ConsoleMultiplexer.Example
 			canvas.Add(border4, new Rect(40, 5, 60, 10));
 			canvas.Add(border5, new Rect(35, 16, 40, 10));
 			canvas.Add(border6, new Rect(5, 5, 10, 15));
-			canvas.Add(border7, new Rect(60, 20, 20, 15));
+			canvas.Add(border7, new Rect(80, 20, 20, 15));
 
 			consoleManager.Content = canvas;
 

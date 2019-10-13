@@ -34,11 +34,11 @@ namespace ConsoleMultiplexer.Controls
 		{
 			get => _top;
 			set => Setter
-				.Set(ref _top, value)
+				.Set(ref _top, Math.Min(ContentContext.Size.Height - Size.Height, Math.Max(0, value)))
 				.Then(Initialize);
 		}
 
-		private Character _scrollBarForeground = new Character('▓', foreground: Color.LightBlue);
+		private Character _scrollBarForeground = new Character('▀', foreground: Color.LightBlue);
 		public Character ScrollBarForeground
 		{
 			get => _scrollBarForeground;
@@ -47,7 +47,7 @@ namespace ConsoleMultiplexer.Controls
 				.Then(RedrawScrollBar);
 		}
 
-		private Character _scrollBarBackground = new Character('▒', foreground: Color.Gray);
+		private Character _scrollBarBackground = new Character('║', foreground: Color.Gray);
 		public Character ScrollBarBackground
 		{
 			get => _scrollBarBackground;
