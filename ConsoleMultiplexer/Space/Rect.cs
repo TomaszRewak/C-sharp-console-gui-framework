@@ -27,6 +27,9 @@ namespace ConsoleMultiplexer.Space
 			Height = height;
 		}
 
+		public Rect(in Vector offset, in Size size) : this(offset.X, offset.Y, size.Width, size.Height)
+		{ }
+
 		public static Rect Empty => new Rect(0, 0, 0, 0);
 
 		public static Rect Containing(in Position position) => new Rect(position.X, position.Y, 1, 1);

@@ -158,11 +158,37 @@ namespace ConsoleMultiplexer.Example
 				}
 			};
 
+			var grid = new Grid
+			{
+				Columns = new[]
+					{
+						new Grid.ColumnDefinition(2),
+						new Grid.ColumnDefinition(3),
+						new Grid.ColumnDefinition(4)
+					},
+				Rows = new[]
+					{
+						new Grid.RowDefinition(3),
+						new Grid.RowDefinition(4),
+						new Grid.RowDefinition(5),
+					}
+			};
+
+			for (int i = 0; i < 9; i++)
+				grid.AddChild(i / 3, i % 3, new Background { Fill = new Character(null, background: i % 2 == 0 ? new Color(255, 255, 255) : new Color(200, 100, 50)) });
+			grid.AddChild(1, 1, new WrapPanel { Children = new[] { new TextBlock { Text = "Middle one" } } });
+
+			var border7 = new Border
+			{
+				Content = grid
+			};
+
 			var canvas = new Canvas();
 			canvas.Add(border3, new Rect(20, 10, 70, 20));
 			canvas.Add(border4, new Rect(40, 5, 60, 10));
 			canvas.Add(border5, new Rect(35, 16, 40, 10));
 			canvas.Add(border6, new Rect(5, 5, 10, 15));
+			canvas.Add(border7, new Rect(60, 20, 20, 15));
 
 			consoleManager.Content = canvas;
 
