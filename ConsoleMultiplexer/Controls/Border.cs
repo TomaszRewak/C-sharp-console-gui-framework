@@ -37,12 +37,12 @@ namespace ConsoleMultiplexer.Controls
 				.Then(Initialize);
 		}
 
-		private Color? _borderColor;
-		public Color? BorderColor
+		private BorderStyle _borderStyle = BorderStyle.Double;
+		public BorderStyle BorderStyle
 		{
-			get => _borderColor;
+			get => _borderStyle;
 			set => Setter
-				.Set(ref _borderColor, value)
+				.Set(ref _borderStyle, value)
 				.Then(Redraw);
 		}
 
@@ -56,28 +56,28 @@ namespace ConsoleMultiplexer.Controls
 					return ContentContext[position];
 
 				if (position.X == 0 && position.Y == 0 && BorderPlacement.HasBorder(BorderPlacement.Top | BorderPlacement.Left))
-					return new Character('╔', BorderColor);
+					return _borderStyle.TopLeft;
 
 				if (position.X == Size.Width - 1 && position.Y == 0 && BorderPlacement.HasBorder(BorderPlacement.Top | BorderPlacement.Right))
-					return new Character('╗', BorderColor);
+					return _borderStyle.TopRight;
 
 				if (position.X == 0 && position.Y == Size.Height - 1 && BorderPlacement.HasBorder(BorderPlacement.Bottom | BorderPlacement.Left))
-					return new Character('╚', BorderColor);
+					return _borderStyle.BottomLeft;
 
 				if (position.X == Size.Width - 1 && position.Y == Size.Height - 1 && BorderPlacement.HasBorder(BorderPlacement.Bottom | BorderPlacement.Right))
-					return new Character('╝', BorderColor);
+					return _borderStyle.BottomRight;
 
 				if (position.X == 0 && BorderPlacement.HasBorder(BorderPlacement.Left))
-					return new Character('║', BorderColor);
+					return _borderStyle.Left;
 
 				if (position.X == Size.Width - 1 && BorderPlacement.HasBorder(BorderPlacement.Right))
-					return new Character('║', BorderColor);
+					return _borderStyle.Right;
 
 				if (position.Y == 0 && BorderPlacement.HasBorder(BorderPlacement.Top))
-					return new Character('═', BorderColor);
+					return _borderStyle.Top;
 
 				if (position.Y == Size.Height - 1 && BorderPlacement.HasBorder(BorderPlacement.Bottom))
-					return new Character('═', BorderColor);
+					return _borderStyle.Bottom;
 
 				return Character.Empty;
 			}

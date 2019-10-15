@@ -53,7 +53,7 @@ namespace ConsoleMultiplexer.Example
 				{
 					Content = textBlock2
 				},
-				BorderColor = new Color(200, 0, 0)
+				BorderStyle = BorderStyle.Double.WithColor(new Color(200, 0, 0))
 			};
 
 			var textBox = new TextBox();
@@ -79,7 +79,7 @@ namespace ConsoleMultiplexer.Example
 			{
 				BorderPlacement = BorderPlacement.All,
 				Content = stackPanel1,
-				BorderColor = new Color(100, 100, 50)
+				BorderStyle = BorderStyle.Double.WithColor(new Color(100, 100, 50))
 			};
 
 			//var textBlock2 = new TextBlock
@@ -146,7 +146,8 @@ namespace ConsoleMultiplexer.Example
 
 			var border5 = new Border
 			{
-				Content = scrollPanel
+				Content = scrollPanel,
+				BorderStyle = BorderStyle.Single
 			};
 
 			var textBlock4 = new TextBlock
@@ -232,8 +233,8 @@ namespace ConsoleMultiplexer.Example
 			canvas.Add(border5, new Rect(35, 16, 40, 10));
 			canvas.Add(border6, new Rect(5, 5, 10, 15));
 			canvas.Add(border7, new Rect(80, 20, 20, 15));
-			canvas.Add(border8, new Rect(20, 40, 100, 10));
-			canvas.Add(border9, new Rect(5, 30, 7, 15));
+			canvas.Add(border8, new Rect(20, 30, 100, 10));
+			canvas.Add(border9, new Rect(5, 25, 7, 15));
 
 			consoleManager.Content = canvas;
 

@@ -21,6 +21,8 @@ namespace ConsoleMultiplexer.Data
 			Background = background;
 		}
 
+		public Character WithForeground(in Color? foreground) => new Character(Content, foreground, Background);
+
 		public static Character Empty => new Character();
 
 		public static bool operator==(in Character lhs, in Character rhs)
