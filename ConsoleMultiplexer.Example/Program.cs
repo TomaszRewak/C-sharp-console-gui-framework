@@ -26,8 +26,6 @@ namespace ConsoleMultiplexer.Example
 	{
 		static void Main(string[] args)
 		{
-			var consoleManager = new ConsoleManager();
-
 			var textBlock1 = new TextBlock
 			{
 				Text = "Heheszki1",
@@ -236,7 +234,7 @@ namespace ConsoleMultiplexer.Example
 			canvas.Add(border8, new Rect(20, 30, 100, 10));
 			canvas.Add(border9, new Rect(5, 25, 7, 15));
 
-			consoleManager.Content = canvas;
+			ConsoleManager.Content = canvas;
 
 			int frames = 0;
 			var watch = new Stopwatch();

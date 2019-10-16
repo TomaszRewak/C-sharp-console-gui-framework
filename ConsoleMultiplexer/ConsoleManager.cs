@@ -10,22 +10,37 @@ using System.Text;
 
 namespace ConsoleMultiplexer
 {
-	public class ConsoleManager : IDrawingContextListener
+	public static class ConsoleManager
 	{
-		private readonly ConsoleBuffer _buffer = new ConsoleBuffer();
-		private FreezeLock freezeLock;
+		private class ConsoleManagerDrawingContextListener : IDrawingContextListener
+		{
+			void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
+			{
+				if (freezeLock.IsFrozen) return;
+				Redraw();
+			}
 
-		private DrawingContext _contentContext = DrawingContext.Dummy;
-		private DrawingContext ContentContext
+			void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
+			{
+				if (freezeLock.IsFrozen) return;
+				Update(rect);
+			}
+		}
+
+		private static readonly ConsoleBuffer _buffer = new ConsoleBuffer();
+		private static FreezeLock freezeLock;
+
+		private static DrawingContext _contentContext = DrawingContext.Dummy;
+		private static DrawingContext ContentContext
 		{
 			get => _contentContext;
 			set => Setter
-				.Set(ref _contentContext, value)
+				.SetDisposable(ref _contentContext, value)
 				.Then(Initialize);
 		}
 
-		private IControl _content;
-		public IControl Content
+		private static IControl _content;
+		public static IControl Content
 		{
 			get => _content;
 			set => Setter
@@ -33,9 +48,7 @@ namespace ConsoleMultiplexer
 				.Then(BindContent);
 		}
 
-		//Character[,] _memory = new Character[100, 30];
-
-		private void Initialize()
+		private static void Initialize()
 		{
 			var consoleSize = new Size(Console.WindowWidth, Console.WindowHeight);
 
@@ -49,12 +62,12 @@ namespace ConsoleMultiplexer
 			Redraw();
 		}
 
-		private void Redraw()
+		private static void Redraw()
 		{
 			Update(ContentContext.Size.AsRect());
 		}
 
-		private void Update(Rect rect)
+		private static void Update(Rect rect)
 		{
 			rect = ClipRect(rect);
 
@@ -80,30 +93,16 @@ namespace ConsoleMultiplexer
 			}
 		}
 
-		public void AdjustSize()
+		public static void AdjustSize()
 		{
 			Initialize();
 		}
 
-		private void BindContent()
+		private static void BindContent()
 		{
-			ContentContext = new DrawingContext(this, Content);
+			ContentContext = new DrawingContext(new ConsoleManagerDrawingContextListener(), Content);
 		}
 
 		private static Rect ClipRect(in Rect rect) => Rect.Intersect(rect, new Rect(0, 0, Console.WindowWidth, Console.WindowHeight));
-
-		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
-		{
-			if (freezeLock.IsFrozen) return;
-
-			Redraw();
-		}
-
-		void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
-		{
-			if (freezeLock.IsFrozen) return;
-
-			Update(rect);
-		}
 	}
 }
