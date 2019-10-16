@@ -38,5 +38,16 @@ namespace ConsoleMultiplexer.Data
 		{
 			return obj is Character character && this == character;
 		}
+
+		public override int GetHashCode()
+		{
+			var hashCode = -1661473088;
+			hashCode = hashCode * -1521134295 + EqualityComparer<char?>.Default.GetHashCode(Content);
+			hashCode = hashCode * -1521134295 + EqualityComparer<Color?>.Default.GetHashCode(Foreground);
+			hashCode = hashCode * -1521134295 + EqualityComparer<Color?>.Default.GetHashCode(Background);
+			hashCode = hashCode * -1521134295 + IsNewLine.GetHashCode();
+			hashCode = hashCode * -1521134295 + IsEmpty.GetHashCode();
+			return hashCode;
+		}
 	}
 }

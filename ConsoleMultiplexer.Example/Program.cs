@@ -24,7 +24,7 @@ namespace ConsoleMultiplexer.Example
 
 	class Program
 	{
-		static void Main(string[] args)
+		static void Main()
 		{
 			var textBlock1 = new TextBlock
 			{

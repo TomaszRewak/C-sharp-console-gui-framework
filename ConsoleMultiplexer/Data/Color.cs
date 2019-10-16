@@ -36,5 +36,14 @@ namespace ConsoleMultiplexer.Data
 		{
 			return obj is Color color && this == color;
 		}
+
+		public override int GetHashCode()
+		{
+			var hashCode = -1058441243;
+			hashCode = hashCode * -1521134295 + Red.GetHashCode();
+			hashCode = hashCode * -1521134295 + Green.GetHashCode();
+			hashCode = hashCode * -1521134295 + Blue.GetHashCode();
+			return hashCode;
+		}
 	}
 }
