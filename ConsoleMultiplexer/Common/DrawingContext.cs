@@ -1,7 +1,9 @@
 ﻿using ConsoleMultiplexer.Data;
 using ConsoleMultiplexer.Space;
 using System;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("ConsoleMultiplexer.Test")]
 namespace ConsoleMultiplexer.Common
 {
 	internal interface IDrawingContextListener
