@@ -38,8 +38,9 @@ namespace ConsoleMultiplexer.Common
 		{
 			using (Freeze())
 			{
+				_updatedRect = Rect.Surround(_updatedRect, Rect.OfSize(Size));
 				Size = Size.Clip(MinSize, newSize, MaxSize);
-				_updatedRect = Rect.OfSize(Size);
+				_updatedRect = Rect.Surround(_updatedRect, Rect.OfSize(Size));
 			}
 		}
 
@@ -49,7 +50,7 @@ namespace ConsoleMultiplexer.Common
 				_updatedRect = Rect.Surround(_updatedRect, rect);
 		}
 
-		protected FreezeContext Freeze()
+		protected internal FreezeContext Freeze()
 		{
 			return new FreezeContext(this);
 		}
@@ -69,7 +70,7 @@ namespace ConsoleMultiplexer.Common
 			Initialize();
 		}
 
-		protected struct FreezeContext : IDisposable
+		protected internal struct FreezeContext : IDisposable
 		{
 			private readonly Control _control;
 

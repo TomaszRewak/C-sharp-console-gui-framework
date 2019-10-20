@@ -64,7 +64,7 @@ namespace ConsoleMultiplexer.Common
 
 			Update(Child, Rect.OfSize(Size));
 			Offset = offset;
-			Redraw(Child);
+			Update(Child, Rect.OfSize(Size));
 		}
 
 		public bool Contains(in Position position)
