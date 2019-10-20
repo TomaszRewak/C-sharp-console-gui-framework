@@ -61,7 +61,11 @@ namespace ConsoleMultiplexer.Common
 
 		public void SetOffset(in Vector offset)
 		{
+			if (offset == Offset) return;
+
+			Update(Child, Rect.OfSize(Size));
 			Offset = offset;
+			Redraw(Child);
 		}
 
 		public bool Contains(in Position position)

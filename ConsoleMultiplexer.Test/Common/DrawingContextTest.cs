@@ -17,5 +17,10 @@ namespace ConsoleMultiplexer.Test.Common
 
 			Assert.AreEqual(Size.Empty, drawingContext.Size);
 		}
+
+		[Test]
+		public void DrawingContext_()
+		{
+		}
 	}
 }

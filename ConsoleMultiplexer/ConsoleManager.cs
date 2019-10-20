@@ -2,6 +2,7 @@
 using ConsoleMultiplexer.Common;
 using ConsoleMultiplexer.Controls;
 using ConsoleMultiplexer.Data;
+using ConsoleMultiplexer.Input;
 using ConsoleMultiplexer.Space;
 using ConsoleMultiplexer.Utils;
 using System;
@@ -96,6 +97,21 @@ namespace ConsoleMultiplexer
 		public static void AdjustSize()
 		{
 			Initialize();
+		}
+
+		public static void ReadInput(IReadOnlyCollection<IInputListener> controls)
+		{
+			while (Console.KeyAvailable)
+			{
+				var key = Console.ReadKey(true);
+				var inputEvent = new InputEvent(key);
+
+				foreach(var control in controls)
+				{
+					control.OnInput(inputEvent);
+					if (inputEvent.Handled) break;
+				}
+			}
 		}
 
 		private static void BindContent()

@@ -80,23 +80,6 @@ namespace ConsoleMultiplexer.Example
 				BorderStyle = BorderStyle.Double.WithColor(new Color(100, 100, 50))
 			};
 
-			//var textBlock2 = new TextBlock
-			//{
-			//	Text = "Heheszki2"
-			//};
-
-			//var stackPanel = new VerticalStackPanel();
-			//stackPanel.Add(new Border { Content = new TextBlock { Text = "Counter" } });
-			//stackPanel.Add(textBlock1);
-			//stackPanel.Add(new Border { Content = new TextBlock { Text = "Stoper" } });
-			//stackPanel.Add(textBlock2);
-
-			//var border = new Border()
-			//{
-			//	BorderPlacement = BorderPlacement.Left | BorderPlacement.Top | BorderPlacement.Right,
-			//	Content = stackPanel
-			//};
-
 			var border4 = new Border
 			{
 				Content = new Background
@@ -240,6 +223,12 @@ namespace ConsoleMultiplexer.Example
 			var watch = new Stopwatch();
 			watch.Start();
 
+			var inputs = new IInputListener[]
+			{
+				textBox,
+				scrollPanel
+			};
+
 			for (int i = 0; ; i++)
 			{
 				textBlock1.Text = $"{i}";
@@ -253,13 +242,7 @@ namespace ConsoleMultiplexer.Example
 					textBlock4.Text = new Random().Next().ToString();
 				}
 
-				while (Console.KeyAvailable)
-				{
-					var key = Console.ReadKey(true);
-					var inputEvent = new InputEvent(key);
-					if (!inputEvent.Handled) (textBox as IInputListener).OnInput(inputEvent);
-					if (!inputEvent.Handled) (scrollPanel as IInputListener).OnInput(inputEvent);
-				}
+				ConsoleManager.ReadInput(inputs);
 
 				frames++;
 			}

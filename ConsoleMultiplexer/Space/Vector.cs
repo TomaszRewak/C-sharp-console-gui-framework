@@ -16,5 +16,8 @@ namespace ConsoleMultiplexer.Space
 		}
 
 		public static Vector operator -(in Vector vector) => new Vector(-vector.X, -vector.Y);
+
+		public static bool operator ==(in Vector lhs, in Vector rhs) => lhs.X == rhs.X && lhs.Y == rhs.Y;
+		public static bool operator !=(in Vector lhs, in Vector rhs) => !(lhs == rhs);
 	}
 }
