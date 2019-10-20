@@ -94,5 +94,19 @@ namespace ConsoleMultiplexer.Test.Common
 
 			listener.Verify(l => l.OnUpdate(It.IsAny<DrawingContext>(), It.IsAny<Rect>()), Times.Never);
 		}
+
+		[Test]
+		public void DrawingContext_ReturnsCorrentCharacter()
+		{
+			var listener = new Mock<IDrawingContextListener>();
+			var control = new Mock<IControl>();
+
+			var drawingContext = new DrawingContext(listener.Object, control.Object);
+			drawingContext.SetOffset(new Vector(5, 10));
+
+			var character = drawingContext[new Position(7, 13)];
+
+			control.Verify(l => l[new Position(2, 3)]);
+		}
 	}
 }
