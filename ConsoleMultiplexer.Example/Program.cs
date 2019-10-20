@@ -105,12 +105,13 @@ namespace ConsoleMultiplexer.Example
 				Top = 0,
 				Content = new VerticalStackPanel
 				{
-					Children = new[] {
+					Children = new IControl[] {
 							new TextBlock {Text = "Test 1"},
 							new TextBlock {Text = "Test 2"},
 							new TextBlock {Text = "Test 3"},
 							new TextBlock {Text = "Test 4"},
 							new TextBlock {Text = "Test 5"},
+							new HorizontalSeparator(),
 							new TextBlock {Text = "Test 6"},
 							new TextBlock {Text = "Test 7"},
 							new TextBlock {Text = "Test 8"},
@@ -118,6 +119,7 @@ namespace ConsoleMultiplexer.Example
 							new TextBlock {Text = "Test 10"},
 							new TextBlock {Text = "Test 11"},
 							new TextBlock {Text = "Test 12"},
+							new HorizontalSeparator(),
 							new TextBlock {Text = "Test 13"},
 							new TextBlock {Text = "Test 14"},
 							new TextBlock {Text = "Test 15"}
