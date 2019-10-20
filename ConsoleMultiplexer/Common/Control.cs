@@ -38,9 +38,8 @@ namespace ConsoleMultiplexer.Common
 		{
 			using (Freeze())
 			{
-				_updatedRect = Rect.Surround(_updatedRect, Rect.OfSize(Size));
 				Size = Size.Clip(MinSize, newSize, MaxSize);
-				_updatedRect = Rect.Surround(_updatedRect, Rect.OfSize(Size));
+				_updatedRect = Rect.OfSize(Size);
 			}
 		}
 
