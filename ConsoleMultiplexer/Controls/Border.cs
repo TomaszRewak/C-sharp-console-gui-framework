@@ -50,8 +50,6 @@ namespace ConsoleMultiplexer.Controls
 		{
 			get
 			{
-				//if (!Size.Contains(position)) throw new IndexOutOfRangeException(nameof(position));
-
 				if (ContentContext.Contains(position))
 					return ContentContext[position];
 

@@ -141,17 +141,22 @@ namespace ConsoleMultiplexer.Example
 
 			var border6 = new Border
 			{
-				Content = new WrapPanel
+
+				Content = new Margin
 				{
-					Children = new[] {
-						new TextBlock {Text = "Test 1"},
-						new TextBlock {Text = "Test 2"},
-						new TextBlock {Text = "Test 3"},
-						textBlock4,
-						new TextBlock {Text = "Test 4"},
-						new TextBlock {Text = "Test 5"},
-						new TextBlock {Text = "Test 6"},
-						new TextBlock {Text = "Test 7"},
+					Offset = new Offset(1, 3, 0, 0),
+					Content = new WrapPanel
+					{
+						Children = new[] {
+							new TextBlock {Text = "Test 1"},
+							new TextBlock {Text = "Test 2"},
+							new TextBlock {Text = "Test 3"},
+							textBlock4,
+							new TextBlock {Text = "Test 4"},
+							new TextBlock {Text = "Test 5"},
+							new TextBlock {Text = "Test 6"},
+							new TextBlock {Text = "Test 7"},
+						}
 					}
 				}
 			};
