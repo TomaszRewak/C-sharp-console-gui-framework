@@ -53,7 +53,7 @@ namespace ConsoleMultiplexer.Controls
 
 				var character = ContentContext[position];
 
-				if (character.IsEmpty) return Character.Empty;
+				if (!character.Content.HasValue) return Character.Empty;
 
 				return new Character(
 					character.Content, 

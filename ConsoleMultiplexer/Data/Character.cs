@@ -11,9 +11,6 @@ namespace ConsoleMultiplexer.Data
 		public Color? Foreground { get; }
 		public Color? Background { get; }
 
-		public bool IsNewLine => Content == '\n';
-		public bool IsEmpty => !Content.HasValue;
-
 		public Character(char? content, Color? foreground = null, Color? background = null)
 		{
 			Content = content;
@@ -46,8 +43,6 @@ namespace ConsoleMultiplexer.Data
 			hashCode = hashCode * -1521134295 + EqualityComparer<char?>.Default.GetHashCode(Content);
 			hashCode = hashCode * -1521134295 + EqualityComparer<Color?>.Default.GetHashCode(Foreground);
 			hashCode = hashCode * -1521134295 + EqualityComparer<Color?>.Default.GetHashCode(Background);
-			hashCode = hashCode * -1521134295 + IsNewLine.GetHashCode();
-			hashCode = hashCode * -1521134295 + IsEmpty.GetHashCode();
 			return hashCode;
 		}
 	}
