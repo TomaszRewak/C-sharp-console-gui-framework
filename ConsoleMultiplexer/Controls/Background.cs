@@ -15,7 +15,8 @@ namespace ConsoleMultiplexer.Controls
 		{
 			get => _contentContext;
 			set => Setter
-				.SetDisposable(ref _contentContext, value);
+				.SetDisposable(ref _contentContext, value)
+				.Then(Initialize);
 		}
 
 		private IControl _content;
