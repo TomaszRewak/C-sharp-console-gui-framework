@@ -26,7 +26,7 @@ namespace ConsoleMultiplexer.Example
 	{
 		static void Main()
 		{
-			var clock = new TextBox();
+			var clock = new TextBlock();
 
 			var dockPanel = new DockPanel
 			{

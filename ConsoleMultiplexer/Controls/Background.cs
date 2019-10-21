@@ -44,7 +44,12 @@ namespace ConsoleMultiplexer.Controls
 
 				var character = ContentContext[position];
 
-				return character.IsEmpty ? Fill : character;
+				if (character.IsEmpty) return Fill;
+
+				if (character.Background == null)
+					character = character.WithBackground(Fill.Background);
+
+				return character;
 			}
 		}
 

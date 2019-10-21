@@ -22,6 +22,7 @@ namespace ConsoleMultiplexer.Data
 		}
 
 		public Character WithForeground(in Color? foreground) => new Character(Content, foreground, Background);
+		public Character WithBackground(in Color? background) => new Character(Content, Foreground, background);
 
 		public static Character Empty => new Character();
 
