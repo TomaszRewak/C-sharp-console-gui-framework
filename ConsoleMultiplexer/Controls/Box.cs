@@ -26,39 +26,39 @@ namespace ConsoleMultiplexer.Controls
 			Stretch
 		}
 
-		private HorizontalPlacement horizontalContentPlacement = HorizontalPlacement.Center;
+		private HorizontalPlacement _horizontalContentPlacement = HorizontalPlacement.Center;
 		public HorizontalPlacement HorizontalContentPlacement
 		{
-			get => horizontalContentPlacement;
+			get => _horizontalContentPlacement;
 			set => Setter
-				.Set(ref horizontalContentPlacement, value)
+				.Set(ref _horizontalContentPlacement, value)
 				.Then(Initialize);
 		}
 
-		private VerticalPlacement verticalContentPlacement = VerticalPlacement.Center;
+		private VerticalPlacement _verticalContentPlacement = VerticalPlacement.Center;
 		public VerticalPlacement VerticalContentPlacement
 		{
-			get => verticalContentPlacement;
+			get => _verticalContentPlacement;
 			set => Setter
-				.Set(ref verticalContentPlacement, value)
+				.Set(ref _verticalContentPlacement, value)
 				.Then(Initialize);
 		}
 
-		private IControl content;
+		private IControl _content;
 		public IControl Content
 		{
-			get => content;
+			get => _content;
 			set => Setter
-				.Set(ref content, value)
+				.Set(ref _content, value)
 				.Then(BindContent);
 		}
 
-		private DrawingContext contentContext = DrawingContext.Dummy;
+		private DrawingContext _contentContext = DrawingContext.Dummy;
 		private DrawingContext ContentContext
 		{
-			get => contentContext;
+			get => _contentContext;
 			set => Setter
-				.SetDisposable(ref contentContext, value)
+				.SetDisposable(ref _contentContext, value)
 				.Then(Initialize);
 		}
 

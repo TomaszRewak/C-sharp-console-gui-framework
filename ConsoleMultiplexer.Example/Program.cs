@@ -26,13 +26,27 @@ namespace ConsoleMultiplexer.Example
 	{
 		static void Main()
 		{
+			var clock = new TextBox();
+
 			var dockPanel = new DockPanel
 			{
 				Placement = DockPanel.DockedContorlPlacement.Top,
 				DockedControl = new DockPanel
 				{
 					Placement = DockPanel.DockedContorlPlacement.Right,
-					DockedControl = new TextBlock { Text = "Clock" },
+					DockedControl = new Background
+					{
+						Fill = new Character(' ', background: new Color(100, 100, 100)),
+						Content = new Boundary
+						{
+							MinContentSize = new Size(20, 1),
+							Content = new Box
+							{
+								Content = clock,
+								HorizontalContentPlacement = Box.HorizontalPlacement.Center
+							}
+						}
+					},
 					FillingControl = new Background
 					{
 						Fill = new Character(' ', background: new Color(100, 0, 0)),
@@ -50,6 +64,8 @@ namespace ConsoleMultiplexer.Example
 			while (true)
 			{
 				Thread.Sleep(20);
+
+				clock.Text = DateTime.Now.ToLongTimeString();
 			}
 		}
 
