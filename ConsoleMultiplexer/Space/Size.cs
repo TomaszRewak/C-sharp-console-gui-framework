@@ -16,6 +16,7 @@ namespace ConsoleMultiplexer.Space
 		}
 
 		public static Size Empty => new Size(0, 0);
+		public static Size Infinite => new Size(int.MaxValue, int.MaxValue);
 		public static Size Containing(in Position position) => new Size(position.X + 1, position.Y + 1);
 		public static Size Max(in Size lhs, in Size rhs) => new Size(Math.Max(lhs.Width, rhs.Width), Math.Max(lhs.Height, rhs.Height));
 		public static Size Min(in Size lhs, in Size rhs) => new Size(Math.Min(lhs.Width, rhs.Width), Math.Min(lhs.Height, rhs.Height));

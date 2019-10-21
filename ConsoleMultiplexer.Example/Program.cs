@@ -26,6 +26,36 @@ namespace ConsoleMultiplexer.Example
 	{
 		static void Main()
 		{
+			var dockPanel = new DockPanel
+			{
+				Placement = DockPanel.DockedContorlPlacement.Top,
+				DockedControl = new DockPanel
+				{
+					Placement = DockPanel.DockedContorlPlacement.Right,
+					DockedControl = new TextBlock { Text = "Clock" },
+					FillingControl = new Background
+					{
+						Fill = new Character(' ', background: new Color(100, 0, 0)),
+						Content = new Box
+						{
+							Content = new TextBlock { Text = "Center" },
+							MinContentSize = Size.Empty,
+							HorizontalContentPlacement = Box.HorizontalPlacement.Center
+						}
+					}
+				}
+			};
+
+			ConsoleManager.Content = dockPanel;
+
+			while (true)
+			{
+				Thread.Sleep(20);
+			}
+		}
+
+		static void Main2()
+		{
 			var textBlock1 = new TextBlock
 			{
 				Text = "Heheszki1",
