@@ -60,7 +60,7 @@ namespace ConsoleMultiplexer.Controls
 			{
 				ContentContext.SetLimits(MinSize, MaxSize);
 
-				Resize(Size.Clip(MinSize, ContentContext.Size, MaxSize));
+				Resize(ContentContext.Size);
 			}
 		}
 

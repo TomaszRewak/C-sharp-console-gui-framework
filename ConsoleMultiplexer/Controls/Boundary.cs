@@ -28,21 +28,39 @@ namespace ConsoleMultiplexer.Controls
 				.Then(BindContent);
 		}
 
-		private Size? _minContentSize;
-		public Size? MinContentSize
+		private int? _minWidth;
+		public int? MinWidth
 		{
-			get => _minContentSize;
+			get => _minWidth;
 			set => Setter
-				.Set(ref _minContentSize, value)
+				.Set(ref _minWidth, value)
 				.Then(Initialize);
 		}
 
-		private Size? _maxContentSize;
-		public Size? MaxContentSize
+		private int? _minHeight;
+		public int? MinHeight
 		{
-			get => _maxContentSize;
+			get => _minHeight;
 			set => Setter
-				.Set(ref _maxContentSize, value)
+				.Set(ref _minHeight, value)
+				.Then(Initialize);
+		}
+
+		private int? _maxWidth;
+		public int? MaxWidth
+		{
+			get => _maxWidth;
+			set => Setter
+				.Set(ref _maxWidth, value)
+				.Then(Initialize);
+		}
+
+		private int? _maxHeight;
+		public int? MaxHeight
+		{
+			get => _maxHeight;
+			set => Setter
+				.Set(ref _maxHeight, value)
 				.Then(Initialize);
 		}
 
@@ -61,11 +79,12 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
-				ContentContext.SetLimits(
-					MinContentSize ?? MinSize,
-					MaxContentSize ?? MaxSize);
+				var minSize = new Size(MinWidth ?? MinSize.Width, MinHeight ?? MinSize.Height);
+				var maxSize = new Size(MaxWidth ?? MaxSize.Width, MaxHeight ?? MaxSize.Height);
 
-				Resize(Size.Clip(Size.Empty, ContentContext.Size, Size.Infinite));
+				ContentContext.SetLimits(minSize, maxSize);
+
+				Resize(Size.Clip(minSize, ContentContext.Size, maxSize));
 			}
 		}
 

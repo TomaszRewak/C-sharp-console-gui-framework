@@ -39,7 +39,7 @@ namespace ConsoleMultiplexer.Example
 						Fill = new Character(' ', background: new Color(100, 100, 100)),
 						Content = new Boundary
 						{
-							MinContentSize = new Size(20, 1),
+							MinWidth = 20,
 							Content = new Box
 							{
 								Content = clock,
@@ -54,6 +54,18 @@ namespace ConsoleMultiplexer.Example
 						{
 							Content = new TextBlock { Text = "Center" },
 							HorizontalContentPlacement = Box.HorizontalPlacement.Center
+						}
+					}
+				},
+				FillingControl = new DockPanel
+				{
+					Placement = DockPanel.DockedContorlPlacement.Botton,
+					DockedControl = new Boundary
+					{
+						MinHeight = 1,
+						Content = new Background
+						{
+							Fill = new Character(null, background: new Color(0, 100, 0))
 						}
 					}
 				}
