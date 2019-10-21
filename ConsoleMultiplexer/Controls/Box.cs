@@ -14,14 +14,16 @@ namespace ConsoleMultiplexer.Controls
 		{
 			Top,
 			Center,
-			Bottom
+			Bottom,
+			Stretch
 		}
 
 		public enum HorizontalPlacement
 		{
 			Left,
 			Center,
-			Right
+			Right,
+			Stretch
 		}
 
 		private HorizontalPlacement horizontalContentPlacement = HorizontalPlacement.Center;
@@ -39,24 +41,6 @@ namespace ConsoleMultiplexer.Controls
 			get => verticalContentPlacement;
 			set => Setter
 				.Set(ref verticalContentPlacement, value)
-				.Then(Initialize);
-		}
-
-		private Size? minContentSize;
-		public Size? MinContentSize
-		{
-			get => minContentSize;
-			set => Setter
-				.Set(ref minContentSize, value)
-				.Then(Initialize);
-		}
-
-		private Size? maxContentSize;
-		public Size? MaxContentSize
-		{
-			get => maxContentSize;
-			set => Setter
-				.Set(ref maxContentSize, value)
 				.Then(Initialize);
 		}
 
@@ -93,9 +77,11 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
-				ContentContext.SetLimits(
-					MinContentSize ?? MinSize,
-					MaxContentSize ?? MaxSize);
+				var minSize = new Size(
+					HorizontalContentPlacement == HorizontalPlacement.Stretch ? MinSize.Width : 0,
+					VerticalContentPlacement == VerticalPlacement.Stretch ? MinSize.Height : 0);
+
+				ContentContext.SetLimits(minSize, MaxSize);
 
 				Resize(ContentContext.Size);
 
@@ -104,6 +90,7 @@ namespace ConsoleMultiplexer.Controls
 
 				switch (VerticalContentPlacement)
 				{
+					case VerticalPlacement.Stretch:
 					case VerticalPlacement.Top:
 						top = 0;
 						break;
@@ -117,6 +104,7 @@ namespace ConsoleMultiplexer.Controls
 
 				switch (HorizontalContentPlacement)
 				{
+					case HorizontalPlacement.Stretch:
 					case HorizontalPlacement.Left:
 						left = 0;
 						break;

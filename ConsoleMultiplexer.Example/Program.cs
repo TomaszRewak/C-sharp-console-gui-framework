@@ -39,7 +39,6 @@ namespace ConsoleMultiplexer.Example
 						Content = new Box
 						{
 							Content = new TextBlock { Text = "Center" },
-							MinContentSize = Size.Empty,
 							HorizontalContentPlacement = Box.HorizontalPlacement.Center
 						}
 					}
