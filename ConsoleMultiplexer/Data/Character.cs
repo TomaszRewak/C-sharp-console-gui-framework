@@ -18,6 +18,15 @@ namespace ConsoleMultiplexer.Data
 			Background = background;
 		}
 
+		public Character(in Color background)
+		{
+			Content = null;
+			Foreground = null;
+			Background = background;
+		}
+
+
+		public Character WithContent(char? content) => new Character(content, Foreground, Background);
 		public Character WithForeground(in Color? foreground) => new Character(Content, foreground, Background);
 		public Character WithBackground(in Color? background) => new Character(Content, Foreground, background);
 

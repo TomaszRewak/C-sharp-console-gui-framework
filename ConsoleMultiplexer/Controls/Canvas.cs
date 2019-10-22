@@ -3,6 +3,7 @@ using ConsoleMultiplexer.Data;
 using ConsoleMultiplexer.Space;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ConsoleMultiplexer.Controls
@@ -27,11 +28,6 @@ namespace ConsoleMultiplexer.Controls
 			}
 		}
 
-		public void Remove(IControl control)
-		{
-
-		}
-
 		public override Character this[Position position]
 		{
 			get
@@ -47,13 +43,16 @@ namespace ConsoleMultiplexer.Controls
 		{
 			if (MinSize == Size) return;
 
-			UpdateZBuffer(MinSize);
-			Resize(MinSize);
+			using (Freeze())
+			{
+				Resize(MinSize);
+				UpdateZBuffer();
+			}
 		}
 
-		private void UpdateZBuffer(Size newSize)
+		private void UpdateZBuffer()
 		{
-			_zBuffer = new DrawingContext[newSize.Width, newSize.Height];
+			_zBuffer = new DrawingContext[Size.Width, Size.Height];
 
 			foreach (var child in _children)
 				AddToZBuffer(child);

@@ -24,9 +24,12 @@ namespace ConsoleMultiplexer.Example
 
 	class Program
 	{
-		static void Main()
+		static void Main2()
 		{
 			var clock = new TextBlock();
+
+			var canvas = new Canvas();
+			var textBox = new TextBox();
 
 			var dockPanel = new DockPanel
 			{
@@ -63,25 +66,138 @@ namespace ConsoleMultiplexer.Example
 					DockedControl = new Boundary
 					{
 						MinHeight = 1,
+						MaxHeight = 1,
 						Content = new Background
 						{
-							Fill = new Character(null, background: new Color(0, 100, 0))
+							Fill = new Character(null, background: new Color(0, 100, 0)),
+							Content = new HorizontalStackPanel
+							{
+								Children = new IControl[] {
+									new TextBlock { Text = " 10 ↑ " },
+									new VerticalSeparator(),
+									new TextBlock { Text = " 5 ✎ " }
+								}
+							}
 						}
+					},
+					FillingControl = new Overlay
+					{
+						BottomContent = new Background
+						{
+							Fill = new Character(new Color(25, 54, 65)),
+							Content = new DockPanel
+							{
+								Placement = DockPanel.DockedContorlPlacement.Right,
+								DockedControl = new Background
+								{
+									Fill = new Character(new Color(30, 40, 50)),
+									Content = new Border
+									{
+										BorderPlacement = BorderPlacement.Left,
+										BorderStyle = BorderStyle.Double.WithColor(new Color(50, 60, 70)),
+										Content = new Boundary
+										{
+											MinWidth = 70,
+											MaxWidth = 70,
+											Content = new Box
+											{
+												VerticalContentPlacement = Box.VerticalPlacement.Bottom,
+												HorizontalContentPlacement = Box.HorizontalPlacement.Stretch,
+												Content = new VerticalStackPanel
+												{
+													Children = new IControl[]
+													{
+														new WrapPanel
+														{
+															Children = new IControl[]
+															{
+																new Style
+																{
+																	Foreground = new Color(200, 20, 20),
+																	Content = new TextBlock {Text = "[20:12:43] "}
+																},
+																new TextBlock {Text = "Some log line with a date to the left"}
+															}
+														},
+														new WrapPanel
+														{
+															Children = new IControl[]
+															{
+																new Style
+																{
+																	Foreground = new Color(200, 20, 20),
+																	Content = new TextBlock {Text = "[20:12:43] "}
+																},
+																new TextBlock {Text = "Some log line with a date to the left, but this time a little bit longer so that it wraps"}
+															}
+														},
+														new WrapPanel
+														{
+															Children = new IControl[]
+															{
+																new Style
+																{
+																	Foreground = new Color(150, 150, 200),
+																	Content = new TextBlock {Text = @"D:\Software\> "}
+																},
+																textBox
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						TopContent = canvas
 					}
 				}
 			};
 
+			var scrollPanel = new VerticalScrollPanel
+			{
+				Content = new Background
+				{
+					Fill = new Character(new Color(10, 10, 10)),
+					Content = new VerticalStackPanel
+					{
+						Children = new IControl[]
+							{
+								new WrapPanel { Children = new [] { new TextBlock{Text = "Here is a short example of text wrapping" } } },
+								new HorizontalSeparator(),
+								new WrapPanel { Children = new [] { new TextBlock{Text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." } } },
+							}
+					}
+				}
+			};
+
+			canvas.Add(new Border
+			{
+				BorderPlacement = BorderPlacement.All,
+				Content = scrollPanel
+			}, new Rect(10, 10, 30, 10));
+
 			ConsoleManager.Content = dockPanel;
+
+			var input = new IInputListener[]
+			{
+				scrollPanel,
+				textBox
+			};
 
 			while (true)
 			{
 				Thread.Sleep(20);
 
 				clock.Text = DateTime.Now.ToLongTimeString();
+
+				ConsoleManager.ReadInput(input);
 			}
 		}
 
-		static void Main2()
+		static void Main()
 		{
 			var textBlock1 = new TextBlock
 			{

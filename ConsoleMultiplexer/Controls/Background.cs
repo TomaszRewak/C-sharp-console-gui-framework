@@ -37,6 +37,15 @@ namespace ConsoleMultiplexer.Controls
 				.Then(Redraw);
 		}
 
+		public bool _important;
+		public bool Important
+		{
+			get => _important;
+			set => Setter
+				.Set(ref _important, value)
+				.Then(Redraw);
+		}
+
 		public override Character this[Position position]
 		{
 			get
@@ -45,9 +54,10 @@ namespace ConsoleMultiplexer.Controls
 
 				var character = ContentContext[position];
 
-				if (!character.Content.HasValue) return Fill;
+				if (!character.Content.HasValue)
+					character = character.WithContent(Fill.Content).WithForeground(Fill.Foreground);
 
-				if (character.Background == null)
+				if (!character.Background.HasValue || Important)
 					character = character.WithBackground(Fill.Background);
 
 				return character;
