@@ -24,7 +24,7 @@ namespace ConsoleMultiplexer.Example
 
 	class Program
 	{
-		static void Main2()
+		static void Main()
 		{
 			var clock = new TextBlock();
 
@@ -197,7 +197,7 @@ namespace ConsoleMultiplexer.Example
 			}
 		}
 
-		static void Main()
+		static void Main2()
 		{
 			var textBlock1 = new TextBlock
 			{

@@ -11,7 +11,6 @@ namespace ConsoleMultiplexer.Controls
 	public class Canvas : Control, IDrawingContextListener
 	{
 		private readonly List<DrawingContext> _children = new List<DrawingContext>();
-		private DrawingContext[,] _zBuffer = new DrawingContext[0, 0];
 
 		public void Add(IControl control, Rect rect)
 		{
@@ -21,9 +20,8 @@ namespace ConsoleMultiplexer.Controls
 				newChild.SetOffset(rect.Offset);
 				newChild.SetLimits(rect.Size, rect.Size);
 
-				_children.Add(newChild);
+				_children.Insert(0, newChild);
 
-				AddToZBuffer(newChild);
 				Update(rect);
 			}
 		}
@@ -33,37 +31,18 @@ namespace ConsoleMultiplexer.Controls
 			get
 			{
 				if (!Size.Contains(position)) return Character.Empty;
-				if (_zBuffer[position.X, position.Y] == null) return Character.Empty;
 
-				return _zBuffer[position.X, position.Y][position];
+				foreach (var child in _children)
+					if (child.Contains(position))
+						return child[position];
+
+				return Character.Empty;
 			}
 		}
 
 		protected override void Initialize()
 		{
-			if (MinSize == Size) return;
-
-			using (Freeze())
-			{
-				Resize(MinSize);
-				UpdateZBuffer();
-			}
-		}
-
-		private void UpdateZBuffer()
-		{
-			_zBuffer = new DrawingContext[Size.Width, Size.Height];
-
-			foreach (var child in _children)
-				AddToZBuffer(child);
-		}
-
-		private void AddToZBuffer(DrawingContext drawingContext)
-		{
-			var rect = drawingContext.MinSize.AsRect().Move(drawingContext.Offset);
-
-			foreach (var position in Rect.Intersect(rect, Size.Of(_zBuffer).AsRect()))
-				_zBuffer[position.X, position.Y] = drawingContext;
+			Resize(MinSize);
 		}
 
 		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
