@@ -57,7 +57,7 @@ namespace ConsoleMultiplexer.Controls
 
 					left += child.Size.Width;
 				}
-				Resize(new Size(Math.Min(left, MaxSize.Width), left / MaxSize.Width + 1));
+				Resize(new Size(Math.Min(left, MaxSize.Width), (left - 1) / MaxSize.Width + 1));
 			}
 		}
 

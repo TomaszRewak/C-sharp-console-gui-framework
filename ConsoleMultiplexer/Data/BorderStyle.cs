@@ -64,5 +64,25 @@ namespace ConsoleMultiplexer.Data
 			BottomLeft.WithForeground(foreground),
 			Left.WithForeground(foreground),
 			TopLeft.WithForeground(foreground));
+
+		public BorderStyle WithTopLeft(in Character topLeft) => new BorderStyle(
+			Top,
+			TopRight,
+			Right,
+			BottomRight,
+			Bottom,
+			BottomLeft,
+			Left,
+			topLeft);
+
+		public BorderStyle WithTopRight(in Character topRight) => new BorderStyle(
+			Top,
+			topRight,
+			Right,
+			BottomRight,
+			Bottom,
+			BottomLeft,
+			Left,
+			TopLeft);
 	}
 }
