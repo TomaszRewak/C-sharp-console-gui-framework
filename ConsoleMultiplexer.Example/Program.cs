@@ -22,6 +22,35 @@ namespace ConsoleMultiplexer.Example
 		}
 	}
 
+	class InputController : IInputListener
+	{
+		private readonly TextBox _textBox;
+		private readonly VerticalStackPanel _stackPanel;
+
+		public InputController(TextBox textBox, VerticalStackPanel stackPanel)
+		{
+			_textBox = textBox;
+			_stackPanel = stackPanel;
+		}
+
+		public void OnInput(InputEvent inputEvent)
+		{
+			if (inputEvent.Key.Key != ConsoleKey.Enter) return;
+
+			_stackPanel.Add(new WrapPanel
+			{
+				Children = new IControl[]
+				{
+					new TextBlock {Text = $"[{DateTime.Now.ToLongTimeString()}] ", Color = new Color(200, 20, 20)},
+					new TextBlock {Text = _textBox.Text}
+				}
+			});
+
+			_textBox.Text = string.Empty;
+			inputEvent.Handled = true;
+		}
+	}
+
 	class Program
 	{
 		static void Main()
@@ -30,6 +59,7 @@ namespace ConsoleMultiplexer.Example
 
 			var canvas = new Canvas();
 			var textBox = new TextBox();
+			var consoleLog = new VerticalStackPanel();
 
 			var dockPanel = new DockPanel
 			{
@@ -99,41 +129,12 @@ namespace ConsoleMultiplexer.Example
 										{
 											MinWidth = 50,
 											MaxWidth = 50,
-											Content = new Box
+											Content = new DockPanel
 											{
-												VerticalContentPlacement = Box.VerticalPlacement.Bottom,
-												HorizontalContentPlacement = Box.HorizontalPlacement.Stretch,
-												Content = new VerticalStackPanel
+												Placement = DockPanel.DockedContorlPlacement.Botton,
+												DockedControl = new WrapPanel
 												{
 													Children = new IControl[]
-													{
-														new WrapPanel
-														{
-															Children = new IControl[]
-															{
-																new Style
-																{
-																	Foreground = new Color(200, 20, 20),
-																	Content = new TextBlock {Text = "[20:12:43] "}
-																},
-																new TextBlock {Text = "Some log line with a date to the left"}
-															}
-														},
-														new WrapPanel
-														{
-															Children = new IControl[]
-															{
-																new Style
-																{
-																	Foreground = new Color(200, 20, 20),
-																	Content = new TextBlock {Text = "[20:12:43] "}
-																},
-																new TextBlock {Text = "Some log line with a date to the left, but this time a little bit longer so that it wraps to the next line"}
-															}
-														},
-														new WrapPanel
-														{
-															Children = new IControl[]
 															{
 																new Style
 																{
@@ -142,8 +143,12 @@ namespace ConsoleMultiplexer.Example
 																},
 																textBox
 															}
-														}
-													}
+												},
+												FillingControl = new Box
+												{
+													VerticalContentPlacement = Box.VerticalPlacement.Bottom,
+													HorizontalContentPlacement = Box.HorizontalPlacement.Stretch,
+													Content = consoleLog
 												}
 											}
 										}
@@ -247,11 +252,11 @@ namespace ConsoleMultiplexer.Example
 						}
 					}
 				}
-			}, new Rect(100, 10, 30, 10));
+			}, new Rect(77, 5, 30, 10));
 
 			canvas.Add(new Background
 			{
-				Fill = new Character(new Color(10, 70, 10)),
+				Fill = new Character(new Color(10, 40, 10)),
 				Content = new Border
 				{
 					Content = new Box
@@ -261,13 +266,15 @@ namespace ConsoleMultiplexer.Example
 						Content = new TextBlock { Text = "Popup 2" }
 					}
 				}
-			}, new Rect(89, 17, 17, 5));
+			}, new Rect(66, 12, 17, 5));
 
+			ConsoleManager.Resize(new Size(150, 40));
 			ConsoleManager.Content = dockPanel;
 
 			var input = new IInputListener[]
 			{
 				scrollPanel,
+				new InputController(textBox, consoleLog),
 				textBox
 			};
 

@@ -61,7 +61,7 @@ namespace ConsoleMultiplexer.Controls
 		{
 			using (Freeze())
 			{
-				CaretStart = Math.Max(CaretStart, 0);
+				CaretStart = Math.Min(Math.Max(CaretStart, 0), TextLength);
 				CaretEnd = Math.Min(CaretEnd, TextLength);
 
 				switch (inputEvent.Key.Key)

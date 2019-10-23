@@ -8,6 +8,7 @@ using ConsoleMultiplexer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace ConsoleMultiplexer
 {
@@ -92,6 +93,15 @@ namespace ConsoleMultiplexer
 				catch (ArgumentOutOfRangeException)
 				{ }
 			}
+		}
+
+		public static void Resize(in Size size)
+		{
+			Console.SetWindowSize(1, 1);
+			Console.SetBufferSize(size.Width, size.Height);
+			Console.SetWindowSize(size.Width, size.Height);
+
+			AdjustSize();
 		}
 
 		public static void AdjustSize()
