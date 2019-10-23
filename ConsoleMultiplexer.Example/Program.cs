@@ -105,7 +105,7 @@ namespace ConsoleMultiplexer.Example
 								Children = new IControl[] {
 									new TextBlock { Text = " 10 ↑ " },
 									new VerticalSeparator(),
-									new TextBlock { Text = " 5 ✎ " }
+									new TextBlock { Text = " 5 ↓ " }
 								}
 							}
 						}
@@ -268,6 +268,7 @@ namespace ConsoleMultiplexer.Example
 				}
 			}, new Rect(66, 12, 17, 5));
 
+			ConsoleManager.Setup();
 			ConsoleManager.Resize(new Size(150, 40));
 			ConsoleManager.Content = dockPanel;
 

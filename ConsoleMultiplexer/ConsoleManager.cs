@@ -95,6 +95,11 @@ namespace ConsoleMultiplexer
 			}
 		}
 
+		public static void Setup()
+		{
+			Console.OutputEncoding = System.Text.Encoding.UTF8;
+		}
+
 		public static void Resize(in Size size)
 		{
 			Console.SetWindowSize(1, 1);
