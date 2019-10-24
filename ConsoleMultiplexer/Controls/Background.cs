@@ -28,12 +28,12 @@ namespace ConsoleMultiplexer.Controls
 				.Then(BindContent);
 		}
 
-		private Character _fill;
-		public Character Fill
+		private Color _color;
+		public Color Color
 		{
-			get => _fill;
+			get => _color;
 			set => Setter
-				.Set(ref _fill, value)
+				.Set(ref _color, value)
 				.Then(Redraw);
 		}
 
@@ -50,15 +50,12 @@ namespace ConsoleMultiplexer.Controls
 		{
 			get
 			{
-				if (!ContentContext.Contains(position)) return Fill;
+				if (!ContentContext.Contains(position)) return new Character(Color);
 
 				var character = ContentContext[position];
 
-				if (!character.Content.HasValue)
-					character = character.WithContent(Fill.Content).WithForeground(Fill.Foreground);
-
 				if (!character.Background.HasValue || Important)
-					character = character.WithBackground(Fill.Background);
+					character = character.WithBackground(Color);
 
 				return character;
 			}
