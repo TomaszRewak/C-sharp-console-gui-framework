@@ -4,6 +4,7 @@ using ConsoleMultiplexer.Input;
 using ConsoleMultiplexer.Space;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace ConsoleMultiplexer.Example
@@ -60,6 +61,16 @@ namespace ConsoleMultiplexer.Example
 			var canvas = new Canvas();
 			var textBox = new TextBox();
 			var consoleLog = new VerticalStackPanel();
+
+			var board = new Grid
+			{
+				Rows = Enumerable.Repeat(new Grid.RowDefinition(3), 10).ToArray(),
+				Columns = Enumerable.Repeat(new Grid.ColumnDefinition(5), 10).ToArray()
+			};
+
+			for (int i = 0; i < 10; i++)
+				for (int j = 0; j < 10; j++)
+					board.AddChild(i, j, new Background { Color = (i + j) % 2 == 0 ? new Color(255, 222, 173) : new Color(139, 69, 19) });
 
 			var dockPanel = new DockPanel
 			{
@@ -139,7 +150,7 @@ namespace ConsoleMultiplexer.Example
 																new Style
 																{
 																	Foreground = new Color(150, 150, 200),
-																	Content = new TextBlock {Text = @"D:\Software\> "}
+																	Content = new TextBlock { Text = @"D:\Software\> " }
 																},
 																textBox
 															}
@@ -183,9 +194,9 @@ namespace ConsoleMultiplexer.Example
 																new Style
 																{
 																	Foreground = new Color(200, 20, 20),
-																	Content = new TextBlock {Text = "[20:12:43] "}
+																	Content = new TextBlock { Text = "[20:12:43] " }
 																},
-																new TextBlock {Text = "Some log line with a date to the left"}
+																new TextBlock { Text = "Some log line with a date to the left" }
 															}
 														},
 														new WrapPanel
@@ -195,9 +206,9 @@ namespace ConsoleMultiplexer.Example
 																new Style
 																{
 																	Foreground = new Color(200, 20, 20),
-																	Content = new TextBlock {Text = "[20:12:43] "}
+																	Content = new TextBlock { Text = "[20:12:43] " }
 																},
-																new TextBlock {Text = "Some log line with a date to the left, but this time a little bit longer so that it wraps"}
+																new TextBlock { Text = "Some log line with a date to the left, but this time a little bit longer so that it wraps" }
 															}
 														},
 													}
@@ -206,7 +217,12 @@ namespace ConsoleMultiplexer.Example
 											}
 										}
 									},
-									FillingControl = new Background { Color = new Color(255, 0, 0) }
+									FillingControl = new Box
+									{
+										HorizontalContentPlacement = Box.HorizontalPlacement.Center,
+										VerticalContentPlacement = Box.VerticalPlacement.Center,
+										Content = board
+									}
 								}
 							}
 						},

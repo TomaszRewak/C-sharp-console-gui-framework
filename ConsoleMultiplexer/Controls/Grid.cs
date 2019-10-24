@@ -125,7 +125,13 @@ namespace ConsoleMultiplexer.Controls
 					}
 				}
 
-				Redraw();
+				int width = 0,
+					height = 0;
+
+				for (int x = 0; x < Columns.Length; x++) width += Columns[x].Width;
+				for (int y = 0; y < Rows.Length; y++) height += Rows[y].Height;
+
+				Resize(new Size(width, height));
 			}
 		}
 
