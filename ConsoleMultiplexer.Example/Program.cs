@@ -9,17 +9,19 @@ using System.Threading;
 
 namespace ConsoleMultiplexer.Example
 {
-	class Person
+	class Player
 	{
-		public string Name { get; set; }
-		public string Surname { get; set; }
-		public DateTime BirthDate { get; set; }
+		public string Name { get; }
+		public string Surname { get; }
+		public DateTime BirthDate { get; }
+		public int Points { get; }
 
-		public Person(string name, string surname, DateTime birthDate)
+		public Player(string name, string surname, DateTime birthDate, int points)
 		{
 			Name = name;
 			Surname = surname;
 			BirthDate = birthDate;
+			Points = points;
 		}
 	}
 
@@ -122,18 +124,29 @@ namespace ConsoleMultiplexer.Example
 			{
 				HorizontalContentPlacement = Box.HorizontalPlacement.Center,
 				VerticalContentPlacement = Box.VerticalPlacement.Center,
-				Content = new DataGrid<Person>
+				Content = new Background 
 				{
-					Columns = new[] {
-						new DataGrid<Person>.ColumnDefinition("Name", 10, p => p.Name),
-						new DataGrid<Person>.ColumnDefinition("Surname", 10, p => p.Surname),
-						new DataGrid<Person>.ColumnDefinition("Birth date", 15, p => p.BirthDate.ToLongDateString())
-					},
-					Data = new[]
+					Color = new Color(45, 74, 85),
+					Content = new Border
 					{
-						new Person("John", "Connor", new DateTime(1985, 2, 28)),
-						new Person("Ellen", "Ripley", new DateTime(2092, 1, 1)),
-						new Person("Jan", "Kowalski", new DateTime(1990, 4, 10)),
+						BorderStyle = BorderStyle.Single,
+						Content = new DataGrid<Player>
+						{
+							Columns = new[]
+							{
+								new DataGrid<Player>.ColumnDefinition("Name", 10, p => p.Name, foreground: p => p.Name == "Tomasz" ? (Color?)new Color(100, 100, 220) : null),
+								new DataGrid<Player>.ColumnDefinition("Surname", 10, p => p.Surname),
+								new DataGrid<Player>.ColumnDefinition("Birth date", 15, p => p.BirthDate.ToShortDateString()),
+								new DataGrid<Player>.ColumnDefinition("Points", 5, p => p.Points.ToString(), background: p => p.Points > 20 ? (Color?)new Color(0, 220, 0) : null)
+							},
+								Data = new[]
+							{
+								new Player("John", "Connor", new DateTime(1985, 2, 28), 10),
+								new Player("Ellen", "Ripley", new DateTime(2092, 1, 1), 23),
+								new Player("Jan", "Kowalski", new DateTime(1990, 4, 10), 50),
+								new Player("Tomasz", "Rewak", new DateTime(1900, 1, 1), 0),
+							}
+						}
 					}
 				}
 			});
