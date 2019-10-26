@@ -98,6 +98,7 @@ namespace ConsoleMultiplexer
 		public static void Setup()
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
+			Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
 		}
 
 		public static void Resize(in Size size)

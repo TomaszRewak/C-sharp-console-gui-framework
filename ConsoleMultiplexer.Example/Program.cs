@@ -54,6 +54,20 @@ namespace ConsoleMultiplexer.Example
 
 	class Program
 	{
+		private static IControl BoardCell(char content, Color color)
+		{
+			return new Background
+			{
+				Color = color,
+				Content = new Box
+				{
+					HorizontalContentPlacement = Box.HorizontalPlacement.Center,
+					VerticalContentPlacement = Box.VerticalPlacement.Center,
+					Content = new TextBlock { Text = content.ToString() }
+				}
+			};
+		}
+
 		static void Main()
 		{
 			var clock = new TextBlock();
@@ -68,9 +82,33 @@ namespace ConsoleMultiplexer.Example
 				Columns = Enumerable.Repeat(new Grid.ColumnDefinition(5), 10).ToArray()
 			};
 
-			for (int i = 0; i < 10; i++)
-				for (int j = 0; j < 10; j++)
-					board.AddChild(i, j, new Background { Color = (i + j) % 2 == 0 ? new Color(255, 222, 173) : new Color(139, 69, 19) });
+			for (int i = 1; i < 9; i++)
+			{
+				var character = (char)('a' + (i - 1));
+				var number = (char)('0' + (i - 1));
+				var darkColor = new Color(50, 50, 50).Mix(Color.White, i % 2 == 1 ? 0f : 0.1f);
+				var lightColor = new Color(50, 50, 50).Mix(Color.White, i % 2 == 0 ? 0f : 0.1f);
+
+				board.AddChild(i, 0, BoardCell(character, darkColor));
+				board.AddChild(i, 9, BoardCell(character, lightColor));
+				board.AddChild(0, i, BoardCell(number, darkColor));
+				board.AddChild(9, i, BoardCell(number, lightColor));
+			}
+
+			string[] pieces = new[] {
+				"♜♞♝♛♚♝♞♜",
+				"♟♟♟♟♟♟♟♟",
+				"        ",
+				"        ",
+				"        ",
+				"        ",
+				"♙♙♙♙♙♙♙♙",
+				"♖♘♗♕♔♗♘♖"
+			};
+
+			for (int i = 1; i < 9; i++)
+				for (int j = 1; j < 9; j++)
+					board.AddChild(i, j, BoardCell(pieces[j - 1][i - 1], new Color(139, 69, 19).Mix(Color.White, ((i + j) % 2) == 1 ? 0f : 0.4f)));
 
 			var dockPanel = new DockPanel
 			{

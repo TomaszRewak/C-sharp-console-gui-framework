@@ -17,10 +17,10 @@ namespace ConsoleMultiplexer.Data
 			Blue = blue;
 		}
 
+		public Color Mix(in Color color, float factor) => this * (1 - factor) + color * factor;
+
 		public static Color White => new Color(255, 255, 255);
 		public static Color Black => new Color(0, 0, 0);
-		public static Color LightBlue => new Color(100, 100, 255);
-		public static Color Gray => new Color(100, 100, 100);
 
 		public static bool operator ==(in Color lhs, in Color rhs)
 		{
@@ -31,6 +31,12 @@ namespace ConsoleMultiplexer.Data
 		}
 
 		public static bool operator !=(in Color lhs, in Color rhs) => !(lhs == rhs);
+
+		public static Color operator *(in Color color, float factor) => new Color((byte)(color.Red * factor), (byte)(color.Green * factor), (byte)(color.Blue * factor));
+		public static Color operator +(in Color lhs, in Color rhs) => new Color(
+			(byte)Math.Min(byte.MaxValue, lhs.Red + rhs.Red), 
+			(byte)Math.Min(byte.MaxValue, lhs.Green + rhs.Green),
+			(byte)Math.Min(byte.MaxValue, lhs.Blue + rhs.Blue));
 
 		public override bool Equals(object obj)
 		{

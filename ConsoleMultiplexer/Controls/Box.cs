@@ -80,8 +80,12 @@ namespace ConsoleMultiplexer.Controls
 				var minSize = new Size(
 					HorizontalContentPlacement == HorizontalPlacement.Stretch ? MinSize.Width : 0,
 					VerticalContentPlacement == VerticalPlacement.Stretch ? MinSize.Height : 0);
+				
+				var maxSize = new Size(
+					HorizontalContentPlacement == HorizontalPlacement.Stretch ? MaxSize.Width : int.MaxValue / 2,
+					VerticalContentPlacement == VerticalPlacement.Stretch ? MaxSize.Height : int.MaxValue / 2);
 
-				ContentContext.SetLimits(minSize, MaxSize);
+				ContentContext.SetLimits(minSize, maxSize);
 
 				Resize(ContentContext.Size);
 

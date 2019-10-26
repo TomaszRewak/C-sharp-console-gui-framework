@@ -38,7 +38,7 @@ namespace ConsoleMultiplexer.Controls
 				.Then(Initialize);
 		}
 
-		private Character _scrollBarForeground = new Character('▀', foreground: Color.LightBlue);
+		private Character _scrollBarForeground = new Character('▀', foreground: new Color(100, 100, 255));
 		public Character ScrollBarForeground
 		{
 			get => _scrollBarForeground;
@@ -47,7 +47,7 @@ namespace ConsoleMultiplexer.Controls
 				.Then(RedrawScrollBar);
 		}
 
-		private Character _scrollBarBackground = new Character('║', foreground: Color.Gray);
+		private Character _scrollBarBackground = new Character('║', foreground: new Color(100, 100, 100));
 		public Character ScrollBarBackground
 		{
 			get => _scrollBarBackground;
@@ -74,7 +74,7 @@ namespace ConsoleMultiplexer.Controls
 
 		protected override void Initialize()
 		{
-			using(Freeze())
+			using (Freeze())
 			{
 				ContentContext.SetLimits(MaxSize.Shrink(1, 0), MaxSize.Shrink(1, 0).WithInfitineHeight());
 				ContentContext.SetOffset(new Vector(0, -Top));
@@ -102,10 +102,10 @@ namespace ConsoleMultiplexer.Controls
 		{
 			Update(rect);
 		}
-		
+
 		void IInputListener.OnInput(InputEvent inputEvent)
 		{
-			switch(inputEvent.Key.Key)
+			switch (inputEvent.Key.Key)
 			{
 				case ConsoleKey.UpArrow:
 					Top -= 1;
