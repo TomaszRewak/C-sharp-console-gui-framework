@@ -11,7 +11,7 @@ namespace ConsoleMultiplexer.Controls
 {
 	public class DataGrid<T> : Control
 	{
-		public readonly struct ColumnDefinition
+		public class ColumnDefinition
 		{
 			public readonly string Header;
 			public readonly int Width;

@@ -110,6 +110,34 @@ namespace ConsoleMultiplexer.Example
 				for (int j = 1; j < 9; j++)
 					board.AddChild(i, j, BoardCell(pieces[j - 1][i - 1], new Color(139, 69, 19).Mix(Color.White, ((i + j) % 2) == 1 ? 0f : 0.4f)));
 
+			var tabPanel = new TabPanel();
+			tabPanel.AddTab("game", new Box
+			{
+				HorizontalContentPlacement = Box.HorizontalPlacement.Center,
+				VerticalContentPlacement = Box.VerticalPlacement.Center,
+				Content = board
+			});
+
+			tabPanel.AddTab("leaderboard", new Box
+			{
+				HorizontalContentPlacement = Box.HorizontalPlacement.Center,
+				VerticalContentPlacement = Box.VerticalPlacement.Center,
+				Content = new DataGrid<Person>
+				{
+					Columns = new[] {
+						new DataGrid<Person>.ColumnDefinition("Name", 10, p => p.Name),
+						new DataGrid<Person>.ColumnDefinition("Surname", 10, p => p.Surname),
+						new DataGrid<Person>.ColumnDefinition("Birth date", 15, p => p.BirthDate.ToLongDateString())
+					},
+					Data = new[]
+					{
+						new Person("John", "Connor", new DateTime(1985, 2, 28)),
+						new Person("Ellen", "Ripley", new DateTime(2092, 1, 1)),
+						new Person("Jan", "Kowalski", new DateTime(1990, 4, 10)),
+					}
+				}
+			});
+
 			var dockPanel = new DockPanel
 			{
 				Placement = DockPanel.DockedContorlPlacement.Top,
@@ -255,12 +283,7 @@ namespace ConsoleMultiplexer.Example
 											}
 										}
 									},
-									FillingControl = new Box
-									{
-										HorizontalContentPlacement = Box.HorizontalPlacement.Center,
-										VerticalContentPlacement = Box.VerticalPlacement.Center,
-										Content = board
-									}
+									FillingControl = tabPanel
 								}
 							}
 						},
@@ -330,6 +353,7 @@ namespace ConsoleMultiplexer.Example
 			var input = new IInputListener[]
 			{
 				scrollPanel,
+				tabPanel,
 				new InputController(textBox, consoleLog),
 				textBox
 			};

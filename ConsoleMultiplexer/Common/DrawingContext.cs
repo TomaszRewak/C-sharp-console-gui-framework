@@ -76,15 +76,11 @@ namespace ConsoleMultiplexer.Common
 
 		public void Redraw(IControl control)
 		{
-			if (control != Child) return;
-
 			Parent?.OnRedraw(this);
 		}
 
 		public void Update(IControl control, in Rect rect)
 		{
-			if (control != Child) return;
-
 			Parent?.OnUpdate(this, rect.Move(Offset));
 		}
 
