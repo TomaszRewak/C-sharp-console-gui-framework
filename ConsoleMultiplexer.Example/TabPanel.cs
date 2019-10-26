@@ -34,10 +34,12 @@ namespace ConsoleMultiplexer.Example
 					Content = hederBackground
 				};
 				Content = content;
+
+				MarkAsInactive();
 			}
 
 			public void MarkAsActive() => hederBackground.Color = new Color(25, 54, 65);
-			public void MarkAsInactive() => hederBackground.Color = new Color(35, 35, 32);
+			public void MarkAsInactive() => hederBackground.Color = new Color(65, 24, 25);
 		}
 
 		private readonly List<Tab> tabs = new List<Tab>();

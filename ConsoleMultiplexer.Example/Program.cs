@@ -124,7 +124,7 @@ namespace ConsoleMultiplexer.Example
 			{
 				HorizontalContentPlacement = Box.HorizontalPlacement.Center,
 				VerticalContentPlacement = Box.VerticalPlacement.Center,
-				Content = new Background 
+				Content = new Background
 				{
 					Color = new Color(45, 74, 85),
 					Content = new Border
@@ -139,13 +139,38 @@ namespace ConsoleMultiplexer.Example
 								new DataGrid<Player>.ColumnDefinition("Birth date", 15, p => p.BirthDate.ToShortDateString()),
 								new DataGrid<Player>.ColumnDefinition("Points", 5, p => p.Points.ToString(), background: p => p.Points > 20 ? (Color?)new Color(0, 220, 0) : null)
 							},
-								Data = new[]
+							Data = new[]
 							{
 								new Player("John", "Connor", new DateTime(1985, 2, 28), 10),
 								new Player("Ellen", "Ripley", new DateTime(2092, 1, 1), 23),
 								new Player("Jan", "Kowalski", new DateTime(1990, 4, 10), 50),
 								new Player("Tomasz", "Rewak", new DateTime(1900, 1, 1), 0),
 							}
+						}
+					}
+				}
+			});
+
+			tabPanel.AddTab("about", new Box
+			{
+				HorizontalContentPlacement = Box.HorizontalPlacement.Center,
+				VerticalContentPlacement = Box.VerticalPlacement.Center,
+				Content = new Boundary
+				{
+					MaxWidth = 20,
+					Content = new VerticalStackPanel
+					{
+						Children = new IControl[]
+						{
+							new WrapPanel
+							{
+								Children = new[]
+								{
+									new TextBlock { Text = "This is just a demo application that uses a library for creating a GUI in a console." }
+								}
+							},
+							new HorizontalSeparator(),
+							new TextBlock {Text ="By Tomasz Rewak.", Color = new Color(200, 200, 200)}
 						}
 					}
 				}
