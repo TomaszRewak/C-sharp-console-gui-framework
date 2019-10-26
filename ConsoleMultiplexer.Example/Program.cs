@@ -3,121 +3,45 @@ using ConsoleMultiplexer.Data;
 using ConsoleMultiplexer.Input;
 using ConsoleMultiplexer.Space;
 using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 
 namespace ConsoleMultiplexer.Example
 {
-	class Player
-	{
-		public string Name { get; }
-		public string Surname { get; }
-		public DateTime BirthDate { get; }
-		public int Points { get; }
-
-		public Player(string name, string surname, DateTime birthDate, int points)
-		{
-			Name = name;
-			Surname = surname;
-			BirthDate = birthDate;
-			Points = points;
-		}
-	}
-
-	class InputController : IInputListener
-	{
-		private readonly TextBox _textBox;
-		private readonly VerticalStackPanel _stackPanel;
-
-		public InputController(TextBox textBox, VerticalStackPanel stackPanel)
-		{
-			_textBox = textBox;
-			_stackPanel = stackPanel;
-		}
-
-		public void OnInput(InputEvent inputEvent)
-		{
-			if (inputEvent.Key.Key != ConsoleKey.Enter) return;
-
-			_stackPanel.Add(new WrapPanel
-			{
-				Children = new IControl[]
-				{
-					new TextBlock {Text = $"[{DateTime.Now.ToLongTimeString()}] ", Color = new Color(200, 20, 20)},
-					new TextBlock {Text = _textBox.Text}
-				}
-			});
-
-			_textBox.Text = string.Empty;
-			inputEvent.Handled = true;
-		}
-	}
-
 	class Program
 	{
-		private static IControl BoardCell(char content, Color color)
-		{
-			return new Background
-			{
-				Color = color,
-				Content = new Box
-				{
-					HorizontalContentPlacement = Box.HorizontalPlacement.Center,
-					VerticalContentPlacement = Box.VerticalPlacement.Center,
-					Content = new TextBlock { Text = content.ToString() }
-				}
-			};
-		}
-
 		static void Main()
 		{
 			var clock = new TextBlock();
 
 			var canvas = new Canvas();
 			var textBox = new TextBox();
-			var consoleLog = new VerticalStackPanel();
+			var mainConsole = new LogPanel();
+			var secondaryConsole = new LogPanel();
 
-			var board = new Grid
+			var leaderboard = new DataGrid<Player>
 			{
-				Rows = Enumerable.Repeat(new Grid.RowDefinition(3), 10).ToArray(),
-				Columns = Enumerable.Repeat(new Grid.ColumnDefinition(5), 10).ToArray()
+				Columns = new[]
+				{
+					new DataGrid<Player>.ColumnDefinition("Name", 10, p => p.Name, foreground: p => p.Name == "Tomasz" ? (Color?)new Color(100, 100, 220) : null),
+					new DataGrid<Player>.ColumnDefinition("Surname", 10, p => p.Surname),
+					new DataGrid<Player>.ColumnDefinition("Birth date", 15, p => p.BirthDate.ToShortDateString()),
+					new DataGrid<Player>.ColumnDefinition("Points", 5, p => p.Points.ToString(), background: p => p.Points > 20 ? (Color?)new Color(0, 220, 0) : null)
+				},
+				Data = new[]
+				{
+					new Player("John", "Connor", new DateTime(1985, 2, 28), 10),
+					new Player("Ellen", "Ripley", new DateTime(2092, 1, 1), 23),
+					new Player("Jan", "Kowalski", new DateTime(1990, 4, 10), 50),
+					new Player("Tomasz", "Rewak", new DateTime(1900, 1, 1), 0),
+				}
 			};
-
-			for (int i = 1; i < 9; i++)
-			{
-				var character = (char)('a' + (i - 1));
-				var number = (char)('0' + (i - 1));
-				var darkColor = new Color(50, 50, 50).Mix(Color.White, i % 2 == 1 ? 0f : 0.1f);
-				var lightColor = new Color(50, 50, 50).Mix(Color.White, i % 2 == 0 ? 0f : 0.1f);
-
-				board.AddChild(i, 0, BoardCell(character, darkColor));
-				board.AddChild(i, 9, BoardCell(character, lightColor));
-				board.AddChild(0, i, BoardCell(number, darkColor));
-				board.AddChild(9, i, BoardCell(number, lightColor));
-			}
-
-			string[] pieces = new[] {
-				"♜♞♝♛♚♝♞♜",
-				"♟♟♟♟♟♟♟♟",
-				"        ",
-				"        ",
-				"        ",
-				"        ",
-				"♙♙♙♙♙♙♙♙",
-				"♖♘♗♕♔♗♘♖"
-			};
-
-			for (int i = 1; i < 9; i++)
-				for (int j = 1; j < 9; j++)
-					board.AddChild(i, j, BoardCell(pieces[j - 1][i - 1], new Color(139, 69, 19).Mix(Color.White, ((i + j) % 2) == 1 ? 0f : 0.4f)));
 
 			var tabPanel = new TabPanel();
 			tabPanel.AddTab("game", new Box
 			{
 				HorizontalContentPlacement = Box.HorizontalPlacement.Center,
 				VerticalContentPlacement = Box.VerticalPlacement.Center,
-				Content = board
+				Content = new Board()
 			});
 
 			tabPanel.AddTab("leaderboard", new Box
@@ -130,23 +54,7 @@ namespace ConsoleMultiplexer.Example
 					Content = new Border
 					{
 						BorderStyle = BorderStyle.Single,
-						Content = new DataGrid<Player>
-						{
-							Columns = new[]
-							{
-								new DataGrid<Player>.ColumnDefinition("Name", 10, p => p.Name, foreground: p => p.Name == "Tomasz" ? (Color?)new Color(100, 100, 220) : null),
-								new DataGrid<Player>.ColumnDefinition("Surname", 10, p => p.Surname),
-								new DataGrid<Player>.ColumnDefinition("Birth date", 15, p => p.BirthDate.ToShortDateString()),
-								new DataGrid<Player>.ColumnDefinition("Points", 5, p => p.Points.ToString(), background: p => p.Points > 20 ? (Color?)new Color(0, 220, 0) : null)
-							},
-							Data = new[]
-							{
-								new Player("John", "Connor", new DateTime(1985, 2, 28), 10),
-								new Player("Ellen", "Ripley", new DateTime(2092, 1, 1), 23),
-								new Player("Jan", "Kowalski", new DateTime(1990, 4, 10), 50),
-								new Player("Tomasz", "Rewak", new DateTime(1900, 1, 1), 0),
-							}
-						}
+						Content = leaderboard
 					}
 				}
 			});
@@ -263,7 +171,7 @@ namespace ConsoleMultiplexer.Example
 												{
 													VerticalContentPlacement = Box.VerticalPlacement.Bottom,
 													HorizontalContentPlacement = Box.HorizontalPlacement.Stretch,
-													Content = consoleLog
+													Content = mainConsole
 												}
 											}
 										}
@@ -287,36 +195,7 @@ namespace ConsoleMultiplexer.Example
 												{
 													VerticalContentPlacement = Box.VerticalPlacement.Bottom,
 													HorizontalContentPlacement = Box.HorizontalPlacement.Stretch,
-													Content = new VerticalStackPanel
-													{
-														Children = new IControl[]
-													{
-														new WrapPanel
-														{
-															Children = new IControl[]
-															{
-																new Style
-																{
-																	Foreground = new Color(200, 20, 20),
-																	Content = new TextBlock { Text = "[20:12:43] " }
-																},
-																new TextBlock { Text = "Some log line with a date to the left" }
-															}
-														},
-														new WrapPanel
-														{
-															Children = new IControl[]
-															{
-																new Style
-																{
-																	Foreground = new Color(200, 20, 20),
-																	Content = new TextBlock { Text = "[20:12:43] " }
-																},
-																new TextBlock { Text = "Some log line with a date to the left, but this time a little bit longer so that it wraps" }
-															}
-														},
-													}
-													}
+													Content = secondaryConsole
 												}
 											}
 										}
@@ -392,15 +271,16 @@ namespace ConsoleMultiplexer.Example
 			{
 				scrollPanel,
 				tabPanel,
-				new InputController(textBox, consoleLog),
+				new InputController(textBox, mainConsole),
 				textBox
 			};
 
-			while (true)
+			for (int i = 0; ; i++)
 			{
-				Thread.Sleep(20);
+				Thread.Sleep(10);
 
 				clock.Text = DateTime.Now.ToLongTimeString();
+				if (i % 200 == 0) secondaryConsole.Add($"Ping {i / 200 + 1}");
 
 				ConsoleManager.ReadInput(input);
 			}
