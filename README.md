@@ -30,7 +30,7 @@ And finaly setup the `ConsoleManager`:
 // optional: adjusts the buffer size and sets the output encoding to the UTF8
 ConsoleManager.Setup();
 
-// optional: resizes the console window (the size is set in number of characters, not pixels)
+// optional: resizes the console window (the size is set in a number of characters, not pixels)
 ConsoleManager.Resize(new Size(150, 40));
 
 // sets the main layout element and prints it on the screen
