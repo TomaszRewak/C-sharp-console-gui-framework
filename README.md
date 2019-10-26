@@ -12,11 +12,13 @@ It provides most essential layout management utilities as well as a set of basic
 
 First install the Nuget packege:
 
-```dotnet add package ConsoleGUI```
+```powershell
+dotnet add package ConsoleGUI
+```
 
 Then include required namespaces in your code:
 
-```
+```csharp
 using ConsoleGUI;
 using ConsoleGUI.Controls;
 using ConsoleGUI.Space;
@@ -24,7 +26,7 @@ using ConsoleGUI.Space;
 
 And finaly setup the `ConsoleManager`:
 
-```
+```csharp
 // optional: adjusts the buffer size and sets the output encoding to the UTF8
 ConsoleManager.Setup();
 
