@@ -4,16 +4,19 @@ using System.Text;
 using ConsoleGUI.Controls;
 using ConsoleGUI.Data;
 using ConsoleGUI.Space;
+using ConsoleGUI.UserDefined;
 
 namespace ConsoleGUI.Example
 {
-	internal class LogPanel : IControl
+	internal class LogPanel : SimpleControl
 	{
 		private readonly VerticalStackPanel _stackPanel;
 
 		public LogPanel()
 		{
 			_stackPanel = new VerticalStackPanel();
+
+			Content = _stackPanel;
 		}
 
 		public void Add(string message)
@@ -26,14 +29,6 @@ namespace ConsoleGUI.Example
 					new TextBlock {Text = message}
 				}
 			});
-		}
-
-		public Character this[Position position] => _stackPanel[position];
-		public Size Size => _stackPanel.Size;
-		public IDrawingContext Context
-		{
-			get => (_stackPanel as IControl).Context;
-			set => (_stackPanel as IControl).Context = value;
 		}
 	}
 }

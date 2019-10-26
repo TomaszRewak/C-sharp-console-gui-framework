@@ -5,10 +5,11 @@ using ConsoleGUI.Controls;
 using ConsoleGUI.Data;
 using ConsoleGUI.Input;
 using ConsoleGUI.Space;
+using ConsoleGUI.UserDefined;
 
 namespace ConsoleGUI.Example
 {
-	internal class TabPanel : IControl, IInputListener
+	internal class TabPanel : SimpleControl, IInputListener
 	{
 		private class Tab
 		{
@@ -66,6 +67,8 @@ namespace ConsoleGUI.Example
 					}
 				}
 			};
+
+			Content = wrapper;
 		}
 
 		public void AddTab(string name, IControl content)
@@ -91,14 +94,6 @@ namespace ConsoleGUI.Example
 
 			SelectTab((tabs.IndexOf(currentTab) + 1) % tabs.Count);
 			inputEvent.Handled = true;
-		}
-
-		public Character this[Position position] => wrapper[position];
-		public Size Size => wrapper.Size;
-		public IDrawingContext Context
-		{
-			get => (wrapper as IControl).Context;
-			set => (wrapper as IControl).Context = value;
 		}
 	}
 }

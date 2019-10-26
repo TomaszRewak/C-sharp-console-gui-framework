@@ -5,10 +5,11 @@ using System.Text;
 using ConsoleGUI.Controls;
 using ConsoleGUI.Data;
 using ConsoleGUI.Space;
+using ConsoleGUI.UserDefined;
 
 namespace ConsoleGUI.Example
 {
-	internal class BoardCell : IControl
+	internal class BoardCell : SimpleControl
 	{
 		private readonly IControl _cell;
 
@@ -24,18 +25,12 @@ namespace ConsoleGUI.Example
 					Content = new TextBlock { Text = content.ToString() }
 				}
 			};
-		}
 
-		public Character this[Position position] => _cell[position];
-		public Size Size => _cell.Size;
-		public IDrawingContext Context
-		{
-			get => (_cell as IControl).Context;
-			set => (_cell as IControl).Context = value;
+			Content = _cell;
 		}
 	}
 
-	internal class Board : IControl
+	internal class Board : SimpleControl
 	{
 		private readonly Grid _board;
 
@@ -74,14 +69,8 @@ namespace ConsoleGUI.Example
 			for (int i = 1; i < 9; i++)
 				for (int j = 1; j < 9; j++)
 					_board.AddChild(i, j, new BoardCell(pieces[j - 1][i - 1], new Color(139, 69, 19).Mix(Color.White, ((i + j) % 2) == 1 ? 0f : 0.4f)));
-		}
 
-		public Character this[Position position] => _board[position];
-		public Size Size => _board.Size;
-		public IDrawingContext Context
-		{
-			get => (_board as IControl).Context;
-			set => (_board as IControl).Context = value;
+			Content = _board;
 		}
 	}
 }
