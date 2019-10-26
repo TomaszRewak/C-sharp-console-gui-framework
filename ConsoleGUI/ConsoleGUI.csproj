@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Tomasz Rewak</Authors>
+    <Company />
+    <Product>ConsoleGUI</Product>
+    <Description>ConsoleGUI is a simple C# framework for creating console based GUI applications.</Description>
+    <Copyright>Tomasz Rewak</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/TomaszRewak/C-sharp-console-gui-framework</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TomaszRewak/C-sharp-console-gui-framework</RepositoryUrl>
+    <PackageTags>console, gui, framework</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
 </Project>
