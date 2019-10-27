@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/TomaszRewak/C-sharp-console-gui-framework</RepositoryUrl>
     <PackageTags>console, gui, framework</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>
