@@ -112,7 +112,7 @@ namespace ConsoleGUI.Example
 				},
 				FillingControl = new DockPanel
 				{
-					Placement = DockPanel.DockedContorlPlacement.Botton,
+					Placement = DockPanel.DockedContorlPlacement.Bottom,
 					DockedControl = new Boundary
 					{
 						MinHeight = 1,
@@ -151,7 +151,7 @@ namespace ConsoleGUI.Example
 											MaxWidth = 50,
 											Content = new DockPanel
 											{
-												Placement = DockPanel.DockedContorlPlacement.Botton,
+												Placement = DockPanel.DockedContorlPlacement.Bottom,
 												DockedControl = new WrapPanel
 												{
 													Content = new HorizontalStackPanel

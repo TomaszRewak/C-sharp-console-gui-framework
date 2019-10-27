@@ -14,7 +14,7 @@ namespace ConsoleGUI.Controls
 		{
 			Top,
 			Right,
-			Botton,
+			Bottom,
 			Left
 		}
 
@@ -84,7 +84,7 @@ namespace ConsoleGUI.Controls
 				switch (Placement)
 				{
 					case DockedContorlPlacement.Top:
-					case DockedContorlPlacement.Botton:
+					case DockedContorlPlacement.Bottom:
 						DockedDrawingContext.SetLimits(MinSize.WithHeight(0), MaxSize);
 						FillingDrawingContext.SetLimits(MinSize.Shrink(0, DockedDrawingContext.Size.Height), MaxSize.Shrink(0, DockedDrawingContext.Size.Height));
 						Resize(new Size(Math.Max(DockedDrawingContext.Size.Width, FillingDrawingContext.Size.Width), DockedDrawingContext.Size.Height + FillingDrawingContext.Size.Height));
@@ -103,7 +103,7 @@ namespace ConsoleGUI.Controls
 						DockedDrawingContext.SetOffset(new Vector(0, 0));
 						FillingDrawingContext.SetOffset(new Vector(0, DockedDrawingContext.Size.Height));
 						break;
-					case DockedContorlPlacement.Botton:
+					case DockedContorlPlacement.Bottom:
 						DockedDrawingContext.SetOffset(new Vector(0, Size.Height - DockedDrawingContext.Size.Height));
 						FillingDrawingContext.SetOffset(new Vector(0, 0));
 						break;
