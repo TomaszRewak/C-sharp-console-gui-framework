@@ -72,10 +72,7 @@ namespace ConsoleGUI.Example
 						{
 							new WrapPanel
 							{
-								Children = new[]
-								{
-									new TextBlock { Text = "This is just a demo application that uses a library for creating a GUI in a console." }
-								}
+								Content = new TextBlock { Text = "This is just a demo application that uses a library for creating a GUI in a console." }
 							},
 							new HorizontalSeparator(),
 							new TextBlock {Text ="By Tomasz Rewak.", Color = new Color(200, 200, 200)}
@@ -157,15 +154,18 @@ namespace ConsoleGUI.Example
 												Placement = DockPanel.DockedContorlPlacement.Botton,
 												DockedControl = new WrapPanel
 												{
-													Children = new IControl[]
+													Content = new HorizontalStackPanel
+													{
+														Children = new IControl[]
+														{
+															new Style
 															{
-																new Style
-																{
-																	Foreground = new Color(150, 150, 200),
-																	Content = new TextBlock { Text = @"D:\Software\> " }
-																},
-																textBox
-															}
+																Foreground = new Color(150, 150, 200),
+																Content = new TextBlock { Text = @"D:\Software\> " }
+															},
+															textBox
+														}
+													}
 												},
 												FillingControl = new Box
 												{
@@ -215,9 +215,9 @@ namespace ConsoleGUI.Example
 				{
 					Children = new IControl[]
 					{
-						new WrapPanel { Children = new [] { new TextBlock{Text = "Here is a short example of text wrapping" } } },
+						new WrapPanel { Content = new TextBlock{Text = "Here is a short example of text wrapping" } },
 						new HorizontalSeparator(),
-						new WrapPanel { Children = new [] { new TextBlock{Text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." } } },
+						new WrapPanel { Content = new TextBlock{Text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." } },
 					}
 				}
 			};

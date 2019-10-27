@@ -1,6 +1,7 @@
 ﻿using ConsoleGUI.Common;
 using ConsoleGUI.Data;
 using ConsoleGUI.Space;
+using ConsoleGUI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,22 @@ namespace ConsoleGUI.Controls
 {
 	public class WrapPanel : Control, IDrawingContextListener
 	{
-		private readonly List<DrawingContext> _children = new List<DrawingContext>();
-		public IEnumerable<IControl> Children
+		private DrawingContext _contentContext = DrawingContext.Dummy;
+		private DrawingContext ContentContext
 		{
-			get => _children.Select(c => c.Child);
-			set
-			{
-				foreach (var child in _children) child.Dispose();
-				foreach (var child in value) _children.Add(new DrawingContext(this, child));
+			get => _contentContext;
+			set => Setter
+				.SetDisposable(ref _contentContext, value)
+				.Then(Initialize);
+		}
 
-				Initialize();
-			}
+		private IControl _content;
+		public IControl Content
+		{
+			get => _content;
+			set => Setter
+				.Set(ref _content, value)
+				.Then(BindContent);
 		}
 
 		public override Character this[Position position]
@@ -29,9 +35,8 @@ namespace ConsoleGUI.Controls
 			{
 				var localPosition = position.UnWrap(Size.Width);
 
-				foreach (var child in _children)
-					if (child.Contains(localPosition))
-						return child[localPosition];
+				if (ContentContext.Contains(localPosition))
+					return ContentContext[localPosition];
 
 				return Character.Empty;
 			}
@@ -47,18 +52,17 @@ namespace ConsoleGUI.Controls
 
 			using (Freeze())
 			{
-				int left = 0;
-				foreach (var child in _children)
-				{
-					child.SetOffset(new Vector(left, 0));
-					child.SetLimits(
-						new Size(0, 1),
-						new Size(Math.Max(0, MaxSize.Width * MaxSize.Height - left), 1));
+				ContentContext.SetLimits(
+					new Size(0, 1),
+					new Size(Math.Max(0, MaxSize.Width * MaxSize.Height), 1));
 
-					left += child.Size.Width;
-				}
-				Resize(new Size(Math.Min(left, MaxSize.Width), (left - 1) / MaxSize.Width + 1));
+				Resize(new Size(Math.Min(ContentContext.Size.Width, MaxSize.Width), (ContentContext.Size.Width - 1) / MaxSize.Width + 1));
 			}
+		}
+
+		private void BindContent()
+		{
+			ContentContext = new DrawingContext(this, Content);
 		}
 
 		void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)

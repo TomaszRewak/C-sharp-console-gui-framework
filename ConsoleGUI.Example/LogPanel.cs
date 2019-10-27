@@ -23,10 +23,13 @@ namespace ConsoleGUI.Example
 		{
 			_stackPanel.Add(new WrapPanel
 			{
-				Children = new IControl[]
+				Content = new HorizontalStackPanel
 				{
-					new TextBlock {Text = $"[{DateTime.Now.ToLongTimeString()}] ", Color = new Color(200, 20, 20)},
-					new TextBlock {Text = message}
+					Children = new[]
+					{
+						new TextBlock {Text = $"[{DateTime.Now.ToLongTimeString()}] ", Color = new Color(200, 20, 20)},
+						new TextBlock {Text = message}
+					}
 				}
 			});
 		}
