@@ -66,8 +66,7 @@ namespace ConsoleGUI.Controls
 		{
 			using (Freeze())
 			{
-				CaretStart = Math.Min(Math.Max(CaretStart, 0), TextLength);
-				CaretEnd = Math.Min(CaretEnd, TextLength);
+				FixCaretPosition();
 
 				switch (inputEvent.Key.Key)
 				{
@@ -112,7 +111,17 @@ namespace ConsoleGUI.Controls
 
 		protected override void Initialize()
 		{
-			Resize(EditorSize);
+			using (Freeze())
+			{
+				FixCaretPosition();
+				Resize(EditorSize);
+			}
+		}
+
+		private void FixCaretPosition()
+		{
+			CaretStart = Math.Min(Math.Max(CaretStart, 0), TextLength);
+			CaretEnd = Math.Min(CaretEnd, TextLength);
 		}
 	}
 }
