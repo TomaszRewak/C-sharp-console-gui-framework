@@ -284,7 +284,6 @@ namespace ConsoleGUI.Example
 				if (i % 200 == 0) secondaryConsole.Add($"Ping {i / 200 + 1}");
 
 				ConsoleManager.ReadInput(input);
-				//ConsoleManager.AdjustSize();
 			}
 		}
 	}
