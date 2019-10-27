@@ -121,7 +121,8 @@ namespace ConsoleGUI
 		public static void Setup()
 		{
 			Console.OutputEncoding = Encoding.UTF8;
-			AdjustBufferSize();
+			ResizeBuffer(Console.WindowWidth, Console.WindowHeight);
+			Initialize();
 		}
 
 		public static void Resize(in Size size)
@@ -130,11 +131,6 @@ namespace ConsoleGUI
 			ResizeBuffer(size.Width, size.Height);
 			Console.SetWindowSize(size.Width, size.Height);
 			Initialize();
-		}
-
-		private static void AdjustBufferSize()
-		{
-			ResizeBuffer(Console.WindowWidth, Console.WindowHeight);
 		}
 
 		private static void ResizeBuffer(int width, int height)
