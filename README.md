@@ -8,7 +8,7 @@ It provides most essential layout management utilities as well as a set of basic
   <img src="https://github.com/TomaszRewak/C-sharp-console-gui-framework/blob/master/Resources/example.png?raw=true" width=800/>
 </p>
 
-# Setup
+## Setup
 
 First install the NuGet package:
 
@@ -44,7 +44,7 @@ And that's it. As you can see most of those steps are optional, depending on how
 
 After that, whenever you make a change to any of the controls within the UI tree, the updates will be propagated and displayed automatically. No manual `Redraw()` calls are required.
 
-## Compatibility mode
+#### Compatibility mode
 
 The above example uses the compatibility mode. It's required if your terminal of choice doesn't support true color formatting. If set, the ConsoleGUI will translate all of the RGB colors into 4bit values of the ConsoleColor enum. This will, of course, degrade the user experience.
 
@@ -52,13 +52,13 @@ Terminals that DO NOT support the true color formatting are (for example): power
 
 Terminals that DO support the true color formatting are (for example): the new Windows Terminal and the terminal that is built in into the VS.
 
-## Responsiveness
+#### Responsiveness
 
 If the window size is not set explicitly, the layout will be adjusted to the current size of that window. It's important to note that this framework doesn't detect terminal size changes automatically. If the user resizes the window manually, the layout will become broken.
 
 To readjust the layout to the manually updated window size, call the `ConsoleManager.Setup()` method. Just remember that it might take more time to repaint the entire screen then to draw a single update (as the entire buffer must be invalidated), so do it only if the size of the window has actually changed.
 
-# Basic controls
+## Basic controls
 
 This is a list of all available controls:
 
@@ -142,11 +142,11 @@ Stacks multiple controls vertically.
 
 Breaks a single line of text into multiple lines based on the available vertical space. It can be used with any type of a control (`TextBox`, `TextBlock` but also `HorizontalStackPanel` and any other).
 
-# Creating custom controls
+## Creating custom controls
 
 The set of predefined control is relatively small, but it's very easy to create custom ones. There are two main ways to do it.
 
-### Inherit from the `SimpleControl` class
+#### Inheriting the `SimpleControl` class
 
 If you want to define a control that is simply composed of other controls (like a text box with a specific background and border), inheriting from the `SimpleControl` class is the way to go.
 
@@ -179,7 +179,7 @@ internal sealed class MyControl : SimpleControl
 }
 ```
 
-### Implement the `IControl` interface or inherit from the `Control` class
+#### Implementing the `IControl` interface or inheriting the `Control` class
 
 This approach can be used to define fully custom controls. All of the basic within this library are implemented this way.
 
@@ -225,7 +225,7 @@ The `Control` class not only trims all of the incoming and outgoing messages to 
 
 For more information on how to define custom controls using the `IControl`/`IDrawingContext` interfaces or the `Control`/`DrawingContext` classes, please see the source code of one of the controls defined within this library.
 
-# Input
+## Input
 
 As the standard `Console` class doesn't provide any event-based interface for detecting incoming characters, the availability of input messages has to be checked periodically within the main loop of your application. Of course, it's not required if your layout doesn't contain any interactive components.
 
@@ -248,12 +248,12 @@ for (int i = 0; ; i++)
 
 The `IInputListener` interface is not only restricted for classes that implement the `IControl` interface and can be used to define any custom (user defined) controllers that manage application's behavior.
 
-# Performance
+## Performance
 
 This library is designed with high performance applications in mind. It means that if a control requests an `Update`, only the specified screen rectangle will be recalculated, and only if all of its parent controls agree that this part of the content is actually visible.
 
 As the most expensive operation of the whole process is printing characters on the screen, the `ConsoleManager` defines its own, additional buffer. If the requested pixel (character) didn't change, it's not repainted.
 
-# Contributions
+## Contributions
 
 I'm open to all sorts of contributions and feedback.
