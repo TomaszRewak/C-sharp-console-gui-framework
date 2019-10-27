@@ -14,7 +14,7 @@ namespace ConsoleGUI.Controls
 		private string _text = string.Empty;
 		public string Text
 		{
-			get => _text;
+			get => _text ?? string.Empty;
 			set => Setter
 				.Set(ref _text, value)
 				.Then(Initialize);
@@ -23,7 +23,7 @@ namespace ConsoleGUI.Controls
 		private int _caretStart;
 		public int CaretStart
 		{
-			get => _caretStart;
+			get => Math.Min(Math.Max(_caretStart, 0), TextLength);
 			set => Setter
 				.Set(ref _caretStart, value)
 				.Then(Redraw);
@@ -32,7 +32,7 @@ namespace ConsoleGUI.Controls
 		private int _caretEnd;
 		public int CaretEnd
 		{
-			get => _caretEnd;
+			get => Math.Min(Math.Max(_caretEnd, CaretStart), TextLength);
 			set => Setter
 				.Set(ref _caretEnd, value)
 				.Then(Redraw);
@@ -66,7 +66,7 @@ namespace ConsoleGUI.Controls
 		{
 			using (Freeze())
 			{
-				FixCaretPosition();
+				string newText = null;
 
 				switch (inputEvent.Key.Key)
 				{
@@ -84,44 +84,37 @@ namespace ConsoleGUI.Controls
 						break;
 					case ConsoleKey.Delete when CaretStart != CaretEnd:
 					case ConsoleKey.Backspace when CaretStart != CaretEnd:
-						Text = $"{Text.Substring(0, CaretStart)}{Text.Substring(CaretEnd)}";
+						newText = $"{Text.Substring(0, CaretStart)}{Text.Substring(CaretEnd)}";
 						CaretEnd = CaretStart;
 						break;
 					case ConsoleKey.Backspace when CaretStart > 0:
-						Text = $"{Text.Substring(0, CaretStart - 1)}{Text.Substring(CaretStart)}";
+						newText = $"{Text.Substring(0, CaretStart - 1)}{Text.Substring(CaretStart)}";
 						CaretStart = CaretEnd = CaretStart - 1;
 						break;
 					case ConsoleKey.Delete when CaretStart < TextLength:
-						Text = $"{Text.Substring(0, CaretStart)}{Text.Substring(CaretStart + 1)}";
+						newText = $"{Text.Substring(0, CaretStart)}{Text.Substring(CaretStart + 1)}";
 						break;
 					case ConsoleKey key when char.IsControl(inputEvent.Key.KeyChar):
 						return;
 					default:
-						Text = Text ?? "";
-						Text = $"{Text.Substring(0, CaretStart)}{inputEvent.Key.KeyChar}{Text.Substring(CaretEnd)}";
+						newText = $"{Text.Substring(0, CaretStart)}{inputEvent.Key.KeyChar}{Text.Substring(CaretEnd)}";
 						CaretStart = CaretEnd = CaretStart + 1;
 						break;
 				}
+
+				if (newText != null)
+					Text = newText;
+
+				inputEvent.Handled = true;
 			}
-
-			inputEvent.Handled = true;
-
-			Initialize();
 		}
 
 		protected override void Initialize()
 		{
 			using (Freeze())
 			{
-				FixCaretPosition();
 				Resize(EditorSize);
 			}
-		}
-
-		private void FixCaretPosition()
-		{
-			CaretStart = Math.Min(Math.Max(CaretStart, 0), TextLength);
-			CaretEnd = Math.Min(CaretEnd, TextLength);
 		}
 	}
 }
