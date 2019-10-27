@@ -18,19 +18,19 @@ namespace ConsoleGUI
 		{
 			void IDrawingContextListener.OnRedraw(DrawingContext drawingContext)
 			{
-				if (freezeLock.IsFrozen) return;
+				if (_freezeLock.IsFrozen) return;
 				Redraw();
 			}
 
 			void IDrawingContextListener.OnUpdate(DrawingContext drawingContext, Rect rect)
 			{
-				if (freezeLock.IsFrozen) return;
+				if (_freezeLock.IsFrozen) return;
 				Update(rect);
 			}
 		}
 
 		private static readonly ConsoleBuffer _buffer = new ConsoleBuffer();
-		private static FreezeLock freezeLock;
+		private static FreezeLock _freezeLock;
 
 		private static DrawingContext _contentContext = DrawingContext.Dummy;
 		private static DrawingContext ContentContext
@@ -50,6 +50,15 @@ namespace ConsoleGUI
 				.Then(BindContent);
 		}
 
+		private static bool _compatibilityMode;
+		public static bool CompatibilityMode
+		{
+			get => _compatibilityMode;
+			set => Setter
+				.Set(ref _compatibilityMode, value)
+				.Then(Redraw);
+		}
+
 		private static void Initialize()
 		{
 			var consoleSize = new Size(Console.WindowWidth, Console.WindowHeight);
@@ -57,9 +66,9 @@ namespace ConsoleGUI
 			_buffer.Initialize(consoleSize);
 			Console.Clear();
 
-			freezeLock.Freeze();
+			_freezeLock.Freeze();
 			ContentContext.SetLimits(consoleSize, consoleSize);
-			freezeLock.Unfreeze();
+			_freezeLock.Unfreeze();
 
 			Redraw();
 		}
@@ -88,7 +97,21 @@ namespace ConsoleGUI
 				try
 				{
 					Console.SetCursorPosition(position.X, position.Y);
-					Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
+
+					if (CompatibilityMode)
+					{
+						if (position.X == Console.WindowWidth - 1 &&
+							position.Y == Console.WindowHeight - 1)
+							continue;
+
+						Console.BackgroundColor = ColorConverter.GetNearestConsoleColor(background);
+						Console.ForegroundColor = ColorConverter.GetNearestConsoleColor(foreground);
+						Console.Write(content);
+					}
+					else
+					{
+						Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
+					}
 				}
 				catch (ArgumentOutOfRangeException)
 				{ }
@@ -97,22 +120,28 @@ namespace ConsoleGUI
 
 		public static void Setup()
 		{
-			Console.OutputEncoding = System.Text.Encoding.UTF8;
-			Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
+			Console.OutputEncoding = Encoding.UTF8;
+			AdjustBufferSize();
 		}
 
 		public static void Resize(in Size size)
 		{
 			Console.SetWindowSize(1, 1);
-			Console.SetBufferSize(size.Width, size.Height);
+			ResizeBuffer(size.Width, size.Height);
 			Console.SetWindowSize(size.Width, size.Height);
-
-			AdjustSize();
+			Initialize();
 		}
 
-		public static void AdjustSize()
+		private static void AdjustBufferSize()
 		{
-			Initialize();
+			ResizeBuffer(Console.WindowWidth, Console.WindowHeight);
+		}
+
+		private static void ResizeBuffer(int width, int height)
+		{
+			Console.SetCursorPosition(0, 0);
+			Console.SetWindowPosition(0, 0);
+			Console.SetBufferSize(width, height);
 		}
 
 		public static void ReadInput(IReadOnlyCollection<IInputListener> controls)
