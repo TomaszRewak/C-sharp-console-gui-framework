@@ -82,8 +82,8 @@ namespace ConsoleGUI.Controls
 					VerticalContentPlacement == VerticalPlacement.Stretch ? MinSize.Height : 0);
 				
 				var maxSize = new Size(
-					HorizontalContentPlacement == HorizontalPlacement.Stretch ? MaxSize.Width : 1_000_000,
-					VerticalContentPlacement == VerticalPlacement.Stretch ? MaxSize.Height : 1_000_000);
+					HorizontalContentPlacement == HorizontalPlacement.Stretch ? MaxSize.Width : Size.MaxLength,
+					VerticalContentPlacement == VerticalPlacement.Stretch ? MaxSize.Height : Size.MaxLength);
 
 				ContentContext.SetLimits(minSize, maxSize);
 
