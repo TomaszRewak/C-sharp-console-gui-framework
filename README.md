@@ -12,6 +12,8 @@ It provides most essential layout management utilities as well as a set of basic
 
 What sets this library apart from other projects that provide similar functionalities, is the fact that the ConsoleGUI framework is fully layout-driven. In this regard it’s more like WPF or HTML, than for example Windows Forms. You don’t specify exact coordinates at which a given control should reside, but rather let stack panels, dock panels and other layout managers do their work. I don’t claim it’s THE right way of doing things, it’s just what my background is.
 
+More details about this project (as well as a glimpse at the working example) can be found in this video: https://youtu.be/YIrmjENTaaU
+
 ## Setup
 
 First install the NuGet package:
