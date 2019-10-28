@@ -268,6 +268,7 @@ class FromController : IInputListener
 		if (inputEvent.Key.Key == ConsoleKey.Tab)
 		{
 			_currentInput = // nextInput...
+			inputEvent.Handled = true;
 		}
 		else
 		{
