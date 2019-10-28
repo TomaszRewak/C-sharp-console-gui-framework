@@ -8,7 +8,7 @@ It provides most essential layout management utilities as well as a set of basic
   <img src="https://github.com/TomaszRewak/C-sharp-console-gui-framework/blob/master/Resources/example.png?raw=true" width=800/>
 </p>
 
-The example app is not really a playable chess game. The board on the left is simply just a grid with some text in it - for display purposes only. But of course, with a little bit of code behind, it could be made interactive.
+*The example above is not really a playable chess game. The board on the left is simply just a grid with some text in it - it's here for display purposes only. But of course, with a little bit of code behind, it could be made interactive.*
 
 #### Motivation
 
