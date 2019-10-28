@@ -8,6 +8,8 @@ It provides most essential layout management utilities as well as a set of basic
   <img src="https://github.com/TomaszRewak/C-sharp-console-gui-framework/blob/master/Resources/example.png?raw=true" width=800/>
 </p>
 
+The example app is not really a playable chess game. The board on the left is simply just a grid with some text in it - for display purposes only. But of course, with a little bit of code behind, it could be made interactive.
+
 #### Motivation
 
 What sets this library apart from other projects that provide similar functionalities, is the fact that the ConsoleGUI framework is fully layout-driven. In this regard it’s more like WPF or HTML, than for example Windows Forms. You don’t specify exact coordinates at which a given control should reside, but rather let stack panels, dock panels and other layout managers do their work. I don’t claim it’s THE right way of doing things, it’s just what my background is.
@@ -283,6 +285,10 @@ class FromController : IInputListener
 After implementing it, all you have to do is to initialize an instance of this class with a list of you inputs and call the ` ConsoleManager.ReadInput(fromControllers)` each frame.
 
 The biggest strength of this approach is that you decide what’s the order of controls within the form, you can do special validation after leaving each input, create a custom layout of the form itself, highlight currently active input, and much, much more. I believe it’s a good tradeoff. 
+
+## Mouse
+
+Currently this library does not mouse input.
 
 ## Performance
 
