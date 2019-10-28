@@ -8,6 +8,10 @@ It provides most essential layout management utilities as well as a set of basic
   <img src="https://github.com/TomaszRewak/C-sharp-console-gui-framework/blob/master/Resources/example.png?raw=true" width=800/>
 </p>
 
+#### Motivation
+
+What sets this library apart from other projects that provide similar functionalities, is the fact that the ConsoleGUI framework is fully layout-driven. In this regard it’s more like WPF or HTML, than for example Windows Forms. You don’t specify exact coordinates at which a given control should reside, but rather let stack panels, dock panels and other layout managers do their work. I don’t claim it’s THE right way of doing things, it’s just what my background is.
+
 ## Setup
 
 First install the NuGet package:
@@ -247,6 +251,35 @@ for (int i = 0; ; i++)
 ```
 
 The `IInputListener` interface is not only restricted for classes that implement the `IControl` interface and can be used to define any custom (user defined) controllers that manage application's behavior.
+
+#### Forms
+
+As you might have noticed, there is no general purpose `Form` control available in this framework. That’s because it’s very hard to come up with a design that would fit all needs. Of course such obstacle is not a good reason on its own, but at the same time it’s extremely easy to implement a tailor made form controller within the target application itself. Here is an example:
+
+```csharp
+class FromController : IInputListener
+{
+	IInputListener _currentInput;
+	
+	// ...
+
+	public void OnInput(InputEvent inputEvent)
+	{
+		if (inputEvent.Key.Key == ConsoleKey.Tab)
+		{
+			_currentInput = // nextInput...
+		}
+		else
+		{
+			_currentInput.OnInput(inputEvent)
+		}
+	}
+}
+```
+
+After implementing it, all you have to do is to initialize an instance of this class with a list of you inputs and call the ` ConsoleManager.ReadInput(fromControllers)` each frame.
+
+The biggest strength of this approach is that you decide what’s the order of controls within the form, you can do special validation after leaving each input, create a custom layout of the form itself, highlight currently active input, and much, much more. I believe it’s a good tradeoff. 
 
 ## Performance
 
