@@ -1,6 +1,6 @@
 # ConsoleGUI
 
-ConsoleGUI is a simple .NET framework for creating console-based GUI applications.
+ConsoleGUI is a simple layout-driven .NET framework for creating console-based GUI applications.
 
 It provides most essential layout management utilities as well as a set of basic controls.
 
