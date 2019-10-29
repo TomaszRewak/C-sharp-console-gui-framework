@@ -189,7 +189,7 @@ internal sealed class MyControl : SimpleControl
 
 #### Implementing the `IControl` interface or inheriting the `Control` class
 
-This approach can be used to define fully custom controls. All of the basics within this library are implemented this way.
+This approach can be used to define fully custom controls. All of the basic controls within this library are implemented this way.
 
 The `IControl` interface requires providing 3 members:
 
@@ -254,7 +254,7 @@ for (int i = 0; ; i++)
 }
 ```
 
-The `IInputListener` interface is not only restricted for classes that implement the `IControl` interface but can also be used to define any custom (user defined) controllers that manage application behavior.
+The `IInputListener` interface is not restricted only for classes that implement the `IControl` interface, but can also be used to define any custom (user defined) controllers that manage application behavior.
 
 #### Forms
 
@@ -282,9 +282,9 @@ class FromController : IInputListener
 }
 ```
 
-After implementing it, all you have to do is to initialize an instance of this class with a list of your inputs and call the ` ConsoleManager.ReadInput(fromControllers)`for each frame.
+After implementing it, all you have to do is to initialize an instance of this class with a list of your inputs and call the ` ConsoleManager.ReadInput(fromControllers)` on each frame.
 
-The biggest strength of this approach is that you decide the order of controls within the form, you can do special validation after leaving each input, create a custom layout of the form itself, highlight currently active input, and much, much more. I believe it’s a good tradeoff. 
+The biggest strength of this approach is that you decide what is the order of controls within the form, you can do special validation after leaving each input, create a custom layout of the form itself, highlight currently active input, and much, much more. I believe it’s a good tradeoff. 
 
 ## Mouse
 
