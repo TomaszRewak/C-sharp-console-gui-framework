@@ -299,3 +299,5 @@ As the most expensive operation of the whole process is printing characters on t
 ## Contributions
 
 I'm open to all sorts of contributions and feedback.
+
+Also, please feel free to request new controls/features through github issues. 
