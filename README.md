@@ -96,7 +96,7 @@ Can host multiple child controls, each displayed within a specified rectangle. A
   
 Displays `Data` in a grid based on provided column definitions.
 
-The `ColumnDefinition` defines the column `Header`, its `Width` and the data `Selector`. The `Selector` can be used to extract a text from a data row, specify that cell's color, or even define a custom content generator.
+The `ColumnDefinition` defines the column `Header`, its `Width` and the data `Selector`. The `Selector` can be used to extract text from a data row, specify that cell's color, or even define a custom content generator.
 
 ##### DockPanel
 
@@ -148,7 +148,7 @@ Stacks multiple controls vertically.
 
 ##### WrapPanel
 
-Breaks a single line of text into multiple lines based on the available vertical space. It can be used with any type of a control (`TextBox`, `TextBlock` but also `HorizontalStackPanel` and any other).
+Breaks a single line of text into multiple lines based on the available vertical space. It can be used with any type of control (`TextBox`, `TextBlock` but also `HorizontalStackPanel` and any other).
 
 ## Creating custom controls
 
@@ -189,7 +189,7 @@ internal sealed class MyControl : SimpleControl
 
 #### Implementing the `IControl` interface or inheriting the `Control` class
 
-This approach can be used to define fully custom controls. All of the basic within this library are implemented this way.
+This approach can be used to define fully custom controls. All of the basics within this library are implemented this way.
 
 The `IControl` interface requires providing 3 members:
 
@@ -237,7 +237,7 @@ For more information on how to define custom controls using the `IControl`/`IDra
 
 As the standard `Console` class doesn't provide any event-based interface for detecting incoming characters, the availability of input messages has to be checked periodically within the main loop of your application. Of course, it's not required if your layout doesn't contain any interactive components.
 
-To handle pending input messages, call the `ReadInput` method of the `ConsoleManager` class. It accepts a single argument being a collection of `IInputListener` objects. You can define this collection just once and reuse it - it specifies the list of input elements that are currently active and should be listening to keystrokes. The order of those elements is important, because if one control will set the `Handled` property of the provided `InputEvent`, the propagation will be terminated.
+To handle pending input messages, call the `ReadInput` method of the `ConsoleManager` class. It accepts a single argument being a collection of `IInputListener` objects. You can define this collection just once and reuse it - it specifies the list of input elements that are currently active and should be listening to keystrokes. The order of those elements is important, because if one control sets the `Handled` property of the provided `InputEvent`, the propagation will be terminated.
 
 ```csharp
 var input = new IInputListener[]
@@ -254,11 +254,11 @@ for (int i = 0; ; i++)
 }
 ```
 
-The `IInputListener` interface is not only restricted for classes that implement the `IControl` interface and can be used to define any custom (user defined) controllers that manage application's behavior.
+The `IInputListener` interface is not only restricted for classes that implement the `IControl` interface but can also be used to define any custom (user defined) controllers that manage application behavior.
 
 #### Forms
 
-As you might have noticed, there is no general purpose `Form` control available in this framework. That’s because it’s very hard to come up with a design that would fit all needs. Of course such obstacle is not a good reason on its own, but at the same time it’s extremely easy to implement a tailor made form controller within the target application itself. Here is an example:
+As you might have noticed, there is no general purpose `Form` control available in this framework. That’s because it’s very hard to come up with a design that would fit all needs. Of course such an obstacle is not a good reason on its own, but at the same time it’s extremely easy to implement a tailor made form controller within the target application itself. Here is an example:
 
 ```csharp
 class FromController : IInputListener
@@ -282,13 +282,13 @@ class FromController : IInputListener
 }
 ```
 
-After implementing it, all you have to do is to initialize an instance of this class with a list of you inputs and call the ` ConsoleManager.ReadInput(fromControllers)` each frame.
+After implementing it, all you have to do is to initialize an instance of this class with a list of your inputs and call the ` ConsoleManager.ReadInput(fromControllers)`for each frame.
 
-The biggest strength of this approach is that you decide what’s the order of controls within the form, you can do special validation after leaving each input, create a custom layout of the form itself, highlight currently active input, and much, much more. I believe it’s a good tradeoff. 
+The biggest strength of this approach is that you decide the order of controls within the form, you can do special validation after leaving each input, create a custom layout of the form itself, highlight currently active input, and much, much more. I believe it’s a good tradeoff. 
 
 ## Mouse
 
-Currently this library does not mouse input.
+Currently this library does not support mouse input.
 
 ## Performance
 
