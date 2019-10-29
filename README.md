@@ -42,6 +42,7 @@ ConsoleManager.Setup();
 ConsoleManager.Resize(new Size(150, 40));
 
 // required for terminals that don't support true color formatting (e.g. powershell.exe)
+// not recommended if you only want to run your app in a console that supports true color formatting
 ConsoleManager.CompatibilityMode = true;
 
 // sets the main layout element and prints it on the screen
@@ -59,6 +60,24 @@ The above example uses the compatibility mode. It's required if your terminal of
 Terminals that DO NOT support the true color formatting are (for example): powershell.exe and cmd.exe.
 
 Terminals that DO support the true color formatting are (for example): the new Windows Terminal and the terminal that is built in into the VS.
+
+<p align="center">
+  <img src="https://github.com/TomaszRewak/C-sharp-console-gui-framework/blob/master/Resources/Problems.png?raw=true" width=800/>
+</p>
+
+If after starting the application you see the same output as the one on the left, you have to enable the compatibility mode:
+
+```csharp
+ConsoleManager.CompatibilityMode = true;
+```
+
+If your application works more or less correctly, but the top line is not visible and the bottom line is duplicated (the right example), you need to set the `DontPrintTheLastCharacter` property of the `ConsoleManager`:
+
+```csharp
+ConsoleManager.DontPrintTheLastCharacter = true;
+```
+
+This will prevent the last (bottom-right) character from being printed so that the console will not try to scroll to the next line (it's also a console-specific behaviour).
 
 #### Responsiveness
 
