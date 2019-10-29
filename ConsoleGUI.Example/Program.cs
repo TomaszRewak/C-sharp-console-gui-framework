@@ -83,10 +83,10 @@ namespace ConsoleGUI.Example
 
 			var dockPanel = new DockPanel
 			{
-				Placement = DockPanel.DockedContorlPlacement.Top,
+				Placement = DockPanel.DockedControlPlacement.Top,
 				DockedControl = new DockPanel
 				{
-					Placement = DockPanel.DockedContorlPlacement.Right,
+					Placement = DockPanel.DockedControlPlacement.Right,
 					DockedControl = new Background
 					{
 						Color = new Color(100, 100, 100),
@@ -112,7 +112,7 @@ namespace ConsoleGUI.Example
 				},
 				FillingControl = new DockPanel
 				{
-					Placement = DockPanel.DockedContorlPlacement.Bottom,
+					Placement = DockPanel.DockedControlPlacement.Bottom,
 					DockedControl = new Boundary
 					{
 						MinHeight = 1,
@@ -137,7 +137,7 @@ namespace ConsoleGUI.Example
 							Color = new Color(25, 54, 65),
 							Content = new DockPanel
 							{
-								Placement = DockPanel.DockedContorlPlacement.Right,
+								Placement = DockPanel.DockedControlPlacement.Right,
 								DockedControl = new Background
 								{
 									Color = new Color(30, 40, 50),
@@ -151,7 +151,7 @@ namespace ConsoleGUI.Example
 											MaxWidth = 50,
 											Content = new DockPanel
 											{
-												Placement = DockPanel.DockedContorlPlacement.Bottom,
+												Placement = DockPanel.DockedControlPlacement.Bottom,
 												DockedControl = new WrapPanel
 												{
 													Content = new HorizontalStackPanel
@@ -179,7 +179,7 @@ namespace ConsoleGUI.Example
 								},
 								FillingControl = new DockPanel
 								{
-									Placement = DockPanel.DockedContorlPlacement.Right,
+									Placement = DockPanel.DockedControlPlacement.Right,
 									DockedControl = new Background
 									{
 										Color = new Color(20, 30, 40),

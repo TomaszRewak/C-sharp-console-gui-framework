@@ -10,7 +10,7 @@ namespace ConsoleGUI.Controls
 {
 	public class DockPanel : Control, IDrawingContextListener
 	{
-		public enum DockedContorlPlacement
+		public enum DockedControlPlacement
 		{
 			Top,
 			Right,
@@ -18,8 +18,8 @@ namespace ConsoleGUI.Controls
 			Left
 		}
 
-		private DockedContorlPlacement placement = DockedContorlPlacement.Top;
-		public DockedContorlPlacement Placement
+		private DockedControlPlacement placement = DockedControlPlacement.Top;
+		public DockedControlPlacement Placement
 		{
 			get => placement;
 			set => Setter
@@ -83,14 +83,14 @@ namespace ConsoleGUI.Controls
 			{
 				switch (Placement)
 				{
-					case DockedContorlPlacement.Top:
-					case DockedContorlPlacement.Bottom:
+					case DockedControlPlacement.Top:
+					case DockedControlPlacement.Bottom:
 						DockedDrawingContext.SetLimits(MinSize.WithHeight(0), MaxSize);
 						FillingDrawingContext.SetLimits(MinSize.Shrink(0, DockedDrawingContext.Size.Height), MaxSize.Shrink(0, DockedDrawingContext.Size.Height));
 						Resize(new Size(Math.Max(DockedDrawingContext.Size.Width, FillingDrawingContext.Size.Width), DockedDrawingContext.Size.Height + FillingDrawingContext.Size.Height));
 						break;
-					case DockedContorlPlacement.Left:
-					case DockedContorlPlacement.Right:
+					case DockedControlPlacement.Left:
+					case DockedControlPlacement.Right:
 						DockedDrawingContext.SetLimits(MinSize.WithWidth(0), MaxSize);
 						FillingDrawingContext.SetLimits(MinSize.Shrink(DockedDrawingContext.Size.Width, 0), MaxSize.Shrink(DockedDrawingContext.Size.Width, 0));
 						Resize(new Size(DockedDrawingContext.Size.Width + FillingDrawingContext.Size.Width, Math.Max(DockedDrawingContext.Size.Height, FillingDrawingContext.Size.Height)));
@@ -99,19 +99,19 @@ namespace ConsoleGUI.Controls
 
 				switch (Placement)
 				{
-					case DockedContorlPlacement.Top:
+					case DockedControlPlacement.Top:
 						DockedDrawingContext.SetOffset(new Vector(0, 0));
 						FillingDrawingContext.SetOffset(new Vector(0, DockedDrawingContext.Size.Height));
 						break;
-					case DockedContorlPlacement.Bottom:
+					case DockedControlPlacement.Bottom:
 						DockedDrawingContext.SetOffset(new Vector(0, Size.Height - DockedDrawingContext.Size.Height));
 						FillingDrawingContext.SetOffset(new Vector(0, 0));
 						break;
-					case DockedContorlPlacement.Left:
+					case DockedControlPlacement.Left:
 						DockedDrawingContext.SetOffset(new Vector(0, 0));
 						FillingDrawingContext.SetOffset(new Vector(DockedDrawingContext.Size.Width, 0));
 						break;
-					case DockedContorlPlacement.Right:
+					case DockedControlPlacement.Right:
 						DockedDrawingContext.SetOffset(new Vector(Size.Width - DockedDrawingContext.Size.Width, 0));
 						FillingDrawingContext.SetOffset(new Vector(0, 0));
 						break;

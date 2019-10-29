@@ -55,7 +55,7 @@ namespace ConsoleGUI.Example
 
 			wrapper = new DockPanel
 			{
-				Placement = DockPanel.DockedContorlPlacement.Top,
+				Placement = DockPanel.DockedControlPlacement.Top,
 				DockedControl = new Background
 				{
 					Color = new Color(25, 25, 52),
