@@ -59,6 +59,15 @@ namespace ConsoleGUI
 				.Then(Redraw);
 		}
 
+		private static bool _dontPrintTheLastCharacter;
+		public static bool DontPrintTheLastCharacter
+		{
+			get => _dontPrintTheLastCharacter;
+			set => Setter
+				.Set(ref _dontPrintTheLastCharacter, value)
+				.Then(Redraw);
+		}
+
 		private static void Initialize()
 		{
 			var consoleSize = new Size(Console.WindowWidth, Console.WindowHeight);
@@ -86,6 +95,11 @@ namespace ConsoleGUI
 
 			foreach (var position in rect)
 			{
+				if (DontPrintTheLastCharacter &&
+					position.X == Console.WindowWidth - 1 &&
+					position.Y == Console.WindowHeight - 1)
+					continue;
+
 				var character = ContentContext[position];
 
 				if (!_buffer.Update(position, character)) continue;
@@ -94,16 +108,14 @@ namespace ConsoleGUI
 				var foreground = character.Foreground ?? Color.White;
 				var background = character.Background ?? Color.Black;
 
+				if (content == '\n') content = ' ';
+
 				try
 				{
 					Console.SetCursorPosition(position.X, position.Y);
 
 					if (CompatibilityMode)
 					{
-						if (position.X == Console.WindowWidth - 1 &&
-							position.Y == Console.WindowHeight - 1)
-							continue;
-
 						Console.BackgroundColor = ColorConverter.GetNearestConsoleColor(background);
 						Console.ForegroundColor = ColorConverter.GetNearestConsoleColor(foreground);
 						Console.Write(content);
@@ -120,24 +132,24 @@ namespace ConsoleGUI
 
 		public static void Setup()
 		{
-			Console.OutputEncoding = Encoding.UTF8;
+			SafeConsole.SetUtf8();
 			ResizeBuffer(Console.WindowWidth, Console.WindowHeight);
 			Initialize();
 		}
 
 		public static void Resize(in Size size)
 		{
-			Console.SetWindowSize(1, 1);
+			SafeConsole.SetWindowSize(1, 1);
 			ResizeBuffer(size.Width, size.Height);
-			Console.SetWindowSize(size.Width, size.Height);
+			SafeConsole.SetWindowSize(size.Width, size.Height);
 			Initialize();
 		}
 
 		private static void ResizeBuffer(int width, int height)
 		{
 			Console.SetCursorPosition(0, 0);
-			Console.SetWindowPosition(0, 0);
-			Console.SetBufferSize(width, height);
+			SafeConsole.SetWindowPosition(0, 0);
+			SafeConsole.SetBufferSize(width, height);
 		}
 
 		public static void ReadInput(IReadOnlyCollection<IInputListener> controls)
@@ -147,7 +159,7 @@ namespace ConsoleGUI
 				var key = Console.ReadKey(true);
 				var inputEvent = new InputEvent(key);
 
-				foreach(var control in controls)
+				foreach (var control in controls)
 				{
 					control.OnInput(inputEvent);
 					if (inputEvent.Handled) break;
