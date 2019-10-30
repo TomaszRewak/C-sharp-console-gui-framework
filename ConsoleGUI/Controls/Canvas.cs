@@ -12,7 +12,7 @@ namespace ConsoleGUI.Controls
 	{
 		private readonly List<DrawingContext> _children = new List<DrawingContext>();
 
-		public void Add(IControl control, Rect rect)
+		public void Add(IControl control, in Rect rect)
 		{
 			using (Freeze())
 			{
@@ -23,6 +23,34 @@ namespace ConsoleGUI.Controls
 				_children.Insert(0, newChild);
 
 				Update(rect);
+			}
+		}
+
+		public void Move(IControl control, in Rect rect)
+		{
+			using (Freeze())
+			{
+				foreach (var child in _children)
+				{
+					if (child.Child != control) continue;
+
+					child.SetOffset(rect.Offset);
+					child.SetLimits(rect.Size, rect.Size);
+				}
+			}
+		}
+
+		public void Remove(IControl control)
+		{
+			using (Freeze())
+			{
+				var child = _children.FirstOrDefault(context => context.Child == control);
+
+				if (child == null) return;
+
+				Update(new Rect(child.Offset, child.MaxSize));
+
+				_children.Remove(child);
 			}
 		}
 

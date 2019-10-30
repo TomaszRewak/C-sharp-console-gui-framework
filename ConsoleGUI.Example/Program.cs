@@ -204,7 +204,17 @@ namespace ConsoleGUI.Example
 								}
 							}
 						},
-						TopContent = canvas
+						TopContent = new Box
+						{
+							HorizontalContentPlacement = Box.HorizontalPlacement.Center,
+							VerticalContentPlacement = Box.VerticalPlacement.Center,
+							Content = new Boundary
+							{
+								Width = 41,
+								Height = 12,
+								Content = canvas
+							}
+						}
 					}
 				}
 			};
@@ -247,7 +257,7 @@ namespace ConsoleGUI.Example
 						}
 					}
 				}
-			}, new Rect(77, 5, 30, 10));
+			}, new Rect(11, 0, 30, 10));
 
 			canvas.Add(new Background
 			{
@@ -261,7 +271,7 @@ namespace ConsoleGUI.Example
 						Content = new TextBlock { Text = "Popup 2" }
 					}
 				}
-			}, new Rect(66, 12, 17, 5));
+			}, new Rect(0, 7, 17, 5));
 
 			ConsoleManager.Setup();
 			ConsoleManager.Resize(new Size(150, 40));

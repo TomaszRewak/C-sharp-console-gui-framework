@@ -64,6 +64,30 @@ namespace ConsoleGUI.Controls
 				.Then(Initialize);
 		}
 
+		public int? Width
+		{
+			set
+			{
+				using (Freeze())
+				{
+					MinWidth = value;
+					MaxWidth = value;
+				}
+			}
+		}
+
+		public int? Height
+		{
+			set
+			{
+				using (Freeze())
+				{
+					MinHeight = value;
+					MaxHeight = value;
+				}
+			}
+		}
+
 		public override Character this[Position position]
 		{
 			get
