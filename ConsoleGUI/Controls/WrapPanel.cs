@@ -78,8 +78,8 @@ namespace ConsoleGUI.Controls
 				return;
 			}
 
-			var begin = rect.LeftTopCorner.Wrap(Size.Width);
-			var end = rect.RightBottomCorner.Wrap(Size.Width);
+			var begin = rect.TopLeftCorner.Wrap(Size.Width);
+			var end = rect.BottomRightCorner.Wrap(Size.Width);
 
 			Update(new Rect(0, begin.Y, Size.Width, end.Y - begin.Y + 1));
 		}

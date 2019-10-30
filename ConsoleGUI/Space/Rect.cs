@@ -14,8 +14,8 @@ namespace ConsoleGUI.Space
 		public bool IsEmpty => Width == 0 && Height == 0;
 		public int Right => Left + Width - 1;
 		public int Bottom => Top + Height - 1;
-		public Position LeftTopCorner => new Position(Left, Top);
-		public Position RightBottomCorner => new Position(Right, Bottom);
+		public Position TopLeftCorner => new Position(Left, Top);
+		public Position BottomRightCorner => new Position(Right, Bottom);
 		public Size Size => new Size(Width, Height);
 		public Vector Offset => new Vector(Left, Top);
 
@@ -38,7 +38,7 @@ namespace ConsoleGUI.Space
 		public static Rect Surround(in Rect lhs, in Rect rhs)
 		{
 			if (rhs.IsEmpty) return lhs;
-			return lhs.ExtendBy(rhs.LeftTopCorner).ExtendBy(rhs.RightBottomCorner);
+			return lhs.ExtendBy(rhs.TopLeftCorner).ExtendBy(rhs.BottomRightCorner);
 		}
 
 		public static Rect Intersect(in Rect lhs, in Rect rhs)
@@ -93,12 +93,5 @@ namespace ConsoleGUI.Space
 		}
 
 		public Rect Move(in Vector vector) => Move(vector.X, vector.Y);
-
-		public IEnumerator<Position> GetEnumerator()
-		{
-			for (int x = 0; x < Width; x++)
-				for (int y = 0; y < Height; y++)
-					yield return new Position(x + Left, y + Top);
-		}
 	}
 }

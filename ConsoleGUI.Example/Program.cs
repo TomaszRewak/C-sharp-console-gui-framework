@@ -266,6 +266,7 @@ namespace ConsoleGUI.Example
 			ConsoleManager.Setup();
 			ConsoleManager.Resize(new Size(150, 40));
 			ConsoleManager.CompatibilityMode = false;
+			ConsoleManager.DontPrintTheLastCharacter = false;
 			ConsoleManager.Content = dockPanel;
 
 			var input = new IInputListener[]
@@ -284,6 +285,7 @@ namespace ConsoleGUI.Example
 				if (i % 200 == 0) secondaryConsole.Add($"Ping {i / 200 + 1}");
 
 				ConsoleManager.ReadInput(input);
+				ConsoleManager.AdjustBufferSize();
 			}
 		}
 	}

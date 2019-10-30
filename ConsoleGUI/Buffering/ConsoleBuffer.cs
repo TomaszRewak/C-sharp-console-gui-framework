@@ -8,7 +8,9 @@ namespace ConsoleGUI.Buffering
 {
 	internal class ConsoleBuffer
 	{
-		private Character?[,] buffer;
+		private Character?[,] buffer = new Character?[0, 0];
+
+		public Size Size => new Size(buffer.GetLength(0), buffer.GetLength(1));
 
 		public void Initialize(in Size size)
 		{

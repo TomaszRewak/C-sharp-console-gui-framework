@@ -68,11 +68,13 @@ namespace ConsoleGUI
 				.Then(Redraw);
 		}
 
+		public static Size WindowSize => new Size(Console.WindowWidth, Console.WindowHeight);
+		public static Size BufferSize => _buffer.Size;
+
 		private static void Initialize()
 		{
-			var consoleSize = new Size(Console.WindowWidth, Console.WindowHeight);
+			var consoleSize = _buffer.Size;
 
-			_buffer.Initialize(consoleSize);
 			Console.Clear();
 
 			_freezeLock.Freeze();
@@ -89,67 +91,88 @@ namespace ConsoleGUI
 
 		private static void Update(Rect rect)
 		{
-			rect = ClipRect(rect);
+			SafeConsole.HideCursor();
 
-			Console.CursorVisible = false;
+			var lastPoint = WindowSize.AsRect().BottomRightCorner;
+			rect = Rect.Intersect(rect, Rect.OfSize(BufferSize));
+			rect = Rect.Intersect(rect, Rect.OfSize(WindowSize));
 
-			foreach (var position in rect)
+			for (int y = rect.Top; y <= rect.Bottom; y++)
 			{
-				if (DontPrintTheLastCharacter &&
-					position.X == Console.WindowWidth - 1 &&
-					position.Y == Console.WindowHeight - 1)
-					continue;
-
-				var character = ContentContext[position];
-
-				if (!_buffer.Update(position, character)) continue;
-
-				var content = character.Content ?? ' ';
-				var foreground = character.Foreground ?? Color.White;
-				var background = character.Background ?? Color.Black;
-
-				if (content == '\n') content = ' ';
-
-				try
+				for (int x = rect.Left; x <= rect.Right; x++)
 				{
-					Console.SetCursorPosition(position.X, position.Y);
+					var position = new Position(x, y);
 
-					if (CompatibilityMode)
+					if (DontPrintTheLastCharacter && position == lastPoint)
+						continue;
+
+					var character = ContentContext[position];
+
+					if (!_buffer.Update(position, character)) continue;
+
+					var content = character.Content ?? ' ';
+					var foreground = character.Foreground ?? Color.White;
+					var background = character.Background ?? Color.Black;
+
+					if (content == '\n') content = ' ';
+
+					try
 					{
-						Console.BackgroundColor = ColorConverter.GetNearestConsoleColor(background);
-						Console.ForegroundColor = ColorConverter.GetNearestConsoleColor(foreground);
-						Console.Write(content);
+						Console.SetCursorPosition(position.X, position.Y);
+
+						if (CompatibilityMode)
+						{
+							Console.BackgroundColor = ColorConverter.GetNearestConsoleColor(background);
+							Console.ForegroundColor = ColorConverter.GetNearestConsoleColor(foreground);
+							Console.Write(content);
+						}
+						else
+						{
+							Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
+						}
 					}
-					else
+					catch (ArgumentOutOfRangeException)
 					{
-						Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
+						rect = Rect.Intersect(rect, Rect.OfSize(WindowSize));
 					}
 				}
-				catch (ArgumentOutOfRangeException)
-				{ }
 			}
 		}
 
 		public static void Setup()
 		{
 			SafeConsole.SetUtf8();
-			ResizeBuffer(Console.WindowWidth, Console.WindowHeight);
+			SafeConsole.HideCursor();
+			Resize(WindowSize);
 			Initialize();
 		}
 
 		public static void Resize(in Size size)
 		{
-			SafeConsole.SetWindowSize(1, 1);
-			ResizeBuffer(size.Width, size.Height);
-			SafeConsole.SetWindowSize(size.Width, size.Height);
+			Console.SetCursorPosition(0, 0);
+			SafeConsole.SetWindowPosition(0, 0);
+			if (!(WindowSize <= size)) SafeConsole.SetWindowSize(1, 1);
+			ResizeBuffer(size);
+			if (WindowSize != size) SafeConsole.SetWindowSize(size.Width, size.Height);
 			Initialize();
 		}
 
-		private static void ResizeBuffer(int width, int height)
+		public static void AdjustBufferSize()
 		{
-			Console.SetCursorPosition(0, 0);
-			SafeConsole.SetWindowPosition(0, 0);
-			SafeConsole.SetBufferSize(width, height);
+			if (WindowSize != _buffer.Size)
+				Resize(WindowSize);
+		}
+
+		public static void AdjustWindowSize()
+		{
+			if (WindowSize != _buffer.Size)
+				Resize(_buffer.Size);
+		}
+
+		private static void ResizeBuffer(in Size size)
+		{
+			_buffer.Initialize(size);
+			SafeConsole.SetBufferSize(size.Width, size.Height);
 		}
 
 		public static void ReadInput(IReadOnlyCollection<IInputListener> controls)
@@ -171,7 +194,5 @@ namespace ConsoleGUI
 		{
 			ContentContext = new DrawingContext(new ConsoleManagerDrawingContextListener(), Content);
 		}
-
-		private static Rect ClipRect(in Rect rect) => Rect.Intersect(rect, new Rect(0, 0, Console.WindowWidth, Console.WindowHeight));
 	}
 }

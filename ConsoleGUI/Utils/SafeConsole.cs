@@ -12,7 +12,7 @@ namespace ConsoleGUI.Utils
 			{
 				Console.SetWindowPosition(left, top);
 			}
-			catch (PlatformNotSupportedException)
+			catch (Exception)
 			{ }
 		}
 
@@ -22,7 +22,7 @@ namespace ConsoleGUI.Utils
 			{
 				Console.SetWindowSize(width, height);
 			}
-			catch (PlatformNotSupportedException)
+			catch (Exception)
 			{ }
 		}
 
@@ -32,7 +32,7 @@ namespace ConsoleGUI.Utils
 			{
 				Console.SetBufferSize(width, height);
 			}
-			catch (PlatformNotSupportedException)
+			catch (Exception)
 			{ }
 		}
 
@@ -42,7 +42,17 @@ namespace ConsoleGUI.Utils
 			{
 				Console.OutputEncoding = Encoding.UTF8;
 			}
-			catch (PlatformNotSupportedException)
+			catch (Exception)
+			{ }
+		}
+
+		public static void HideCursor()
+		{
+			try
+			{
+				Console.CursorVisible = false;
+			}
+			catch (Exception)
 			{ }
 		}
 	}

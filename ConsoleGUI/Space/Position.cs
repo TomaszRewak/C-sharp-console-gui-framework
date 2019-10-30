@@ -25,5 +25,8 @@ namespace ConsoleGUI.Space
 		public Position Wrap(int width) => new Position(X % width, X / width);
 		public Position UnWrap(int width) => new Position(X + Y * width, 0);
 		public Vector AsVector() => new Vector(X, Y);
+
+		public static bool operator ==(in Position lhs, in Position rhs) => lhs.X == rhs.X && lhs.Y == rhs.Y;
+		public static bool operator !=(in Position lhs, in Position rhs) => !(lhs == rhs);
 	}
 }
