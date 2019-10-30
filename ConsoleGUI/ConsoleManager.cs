@@ -73,7 +73,7 @@ namespace ConsoleGUI
 
 		private static void Initialize()
 		{
-			var consoleSize = _buffer.Size;
+			var consoleSize = BufferSize;
 
 			Console.Clear();
 
@@ -159,14 +159,14 @@ namespace ConsoleGUI
 
 		public static void AdjustBufferSize()
 		{
-			if (WindowSize != _buffer.Size)
+			if (WindowSize != BufferSize)
 				Resize(WindowSize);
 		}
 
 		public static void AdjustWindowSize()
 		{
-			if (WindowSize != _buffer.Size)
-				Resize(_buffer.Size);
+			if (WindowSize != BufferSize)
+				Resize(BufferSize);
 		}
 
 		private static void ResizeBuffer(in Size size)
