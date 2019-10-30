@@ -10,6 +10,10 @@ It provides most essential layout management utilities as well as a set of basic
 
 *The example above is not really a playable chess game. The board on the left is simply just a grid with some text in it - it's here for display purposes only. But of course, with a little bit of code behind, it could be made interactive.*
 
+#### Supported platforms
+
+This framework is platform agnostic and dependency free. The library targets .NET standard 2.0 and should run fine on both Windows and Linux machines.
+
 #### Motivation
 
 What sets this library apart from other projects that provide similar functionalities, is the fact that the ConsoleGUI framework is fully layout-driven. In this regard it’s more like WPF or HTML, than for example Windows Forms. You don’t specify exact coordinates at which a given control should reside, but rather let stack panels, dock panels and other layout managers do their work. I don’t claim it’s THE right way of doing things, it’s just what my background is.
