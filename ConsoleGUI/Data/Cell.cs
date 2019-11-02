@@ -9,7 +9,7 @@ namespace ConsoleGUI.Data
 	public readonly struct Cell
 	{
 		public readonly Character Character;
-		public readonly MouseListener? MouseListener;
+		public readonly MouseContext? MouseListener;
 
 		public Cell(in Character character)
 		{
@@ -17,7 +17,7 @@ namespace ConsoleGUI.Data
 			MouseListener = null;
 		}
 
-		public Cell(in Character character, in MouseListener? mouseListener)
+		public Cell(in Character character, in MouseContext? mouseListener)
 		{
 			Character = character;
 			MouseListener = mouseListener;
@@ -30,7 +30,7 @@ namespace ConsoleGUI.Data
 		public Cell WithContent(char? content) => new Cell(Character.WithContent(content), MouseListener);
 		public Cell WithForeground(in Color? foreground) => new Cell(Character.WithForeground(foreground), MouseListener);
 		public Cell WithBackground(in Color? background) => new Cell(Character.WithBackground(background), MouseListener);
-		public Cell WithMouseListener(IMouseListener control, in Position position) => new Cell(Character, new MouseListener(control, position));
+		public Cell WithMouseListener(IMouseListener mouseListener, in Position position) => new Cell(Character, new MouseContext(mouseListener, position));
 
 		public static implicit operator Cell(in Character character) => new Cell(character);
 	}

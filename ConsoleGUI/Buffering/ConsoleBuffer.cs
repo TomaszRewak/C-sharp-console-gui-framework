@@ -27,7 +27,7 @@ namespace ConsoleGUI.Buffering
 			return characterChanged;
 		}
 
-		public MouseListener? GetMouseListener(Position position)
+		public MouseContext? GetMouseListener(Position position)
 		{
 			if (!Size.Contains(position)) return null;
 

@@ -74,24 +74,24 @@ namespace ConsoleGUI
 			get => _mousePosition;
 			set => Setter
 				.Set(ref _mousePosition, value)
-				.Then(UpdateMouseListener);
+				.Then(UpdateMouseContext);
 		}
 
-		private static MouseListener? _mouseListener;
-		private static MouseListener? MouseListener
+		private static MouseContext? _mouseContext;
+		private static MouseContext? MouseContext
 		{
-			get => _mouseListener;
+			get => _mouseContext;
 			set
 			{
-				if (value?.Control != _mouseListener?.Control)
+				if (value?.MouseListener != _mouseContext?.MouseListener)
 				{
-					_mouseListener?.Control.OnMouseLeave();
-					value?.Control.OnMouseEnter();
-					value?.Control.OnMouseMove(value.Value.RelativePosition);
+					_mouseContext?.MouseListener.OnMouseLeave();
+					value?.MouseListener.OnMouseEnter();
+					value?.MouseListener.OnMouseMove(value.Value.RelativePosition);
 				}
-				else if (value.HasValue && value.Value.RelativePosition != _mouseListener?.RelativePosition)
+				else if (value.HasValue && value.Value.RelativePosition != _mouseContext?.RelativePosition)
 				{
-					value.Value.Control.OnMouseMove(value.Value.RelativePosition);
+					value.Value.MouseListener.OnMouseMove(value.Value.RelativePosition);
 				}
 			}
 		}
@@ -226,13 +226,13 @@ namespace ConsoleGUI
 		public static void OnMouseUp(in Position position)
 		{
 			MousePosition = position;
-			MouseListener?.Control.OnMouseUp(MouseListener.Value.RelativePosition);
+			MouseContext?.MouseListener.OnMouseUp(MouseContext.Value.RelativePosition);
 		}
 
 		public static void OnMouseDonw(in Position position)
 		{
 			MousePosition = position;
-			MouseListener?.Control.OnMouseDown(MouseListener.Value.RelativePosition);
+			MouseContext?.MouseListener.OnMouseDown(MouseContext.Value.RelativePosition);
 		}
 
 		public static void OnMouseLeave()
@@ -245,9 +245,9 @@ namespace ConsoleGUI
 			ContentContext = new DrawingContext(new ConsoleManagerDrawingContextListener(), Content);
 		}
 
-		private static void UpdateMouseListener()
+		private static void UpdateMouseContext()
 		{
-			MouseListener = MousePosition.HasValue
+			MouseContext = MousePosition.HasValue
 				? _buffer.GetMouseListener(MousePosition.Value)
 				: null;
 		}

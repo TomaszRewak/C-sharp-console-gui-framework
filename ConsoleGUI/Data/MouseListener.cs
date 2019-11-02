@@ -6,14 +6,14 @@ using System.Text;
 
 namespace ConsoleGUI.Data
 {
-	public readonly struct MouseListener
+	public readonly struct MouseContext
 	{
-		public readonly IMouseListener Control;
+		public readonly IMouseListener MouseListener;
 		public readonly Position RelativePosition;
 
-		public MouseListener(IMouseListener control, in Position relativePosition)
+		public MouseContext(IMouseListener mouseListener, in Position relativePosition)
 		{
-			Control = control;
+			MouseListener = mouseListener;
 			RelativePosition = relativePosition;
 		}
 	}
