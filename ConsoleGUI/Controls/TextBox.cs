@@ -42,7 +42,7 @@ namespace ConsoleGUI.Controls
 		private Size TextSize => new Size(TextLength, 1);
 		private Size EditorSize => CaretEnd >= TextLength ? TextSize.Expand(1, 0) : TextSize;
 
-		public override Character this[Position position]
+		public override Cell this[Position position]
 		{
 			get
 			{

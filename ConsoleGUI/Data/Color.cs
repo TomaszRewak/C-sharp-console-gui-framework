@@ -6,9 +6,9 @@ namespace ConsoleGUI.Data
 {
 	public readonly struct Color
 	{
-		public byte Red { get; }
-		public byte Green { get; }
-		public byte Blue { get; }
+		public readonly byte Red;
+		public readonly byte Green;
+		public readonly byte Blue;
 
 		public Color(byte red, byte green, byte blue)
 		{

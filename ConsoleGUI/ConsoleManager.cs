@@ -106,13 +106,13 @@ namespace ConsoleGUI
 					if (DontPrintTheLastCharacter && position == lastPoint)
 						continue;
 
-					var character = ContentContext[position];
+					var cell = ContentContext[position];
 
-					if (!_buffer.Update(position, character)) continue;
+					if (!_buffer.Update(position, cell)) continue;
 
-					var content = character.Content ?? ' ';
-					var foreground = character.Foreground ?? Color.White;
-					var background = character.Background ?? Color.Black;
+					var content = cell.Content ?? ' ';
+					var foreground = cell.Foreground ?? Color.White;
+					var background = cell.Background ?? Color.Black;
 
 					if (content == '\n') content = ' ';
 

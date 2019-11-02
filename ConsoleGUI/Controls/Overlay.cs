@@ -46,20 +46,20 @@ namespace ConsoleGUI.Controls
 				.Then(BindBottomContent);
 		}
 
-		public override Character this[Position position]
+		public override Cell this[Position position]
 		{
 			get
 			{
 				if (TopContentContext.Contains(position))
 				{
-					var character = TopContentContext[position];
-					if (character != Character.Empty) return character;
+					var cell = TopContentContext[position];
+					if (cell.Character != Character.Empty) return cell;
 				}
 
 				if (BottomContentContext.Contains(position))
 				{
-					var character = BottomContentContext[position];
-					if (character != Character.Empty) return character;
+					var cell = BottomContentContext[position];
+					if (cell.Character != Character.Empty) return cell;
 				}
 
 				return Character.Empty;

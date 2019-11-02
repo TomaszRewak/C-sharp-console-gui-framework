@@ -6,10 +6,10 @@ namespace ConsoleGUI.Data
 {
 	public readonly struct Character
 	{
-		public char? Content { get; }
+		public readonly char? Content;
 
-		public Color? Foreground { get; }
-		public Color? Background { get; }
+		public readonly Color? Foreground;
+		public readonly Color? Background;
 
 		public Character(char? content, Color? foreground = null, Color? background = null)
 		{
@@ -24,7 +24,6 @@ namespace ConsoleGUI.Data
 			Foreground = null;
 			Background = background;
 		}
-
 
 		public Character WithContent(char? content) => new Character(content, Foreground, Background);
 		public Character WithForeground(in Color? foreground) => new Character(Content, foreground, Background);

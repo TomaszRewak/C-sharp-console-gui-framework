@@ -56,7 +56,7 @@ namespace ConsoleGUI.Controls
 				.Then(RedrawScrollBar);
 		}
 
-		public override Character this[Position position]
+		public override Cell this[Position position]
 		{
 			get
 			{

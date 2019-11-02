@@ -11,7 +11,7 @@ namespace ConsoleGUI
 
 	public interface IControl
 	{
-		Character this[Position position] { get; }
+		Cell this[Position position] { get; }
 
 		Size Size { get; }
 

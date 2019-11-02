@@ -85,7 +85,7 @@ namespace ConsoleGUI.Controls
 			Update(new Rect(xOffset, (row + 1) * 2, Columns[column].Width, 1));
 		}
 
-		public override Character this[Position position]
+		public override Cell this[Position position]
 		{
 			get
 			{

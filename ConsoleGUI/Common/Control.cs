@@ -11,8 +11,7 @@ namespace ConsoleGUI.Common
 		private Rect _updatedRect;
 		private Size _previousSize;
 
-		public abstract Character this[Position position] { get; }
-		public Character this[int x, int y] => this[new Position(x, y)];
+		public abstract Cell this[Position position] { get; }
 
 		protected abstract void Initialize();
 

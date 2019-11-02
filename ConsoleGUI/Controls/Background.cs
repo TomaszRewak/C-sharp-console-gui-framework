@@ -46,18 +46,18 @@ namespace ConsoleGUI.Controls
 				.Then(Redraw);
 		}
 
-		public override Character this[Position position]
+		public override Cell this[Position position]
 		{
 			get
 			{
 				if (!ContentContext.Contains(position)) return new Character(Color);
 
-				var character = ContentContext[position];
+				var cell = ContentContext[position];
 
-				if (!character.Background.HasValue || Important)
-					character = character.WithBackground(Color);
+				if (!cell.Background.HasValue || Important)
+					cell = cell.WithBackground(Color);
 
-				return character;
+				return cell;
 			}
 		}
 

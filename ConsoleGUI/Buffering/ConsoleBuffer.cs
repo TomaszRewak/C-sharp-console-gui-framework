@@ -8,24 +8,23 @@ namespace ConsoleGUI.Buffering
 {
 	internal class ConsoleBuffer
 	{
-		private Character?[,] buffer = new Character?[0, 0];
+		private Cell?[,] buffer = new Cell?[0, 0];
 
 		public Size Size => new Size(buffer.GetLength(0), buffer.GetLength(1));
 
 		public void Initialize(in Size size)
 		{
-			buffer = new Character?[size.Width, size.Height];
+			buffer = new Cell?[size.Width, size.Height];
 		}
 
-		public bool Update(in Position position, in Character character)
+		public bool Update(in Position position, in Cell newCell)
 		{
 			ref var cell = ref buffer[position.X, position.Y];
+			bool characterChanged = cell?.Character != newCell.Character;
 
-			if (cell == character) return false;
+			cell = newCell;
 
-			cell = character;
-
-			return true;
+			return characterChanged;
 		}
 	}
 }

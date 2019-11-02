@@ -93,7 +93,7 @@ namespace ConsoleGUI.Controls
 			Update(GetRect(x, y));
 		}
 
-		public override Character this[Position position]
+		public override Cell this[Position position]
 		{
 			get
 			{

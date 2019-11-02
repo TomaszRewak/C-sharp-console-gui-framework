@@ -30,7 +30,7 @@ namespace ConsoleGUI.Controls
 
 		private int ContentOffset => (Size.Width - Content?.Size.Width ?? 0) / 2;
 
-		public override Character this[Position position]
+		public override Cell this[Position position]
 		{
 			get
 			{

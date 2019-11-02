@@ -35,7 +35,7 @@ namespace ConsoleGUI.UserDefined
 				.SetDisposable(ref _contextWrapper, value);
 		}
 
-		public Character this[Position position] => _content[position];
+		public Cell this[Position position] => _content[position];
 		public Size Size => _content.Size;
 
 		private void BindContent()

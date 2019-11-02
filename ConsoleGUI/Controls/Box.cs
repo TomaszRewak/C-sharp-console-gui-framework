@@ -62,7 +62,7 @@ namespace ConsoleGUI.Controls
 				.Then(Initialize);
 		}
 
-		public override Character this[Position position]
+		public override Cell this[Position position]
 		{
 			get
 			{

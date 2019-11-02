@@ -40,7 +40,7 @@ namespace ConsoleGUI.Common
 
 		public Size Size => Child?.Size ?? Size.Empty;
 
-		public Character this[Position position]
+		public Cell this[Position position]
 		{
 			get
 			{
