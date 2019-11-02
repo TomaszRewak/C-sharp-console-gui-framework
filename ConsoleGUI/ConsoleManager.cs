@@ -68,6 +68,34 @@ namespace ConsoleGUI
 				.Then(Redraw);
 		}
 
+		private static Position? _mousePosition;
+		private static Position? MousePosition
+		{
+			get => _mousePosition;
+			set => Setter
+				.Set(ref _mousePosition, value)
+				.Then(UpdateMouseListener);
+		}
+
+		private static MouseListener? _mouseListener;
+		private static MouseListener? MouseListener
+		{
+			get => _mouseListener;
+			set
+			{
+				if (value?.Control != _mouseListener?.Control)
+				{
+					_mouseListener?.Control.OnMouseLeave();
+					value?.Control.OnMouseEnter();
+					value?.Control.OnMouseMove(value.Value.RelativePosition);
+				}
+				else if (value.HasValue && value.Value.RelativePosition != _mouseListener?.RelativePosition)
+				{
+					value.Value.Control.OnMouseMove(value.Value.RelativePosition);
+				}
+			}
+		}
+
 		public static Size WindowSize => new Size(Console.WindowWidth, Console.WindowHeight);
 		public static Size BufferSize => _buffer.Size;
 
@@ -190,9 +218,38 @@ namespace ConsoleGUI
 			}
 		}
 
+		public static void OnMouseMove(in Position position)
+		{
+			MousePosition = position;
+		}
+
+		public static void OnMouseUp(in Position position)
+		{
+			MousePosition = position;
+			MouseListener?.Control.OnMouseUp(MouseListener.Value.RelativePosition);
+		}
+
+		public static void OnMouseDonw(in Position position)
+		{
+			MousePosition = position;
+			MouseListener?.Control.OnMouseDown(MouseListener.Value.RelativePosition);
+		}
+
+		public static void OnMouseLeave()
+		{
+			MousePosition = null;
+		}
+
 		private static void BindContent()
 		{
 			ContentContext = new DrawingContext(new ConsoleManagerDrawingContextListener(), Content);
+		}
+
+		private static void UpdateMouseListener()
+		{
+			MouseListener = MousePosition.HasValue
+				? _buffer.GetMouseListener(MousePosition.Value)
+				: null;
 		}
 	}
 }

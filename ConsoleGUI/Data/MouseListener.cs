@@ -8,13 +8,13 @@ namespace ConsoleGUI.Data
 {
 	public readonly struct MouseListener
 	{
-		public readonly IMouseListener Listener;
-		public readonly Position Position;
+		public readonly IMouseListener Control;
+		public readonly Position RelativePosition;
 
-		public MouseListener(IMouseListener listener, in Position position)
+		public MouseListener(IMouseListener control, in Position relativePosition)
 		{
-			Listener = listener;
-			Position = position;
+			Control = control;
+			RelativePosition = relativePosition;
 		}
 	}
 }
