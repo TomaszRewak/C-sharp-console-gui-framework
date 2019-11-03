@@ -248,7 +248,7 @@ namespace ConsoleGUI
 		private static void UpdateMouseContext()
 		{
 			MouseContext = MousePosition.HasValue
-				? _buffer.GetMouseListener(MousePosition.Value)
+				? _buffer.GetMouseContext(MousePosition.Value)
 				: null;
 		}
 	}
