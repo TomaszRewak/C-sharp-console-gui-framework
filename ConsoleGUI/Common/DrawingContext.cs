@@ -5,13 +5,13 @@ using System.Runtime.CompilerServices;
 
 namespace ConsoleGUI.Common
 {
-	internal interface IDrawingContextListener
+	public interface IDrawingContextListener
 	{
 		void OnRedraw(DrawingContext drawingContext);
 		void OnUpdate(DrawingContext drawingContext, Rect rect);
 	}
 
-	internal class DrawingContext : IDrawingContext, IDisposable
+	public sealed class DrawingContext : IDrawingContext, IDisposable
 	{
 		public IDrawingContextListener Parent { get; private set; }
 		public IControl Child { get; private set; }
