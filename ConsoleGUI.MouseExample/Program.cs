@@ -98,6 +98,22 @@ namespace ConsoleGUI.MouseExample
 								}
 							},
 							new HorizontalSeparator(),
+							new Boundary
+							{
+								Height = 1,
+								Content = new HorizontalStackPanel
+								{
+									Children = new IControl[]
+									{
+										new TextBlock {Text = "Check box: "},
+										new CheckBox {
+											TrueCharacter = new Character('Y', new Color(0, 255, 0)),
+											FalseCharacter = new Character('N', new Color(255, 0, 0))
+										}
+									}
+								}
+							},
+							new HorizontalSeparator(),
 							new Box { Content = button }
 						}
 					}
