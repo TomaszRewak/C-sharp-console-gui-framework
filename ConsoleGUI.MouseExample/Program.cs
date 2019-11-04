@@ -1,4 +1,5 @@
 ﻿using ConsoleGUI.Controls;
+using ConsoleGUI.Data;
 using ConsoleGUI.Input;
 using ConsoleGUI.Space;
 using System;
@@ -22,16 +23,20 @@ namespace ConsoleGUI.MouseExample
 			ConsoleManager.Resize(new Size(150, 40));
 
 			var textBox = new TextBox { Text = "Hello world" };
-			var textBlock = new TextBlock { Text = "Hello world" };
+			var textBlock = new TextBlock();
 			var button = new Button { Content = new Margin { Offset = new Offset(4, 1, 4, 1), Content = new TextBlock { Text = "Button" } } };
 
-			ConsoleManager.Content = new VerticalStackPanel
+			ConsoleManager.Content = new Background
 			{
-				Children = new IControl[]
+				Color = new Color(100, 0, 0),
+				Content = new VerticalStackPanel
 				{
-					textBox,
-					textBlock,
-					new Box { Content = button }
+					Children = new IControl[]
+					{
+						textBox,
+						textBlock,
+						new Box { Content = button }
+					}
 				}
 			};
 
@@ -42,11 +47,10 @@ namespace ConsoleGUI.MouseExample
 
 			while (true)
 			{
-				MouseHandler.Read();
+				MouseHandler.ReadMouseEvents();
 				ConsoleManager.ReadInput(inputs);
-				ConsoleManager.MousePosition = MouseHandler.MousePosition;
 
-				textBlock.Text = $"({MouseHandler.MousePosition.X}, {MouseHandler.MousePosition.Y})";
+				textBlock.Text = $"Mouse position: ({ConsoleManager.MousePosition?.X}, {ConsoleManager.MousePosition?.Y})";
 
 				Thread.Sleep(50);
 			}

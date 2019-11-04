@@ -13,15 +13,13 @@ namespace ConsoleGUI.MouseExample
 		private static IntPtr _inputHandle = IntPtr.Zero;
 		private static INPUT_RECORD[] _inputBuffer;
 
-		public static Position MousePosition { get; private set; }
-
 		public static void Initialize()
 		{
 			_inputHandle = GetStdHandle(unchecked((uint)-10));
 			_inputBuffer = new INPUT_RECORD[100];
 		}
 
-		public static void Read()
+		public static void ReadMouseEvents()
 		{
 			if (_inputHandle == IntPtr.Zero)
 				throw new InvalidOperationException("First call the Initialize method of the MouseHandler");
@@ -32,7 +30,7 @@ namespace ConsoleGUI.MouseExample
 			{
 				var inputEvent = _inputBuffer[i];
 
-				if (inputEvent.EventType == INPUT_RECORD.MOUSE_EVENT)
+				if ((inputEvent.EventType & 0x0002) != 0)
 					ProcessMouseEvent(inputEvent.MouseEvent);
 				else
 					WriteConsoleInput(_inputHandle, new[] { inputEvent }, 1, out var eventsWritten);
@@ -41,7 +39,8 @@ namespace ConsoleGUI.MouseExample
 
 		private static void ProcessMouseEvent(in MOUSE_EVENT_RECORD mouseEvent)
 		{
-			MousePosition = new Position(mouseEvent.dwMousePosition.X, mouseEvent.dwMousePosition.Y);
+			ConsoleManager.MousePosition = new Position(mouseEvent.dwMousePosition.X, mouseEvent.dwMousePosition.Y);
+			ConsoleManager.MouseDown = (mouseEvent.dwButtonState & 0x0001) != 0;
 		}
 
 		private struct COORD
@@ -74,38 +73,13 @@ namespace ConsoleGUI.MouseExample
 			public COORD dwMousePosition;
 
 			public uint dwButtonState;
-			public const uint
-				FROM_LEFT_1ST_BUTTON_PRESSED = 0x0001,
-				FROM_LEFT_2ND_BUTTON_PRESSED = 0x0004,
-				FROM_LEFT_3RD_BUTTON_PRESSED = 0x0008,
-				FROM_LEFT_4TH_BUTTON_PRESSED = 0x0010,
-				RIGHTMOST_BUTTON_PRESSED = 0x0002;
-
 			public uint dwControlKeyState;
-			public const int
-				CAPSLOCK_ON = 0x0080,
-				ENHANCED_KEY = 0x0100,
-				LEFT_ALT_PRESSED = 0x0002,
-				LEFT_CTRL_PRESSED = 0x0008,
-				NUMLOCK_ON = 0x0020,
-				RIGHT_ALT_PRESSED = 0x0001,
-				RIGHT_CTRL_PRESSED = 0x0004,
-				SCROLLLOCK_ON = 0x0040,
-				SHIFT_PRESSED = 0x0010;
-
 			public uint dwEventFlags;
-			public const int
-				DOUBLE_CLICK = 0x0002,
-				MOUSE_HWHEELED = 0x0008,
-				MOUSE_MOVED = 0x0001,
-				MOUSE_WHEELED = 0x0004;
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
 		private struct INPUT_RECORD
 		{
-			public const ushort MOUSE_EVENT = 0x0002;
-
 			[FieldOffset(0)]
 			public ushort EventType;
 			[FieldOffset(4)]
