@@ -9,8 +9,10 @@ using System.Text;
 
 namespace ConsoleGUI.Controls
 {
-	public class TextBox : Control, IInputListener
+	public class TextBox : Control, IInputListener, IMouseListener
 	{
+		public event EventHandler Clicked;
+
 		private string _text = string.Empty;
 		public string Text
 		{
@@ -38,6 +40,36 @@ namespace ConsoleGUI.Controls
 				.Then(Redraw);
 		}
 
+		public int Caret
+		{
+			set
+			{
+				using(Freeze())
+				{
+					CaretStart = value;
+					CaretEnd = value;
+				}
+			}
+		}
+
+		private int? _mouseDownPosition;
+		private int? MouseDownPosition
+		{
+			get => _mouseDownPosition;
+			set => Setter
+				.Set(ref _mouseDownPosition, value)
+				.Then(UpdateSelection);
+		}
+
+		private int? _mousePosition;
+		public int? MousePosition
+		{
+			get => _mousePosition;
+			set => Setter
+				.Set(ref _mousePosition, value)
+				.Then(UpdateSelection);
+		}
+
 		private int TextLength => Text?.Length ?? 0;
 		private Size TextSize => new Size(TextLength, 1);
 		private Size EditorSize => CaretEnd >= TextLength ? TextSize.Expand(1, 0) : TextSize;
@@ -46,19 +78,18 @@ namespace ConsoleGUI.Controls
 		{
 			get
 			{
-				if (!EditorSize.Contains(position)) return Character.Empty;
+				var content = EditorSize.Contains(position) && position.X < TextLength
+					? Text[position.X]
+					: (char?)null;
 
-				var character = position.X >= TextLength
-					? (char?)null
-					: Text[position.X];
+				var cell = new Cell(content).WithMouseListener(this, position);
 
 				if (position.X == CaretStart && position.X == CaretEnd)
-					return new Character(character, background: new Color(70, 70, 70));
-
+					cell = cell.WithBackground(new Color(70, 70, 70));
 				if (position.X >= CaretStart && position.X < CaretEnd)
-					return new Character(character, background: Color.White, foreground: Color.Black);
+					cell = cell.WithBackground(Color.White).WithForeground(Color.Black);
 
-				return new Character(character);
+				return cell;
 			}
 		}
 
@@ -115,6 +146,44 @@ namespace ConsoleGUI.Controls
 			{
 				Resize(EditorSize);
 			}
+		}
+
+		private void UpdateSelection()
+		{
+			if (!MouseDownPosition.HasValue) return;
+			if (!MousePosition.HasValue) return;
+
+			CaretStart = Math.Min(MouseDownPosition.Value, MousePosition.Value);
+			CaretEnd = Math.Max(MouseDownPosition.Value, MousePosition.Value);
+		}
+
+		void IMouseListener.OnMouseEnter()
+		{ }
+
+		void IMouseListener.OnMouseLeave()
+		{
+			MouseDownPosition = null;
+			MousePosition = null;
+		}
+
+		void IMouseListener.OnMouseUp(Position position)
+		{
+			MousePosition = position.X;
+			if (MouseDownPosition.HasValue)
+			{
+				MouseDownPosition = null;
+				Clicked?.Invoke(this, EventArgs.Empty);
+			}
+		}
+
+		void IMouseListener.OnMouseDown(Position position)
+		{
+			MouseDownPosition = position.X;
+		}
+
+		void IMouseListener.OnMouseMove(Position position)
+		{
+			MousePosition = position.X;
 		}
 	}
 }

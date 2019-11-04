@@ -11,6 +11,12 @@ namespace ConsoleGUI.Data
 		public readonly Character Character;
 		public readonly MouseContext? MouseListener;
 
+		public Cell(char? content)
+		{
+			Character = new Character(content);
+			MouseListener = null;
+		}
+
 		public Cell(in Character character)
 		{
 			Character = character;

@@ -23,6 +23,7 @@ namespace ConsoleGUI.MouseExample
 			ConsoleManager.Resize(new Size(150, 40));
 
 			var textBox = new TextBox { Text = "Hello world" };
+			var wrappedTextBox = new TextBox { Text = "Test" };
 			var textBlock = new TextBlock();
 			var button = new Button { Content = new Margin { Offset = new Offset(4, 1, 4, 1), Content = new TextBlock { Text = "Button" } } };
 
@@ -37,6 +38,15 @@ namespace ConsoleGUI.MouseExample
 					{
 						textBox,
 						textBlock,
+						new Boundary
+						{
+							MaxWidth = 10,
+							Content = new Background
+							{
+								Color = new Color(0, 100, 0),
+								Content = new WrapPanel { Content = wrappedTextBox }
+							}
+						},
 						new Box { Content = button }
 					}
 				}
@@ -44,7 +54,7 @@ namespace ConsoleGUI.MouseExample
 
 			var inputs = new IInputListener[]
 			{
-				textBox
+				wrappedTextBox
 			};
 
 			while (true)
