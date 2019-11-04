@@ -229,7 +229,7 @@ namespace ConsoleGUI
 
 				foreach (var control in controls)
 				{
-					control.OnInput(inputEvent);
+					control?.OnInput(inputEvent);
 					if (inputEvent.Handled) break;
 				}
 			}

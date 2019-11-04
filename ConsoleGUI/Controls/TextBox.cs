@@ -52,6 +52,15 @@ namespace ConsoleGUI.Controls
 			}
 		}
 
+		private bool _showCaret = true;
+		public bool ShowCaret
+		{
+			get => _showCaret;
+			set => Setter
+				.Set(ref _showCaret, value)
+				.Then(Redraw);
+		}
+
 		private int? _mouseDownPosition;
 		private int? MouseDownPosition
 		{
@@ -84,9 +93,9 @@ namespace ConsoleGUI.Controls
 
 				var cell = new Cell(content).WithMouseListener(this, position);
 
-				if (position.X == CaretStart && position.X == CaretEnd)
+				if (ShowCaret && position.X == CaretStart && position.X == CaretEnd)
 					cell = cell.WithBackground(new Color(70, 70, 70));
-				if (position.X >= CaretStart && position.X < CaretEnd)
+				if (ShowCaret && position.X >= CaretStart && position.X < CaretEnd)
 					cell = cell.WithBackground(Color.White).WithForeground(Color.Black);
 
 				return cell;
@@ -169,16 +178,13 @@ namespace ConsoleGUI.Controls
 		void IMouseListener.OnMouseUp(Position position)
 		{
 			MousePosition = position.X;
-			if (MouseDownPosition.HasValue)
-			{
-				MouseDownPosition = null;
-				Clicked?.Invoke(this, EventArgs.Empty);
-			}
+			MouseDownPosition = null;
 		}
 
 		void IMouseListener.OnMouseDown(Position position)
 		{
 			MouseDownPosition = position.X;
+			Clicked?.Invoke(this, EventArgs.Empty);
 		}
 
 		void IMouseListener.OnMouseMove(Position position)

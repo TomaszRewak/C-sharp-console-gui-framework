@@ -11,6 +11,48 @@ using System.Threading.Tasks;
 
 namespace ConsoleGUI.MouseExample
 {
+	class InputController
+	{
+		private readonly TextBox _textBox1;
+		private readonly TextBox _textBox2;
+		private readonly Button _button;
+
+		private TextBox _selectedTextBox;
+
+		public InputController(TextBox textBox1, TextBox textBox2, Button button)
+		{
+			_textBox1 = textBox1;
+			_textBox2 = textBox2;
+			_button = button;
+
+			_textBox1.ShowCaret = false;
+			_textBox2.ShowCaret = false;
+
+			_textBox1.Clicked += TextBoxClicked;
+			_textBox2.Clicked += TextBoxClicked;
+			_button.Clicked += ButtonClicked;
+		}
+
+		public void ReadInput()
+		{
+			MouseHandler.ReadMouseEvents();
+			ConsoleManager.ReadInput(new[] { _selectedTextBox });
+		}
+
+		private void TextBoxClicked(object sender, EventArgs e)
+		{
+			if (_selectedTextBox != null) _selectedTextBox.ShowCaret = false;
+			_selectedTextBox = sender as TextBox;
+			if (_selectedTextBox != null) _selectedTextBox.ShowCaret = true;
+		}
+
+		private void ButtonClicked(object sender, EventArgs e)
+		{
+			_textBox1.Text = "";
+			_textBox2.Text = "";
+		}
+	}
+
 	class Program
 	{
 		static void Main()
@@ -22,45 +64,51 @@ namespace ConsoleGUI.MouseExample
 			ConsoleManager.DontPrintTheLastCharacter = true;
 			ConsoleManager.Resize(new Size(150, 40));
 
-			var textBox = new TextBox { Text = "Hello world" };
-			var wrappedTextBox = new TextBox { Text = "Test" };
+			var textBox1 = new TextBox { Text = "Hello world" };
+			var textBox2 = new TextBox { Text = "Test" };
 			var textBlock = new TextBlock();
 			var button = new Button { Content = new Margin { Offset = new Offset(4, 1, 4, 1), Content = new TextBlock { Text = "Button" } } };
-
-			button.Clicked += (s, a) => textBox.Text = DateTime.Now.ToString("HH:mm:ss.ffff");
 
 			ConsoleManager.Content = new Background
 			{
 				Color = new Color(100, 0, 0),
-				Content = new VerticalStackPanel
+				Content = new Margin
 				{
-					Children = new IControl[]
+					Offset = new Offset(5, 2, 5, 2),
+					Content = new VerticalStackPanel
 					{
-						textBox,
-						textBlock,
-						new Boundary
+						Children = new IControl[]
 						{
-							MaxWidth = 10,
-							Content = new Background
+							textBlock,
+							new HorizontalSeparator(),
+							new TextBlock { Text = "Simple text box" },
+							new Background{
+								Color = new Color(100, 100, 0),
+								Content = textBox1
+							},
+							new HorizontalSeparator(),
+							new TextBlock { Text = "Wrapped text box" },
+							new Boundary
 							{
-								Color = new Color(0, 100, 0),
-								Content = new WrapPanel { Content = wrappedTextBox }
-							}
-						},
-						new Box { Content = button }
+								Width = 10,
+								Content = new Background
+								{
+									Color = new Color(0, 100, 0),
+									Content = new WrapPanel { Content = new Boundary{ MinWidth = 10, Content = textBox2 } }
+								}
+							},
+							new HorizontalSeparator(),
+							new Box { Content = button }
+						}
 					}
 				}
 			};
 
-			var inputs = new IInputListener[]
-			{
-				wrappedTextBox
-			};
+			var inputController = new InputController(textBox1, textBox2, button);
 
 			while (true)
 			{
-				MouseHandler.ReadMouseEvents();
-				ConsoleManager.ReadInput(inputs);
+				inputController.ReadInput();
 
 				textBlock.Text = $"Mouse position: ({ConsoleManager.MousePosition?.X}, {ConsoleManager.MousePosition?.Y})";
 
