@@ -69,12 +69,27 @@ namespace ConsoleGUI
 		}
 
 		private static Position? _mousePosition;
-		private static Position? MousePosition
+		public static Position? MousePosition
 		{
 			get => _mousePosition;
 			set => Setter
 				.Set(ref _mousePosition, value)
 				.Then(UpdateMouseContext);
+		}
+
+		public static bool _mouseDown;
+		public static bool MouseDown
+		{
+			get => _mouseDown;
+			set
+			{
+				if (_mouseDown && !value)
+					MouseContext?.MouseListener?.OnMouseUp(MouseContext.Value.RelativePosition);
+				if (!_mouseDown && value)
+					MouseContext?.MouseListener?.OnMouseDown(MouseContext.Value.RelativePosition);
+
+				_mouseDown = value;
+			}
 		}
 
 		private static MouseContext? _mouseContext;
@@ -218,28 +233,6 @@ namespace ConsoleGUI
 					if (inputEvent.Handled) break;
 				}
 			}
-		}
-
-		public static void OnMouseMove(in Position position)
-		{
-			MousePosition = position;
-		}
-
-		public static void OnMouseUp(in Position position)
-		{
-			MousePosition = position;
-			MouseContext?.MouseListener.OnMouseUp(MouseContext.Value.RelativePosition);
-		}
-
-		public static void OnMouseDonw(in Position position)
-		{
-			MousePosition = position;
-			MouseContext?.MouseListener.OnMouseDown(MouseContext.Value.RelativePosition);
-		}
-
-		public static void OnMouseLeave()
-		{
-			MousePosition = null;
 		}
 
 		private static void BindContent()

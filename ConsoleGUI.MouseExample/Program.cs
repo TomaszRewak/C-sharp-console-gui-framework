@@ -44,7 +44,7 @@ namespace ConsoleGUI.MouseExample
 			{
 				MouseHandler.Read();
 				ConsoleManager.ReadInput(inputs);
-				ConsoleManager.OnMouseMove(MouseHandler.MousePosition);
+				ConsoleManager.MousePosition = MouseHandler.MousePosition;
 
 				textBlock.Text = $"({MouseHandler.MousePosition.X}, {MouseHandler.MousePosition.Y})";
 
