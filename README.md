@@ -311,7 +311,25 @@ The biggest strength of this approach is that you decide what is the order of co
 
 ## Mouse
 
-Currently this library does not support mouse input.
+The ConsoleGUI framework does support mouse input, but it doesn’t create mouse event bindings automatically. That's because intercepting and translating mouse events is a very platform-specific operation that might vary based on the operating system and the terminal you are using.
+
+An example code that properly handles mouse events in the Powershell.exe and cmd.exe terminals can be found in the `ConsoleGUI.MouseExample/MouseHandler.cs` source file. (To use this example you will have to disable the QuickEdit option of your console window).
+
+When creating your own bindings, all you have to do from the framework perspective, is to set the `MousePosition` and `MouseDown` properties of the `ConsoleManager` whenever a user interaction is detected. For example:
+
+```csharp
+private static void ProcessMouseEvent(in MouseRecord mouseEvent)
+{
+	ConsoleManager.MousePosition = new Position(mouseEvent.MousePosition.X, mouseEvent.MousePosition.Y);
+	ConsoleManager.MouseDown = (mouseEvent.ButtonState & 0x0001) != 0;
+}
+```
+
+The `ConsoleManager` will take care of the rest. It will find a control that the cursor is currently hovering over and raise a proper method as described in the `IMouseListener` interface.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TomaszRewak/C-sharp-console-gui-framework/master/Resources/input%20example.gif" width=350/>
+</p>
 
 ## Performance
 
