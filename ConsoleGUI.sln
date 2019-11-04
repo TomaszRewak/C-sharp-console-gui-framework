@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleGUI.Example", "Conso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleGUI", "ConsoleGUI\ConsoleGUI.csproj", "{E3D8BC25-7EA1-4F81-9C31-BCF2DCBF77A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleGUI.Test", "ConsoleGUI.Test\ConsoleGUI.Test.csproj", "{ABC28308-500E-48E9-AD7E-AA8977370D35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleGUI.Test", "ConsoleGUI.Test\ConsoleGUI.Test.csproj", "{ABC28308-500E-48E9-AD7E-AA8977370D35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleGUI.MouseExample", "ConsoleGUI.MouseExample\ConsoleGUI.MouseExample.csproj", "{97B69CAE-3F74-4DEA-86FF-929FC45D3080}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{ABC28308-500E-48E9-AD7E-AA8977370D35}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABC28308-500E-48E9-AD7E-AA8977370D35}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABC28308-500E-48E9-AD7E-AA8977370D35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97B69CAE-3F74-4DEA-86FF-929FC45D3080}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97B69CAE-3F74-4DEA-86FF-929FC45D3080}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97B69CAE-3F74-4DEA-86FF-929FC45D3080}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97B69CAE-3F74-4DEA-86FF-929FC45D3080}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

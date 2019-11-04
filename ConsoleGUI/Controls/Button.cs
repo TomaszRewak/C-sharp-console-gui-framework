@@ -29,7 +29,7 @@ namespace ConsoleGUI.Controls
 				.Then(BindContent);
 		}
 
-		private Color _mouseOverColor = new Color(150, 150, 200);
+		private Color _mouseOverColor = new Color(50, 50, 100);
 		public Color MouseOverColor
 		{
 			get => _mouseOverColor;

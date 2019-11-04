@@ -93,6 +93,8 @@ namespace ConsoleGUI
 				{
 					value.Value.MouseListener.OnMouseMove(value.Value.RelativePosition);
 				}
+
+				_mouseContext = value;
 			}
 		}
 
