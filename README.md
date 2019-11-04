@@ -85,9 +85,9 @@ This will prevent the last (bottom-right) character from being printed so that t
 
 #### Responsiveness
 
-If the window size is not set explicitly, the layout will be adjusted to the current size of that window. It's important to note that this framework doesn't detect terminal size changes automatically. If the user resizes the window manually, the layout will become broken.
+If the window size is not set explicitly, the layout will be adjusted to the initial size of that window. It's important to note that this framework doesn't detect terminal size changes automatically (as there is no standard way of listening to such events). If the user resizes the window manually, the layout will become broken.
 
-To readjust the layout to the manually updated window size, call the `ConsoleManager.Setup()` method. Just remember that it might take more time to repaint the entire screen then to draw a single update (as the entire buffer must be invalidated), so do it only if the size of the window has actually changed.
+To adjust the layout to the updated size of the window, remember to call the `AdjustBufferSize` method of the `ConsoleManager` on every frame (on every iteration of your program's main loop). It will compare the current window size with its previous value and, if necessary, redraw the entire screen. 
 
 ## Basic controls
 
