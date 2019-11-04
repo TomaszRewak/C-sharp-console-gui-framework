@@ -9,7 +9,7 @@ using System.Text;
 
 namespace ConsoleGUI.Controls
 {
-	public class CheckBox : Control, IMouseListener
+	public class CheckBox : Control, IInputListener, IMouseListener
 	{
 		private bool _mouseDown;
 
@@ -86,5 +86,14 @@ namespace ConsoleGUI.Controls
 
 		void IMouseListener.OnMouseMove(Position position)
 		{ }
+
+		void IInputListener.OnInput(InputEvent inputEvent)
+		{
+			if (inputEvent.Key.Key == ConsoleKey.Spacebar)
+			{
+				Value = !Value;
+				inputEvent.Handled = true;
+			}
+		}
 	}
 }
