@@ -54,7 +54,7 @@ namespace ConsoleGUI.Test.Controls
 			var border = new Border();
 			(border as IControl).Context = context.Object;
 
-			Assert.AreEqual(Character.Empty, border[new Position(1, 1)]);
+			Assert.AreEqual(Character.Empty, border[new Position(1, 1)].Character);
 		}
 
 		[Test]
@@ -67,7 +67,7 @@ namespace ConsoleGUI.Test.Controls
 			var border = new Border();
 			(border as IControl).Context = context.Object;
 
-			Assert.AreEqual(Character.Empty, border[new Position(3, 1)]);
+			Assert.AreEqual(Character.Empty, border[new Position(3, 1)].Character);
 		}
 	}
 }
