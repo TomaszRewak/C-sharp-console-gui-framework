@@ -103,8 +103,12 @@ namespace ConsoleGUI.Controls
 		{
 			using (Freeze())
 			{
-				var minSize = new Size(MinWidth ?? MinSize.Width, MinHeight ?? MinSize.Height);
-				var maxSize = new Size(MaxWidth ?? MaxSize.Width, MaxHeight ?? MaxSize.Height);
+				var minSize = new Size(
+					Math.Min(MinWidth ?? MinSize.Width, MaxWidth ?? int.MaxValue), 
+					Math.Min(MinHeight ?? MinSize.Height, MaxHeight ?? int.MaxValue));
+				var maxSize = new Size(
+					Math.Max(MaxWidth ?? MaxSize.Width, MinWidth ?? 0), 
+					Math.Max(MaxHeight ?? MaxSize.Height, MinHeight ?? 0));
 
 				ContentContext.SetLimits(minSize, maxSize);
 
