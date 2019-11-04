@@ -26,6 +26,8 @@ namespace ConsoleGUI.MouseExample
 			var textBlock = new TextBlock();
 			var button = new Button { Content = new Margin { Offset = new Offset(4, 1, 4, 1), Content = new TextBlock { Text = "Button" } } };
 
+			button.Clicked += (s, a) => textBox.Text = DateTime.Now.ToString("HH:mm:ss.ffff");
+
 			ConsoleManager.Content = new Background
 			{
 				Color = new Color(100, 0, 0),

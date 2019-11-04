@@ -11,6 +11,8 @@ namespace ConsoleGUI.Controls
 {
 	public sealed class Button : Control, IDrawingContextListener, IMouseListener
 	{
+		public event EventHandler Clicked;
+
 		private DrawingContext _contentContext = DrawingContext.Dummy;
 		private DrawingContext ContentContext
 		{
@@ -117,7 +119,12 @@ namespace ConsoleGUI.Controls
 
 		void IMouseListener.OnMouseUp(Position position)
 		{
-			MouseDown = false;
+			if (MouseDown)
+			{
+				MouseDown = false;
+				Clicked?.Invoke(this, EventArgs.Empty);
+			}
+
 		}
 
 		void IMouseListener.OnMouseDown(Position position)
