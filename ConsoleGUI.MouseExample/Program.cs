@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleGUI.MouseExample
 {
-	class InputController
+	class InputController : IInputListener
 	{
 		private readonly TextBox _textBox1;
 		private readonly TextBox _textBox2;
@@ -33,23 +33,37 @@ namespace ConsoleGUI.MouseExample
 			_button.Clicked += ButtonClicked;
 		}
 
-		public void ReadInput()
-		{
-			MouseHandler.ReadMouseEvents();
-			ConsoleManager.ReadInput(new[] { _selectedTextBox });
-		}
-
 		private void TextBoxClicked(object sender, EventArgs e)
 		{
-			if (_selectedTextBox != null) _selectedTextBox.ShowCaret = false;
-			_selectedTextBox = sender as TextBox;
-			if (_selectedTextBox != null) _selectedTextBox.ShowCaret = true;
+			Select(sender as TextBox);
 		}
 
 		private void ButtonClicked(object sender, EventArgs e)
 		{
 			_textBox1.Text = "";
 			_textBox2.Text = "";
+
+			Select(_textBox1);
+		}
+
+		private void Select(TextBox textBox)
+		{
+			if (_selectedTextBox != null) _selectedTextBox.ShowCaret = false;
+			_selectedTextBox = textBox as TextBox;
+			if (_selectedTextBox != null) _selectedTextBox.ShowCaret = true;
+		}
+
+		void IInputListener.OnInput(InputEvent inputEvent)
+		{
+			if (inputEvent.Key.Key == ConsoleKey.Tab)
+			{
+				Select(_selectedTextBox == _textBox1 ? _textBox2 : _textBox1);
+				inputEvent.Handled = true;
+			}
+			else
+			{
+				(_selectedTextBox as IInputListener)?.OnInput(inputEvent);
+			}
 		}
 	}
 
@@ -62,7 +76,7 @@ namespace ConsoleGUI.MouseExample
 			ConsoleManager.Setup();
 			ConsoleManager.CompatibilityMode = true;
 			ConsoleManager.DontPrintTheLastCharacter = true;
-			ConsoleManager.Resize(new Size(150, 40));
+			ConsoleManager.Resize(new Size(80, 30));
 
 			var textBox1 = new TextBox { Text = "Hello world" };
 			var textBox2 = new TextBox { Text = "Test" };
@@ -120,11 +134,17 @@ namespace ConsoleGUI.MouseExample
 				}
 			};
 
-			var inputController = new InputController(textBox1, textBox2, button);
+			var input = new IInputListener[]
+			{
+				new InputController(textBox1, textBox2, button)
+			};
 
 			while (true)
 			{
-				inputController.ReadInput();
+				ConsoleManager.AdjustBufferSize();
+				ConsoleManager.ReadInput(input);
+
+				MouseHandler.ReadMouseEvents();
 
 				textBlock.Text = $"Mouse position: ({ConsoleManager.MousePosition?.X}, {ConsoleManager.MousePosition?.Y})";
 
