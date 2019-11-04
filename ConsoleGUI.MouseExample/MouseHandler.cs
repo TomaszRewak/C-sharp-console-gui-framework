@@ -11,12 +11,12 @@ namespace ConsoleGUI.MouseExample
 	public static class MouseHandler
 	{
 		private static IntPtr _inputHandle = IntPtr.Zero;
-		private static INPUT_RECORD[] _inputBuffer;
+		private static InputRecord[] _inputBuffer;
 
 		public static void Initialize()
 		{
 			_inputHandle = GetStdHandle(unchecked((uint)-10));
-			_inputBuffer = new INPUT_RECORD[100];
+			_inputBuffer = new InputRecord[100];
 		}
 
 		public static void ReadMouseEvents()
@@ -37,10 +37,10 @@ namespace ConsoleGUI.MouseExample
 			}
 		}
 
-		private static void ProcessMouseEvent(in MOUSE_EVENT_RECORD mouseEvent)
+		private static void ProcessMouseEvent(in MouseRecord mouseEvent)
 		{
-			ConsoleManager.MousePosition = new Position(mouseEvent.dwMousePosition.X, mouseEvent.dwMousePosition.Y);
-			ConsoleManager.MouseDown = (mouseEvent.dwButtonState & 0x0001) != 0;
+			ConsoleManager.MousePosition = new Position(mouseEvent.MousePosition.X, mouseEvent.MousePosition.Y);
+			ConsoleManager.MouseDown = (mouseEvent.ButtonState & 0x0001) != 0;
 		}
 
 		private struct COORD
@@ -49,52 +49,27 @@ namespace ConsoleGUI.MouseExample
 			public short Y;
 		}
 
-		[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
-		private struct KEY_EVENT_RECORD
+		private struct MouseRecord
 		{
-			[FieldOffset(0)]
-			public bool bKeyDown;
-			[FieldOffset(4)]
-			public ushort wRepeatCount;
-			[FieldOffset(6)]
-			public ushort wVirtualKeyCode;
-			[FieldOffset(8)]
-			public ushort wVirtualScanCode;
-			[FieldOffset(10)]
-			public char UnicodeChar;
-			[FieldOffset(10)]
-			public byte AsciiChar;
-			[FieldOffset(12)]
-			public uint dwControlKeyState;
+			public COORD MousePosition;
+			public uint ButtonState;
+			public uint ControlKeyState;
+			public uint EventFlags;
 		}
 
-		private struct MOUSE_EVENT_RECORD
+		private struct InputRecord
 		{
-			public COORD dwMousePosition;
-
-			public uint dwButtonState;
-			public uint dwControlKeyState;
-			public uint dwEventFlags;
-		}
-
-		[StructLayout(LayoutKind.Explicit)]
-		private struct INPUT_RECORD
-		{
-			[FieldOffset(0)]
 			public ushort EventType;
-			[FieldOffset(4)]
-			public KEY_EVENT_RECORD KeyEvent;
-			[FieldOffset(4)]
-			public MOUSE_EVENT_RECORD MouseEvent;
+			public MouseRecord MouseEvent;
 		}
 
 		[DllImport("kernel32.dll")]
 		public static extern IntPtr GetStdHandle(uint nStdHandle);
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-		private static extern bool ReadConsoleInput(IntPtr hConsoleInput, [Out] INPUT_RECORD[] lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
+		private static extern bool ReadConsoleInput(IntPtr hConsoleInput, [Out] InputRecord[] lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-		private static extern bool WriteConsoleInput(IntPtr hConsoleInput, INPUT_RECORD[] lpBuffer, uint nLength, out uint lpNumberOfEventsWritten);
+		private static extern bool WriteConsoleInput(IntPtr hConsoleInput, InputRecord[] lpBuffer, uint nLength, out uint lpNumberOfEventsWritten);
 	}
 }
