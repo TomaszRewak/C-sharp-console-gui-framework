@@ -83,7 +83,7 @@ namespace ConsoleGUI.MouseExample
 							new HorizontalSeparator(),
 							new TextBlock { Text = "Simple text box" },
 							new Background{
-								Color = new Color(100, 100, 0),
+								Color = Color.Black,
 								Content = textBox1
 							},
 							new HorizontalSeparator(),
