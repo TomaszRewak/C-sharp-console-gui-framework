@@ -1,9 +1,9 @@
-name: .NET Core
+name: build windows
 
 on: [push]
 
 jobs:
-  build-windows:
+  build:
 
     runs-on: [windows-latest]
 
@@ -15,5 +15,3 @@ jobs:
         dotnet-version: 3.0.100
     - name: Build with dotnet
       run: dotnet build --configuration Release
-    - name: Test with dotnet
-      run: dotnet test
