@@ -1,3 +1,7 @@
+![](https://github.com/TomaszRewak/C-sharp-console-gui-framework/workflows/build%20windows/badge.svg)
+![](https://github.com/TomaszRewak/C-sharp-console-gui-framework/workflows/build%20linux/badge.svg)
+![](https://github.com/TomaszRewak/C-sharp-console-gui-framework/workflows/tests/badge.svg)
+
 # ConsoleGUI
 
 ConsoleGUI is a simple layout-driven .NET framework for creating console-based GUI applications.
