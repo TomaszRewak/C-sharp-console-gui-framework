@@ -3,9 +3,9 @@ name: .NET Core
 on: [push]
 
 jobs:
-  build:
+  build-windows:
 
-    runs-on: ubuntu-latest
+    runs-on: [windows-latest]
 
     steps:
     - uses: actions/checkout@v1
