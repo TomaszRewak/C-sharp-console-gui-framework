@@ -125,6 +125,10 @@ Displays `Data` in a grid based on provided column definitions.
 
 The `ColumnDefinition` defines the column `Header`, its `Width` and the data `Selector`. The `Selector` can be used to extract text from a data row, specify that cell's color, or even define a custom content generator.
 
+##### Decorator
+
+`Decorator` is an abstract class that allows the user to define custom formatting rules (like applying foreground and background colors based on the content and position of a cell), while preserving the layout of the `Content` control. See the `SimpleDecorator` class in the `ConsoleGUI.Example` project for an example.
+
 ##### DockPanel
 
 `DockPanel` consists of two parts: `DockedControl` and `FillingControl`. The `DockedControl` is placed within the available space according to the `Placement` property value (`Top`/`Right`/`Bottom`/`Left`). The `FillingControl` takes up all of the remaining space.
