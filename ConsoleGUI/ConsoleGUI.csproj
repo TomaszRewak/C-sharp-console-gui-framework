@@ -13,8 +13,9 @@
     <RepositoryUrl>https://github.com/TomaszRewak/C-sharp-console-gui-framework</RepositoryUrl>
     <PackageTags>console, gui, framework</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>1.0.4</Version>
-    <PackageReleaseNotes>1.0.4 - Adding support for window resizing</PackageReleaseNotes>
+    <Version>1.0.5</Version>
+    <PackageReleaseNotes>1.0.5 - Adding basic mouse support
+1.0.4 - Adding support for window resizing</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>

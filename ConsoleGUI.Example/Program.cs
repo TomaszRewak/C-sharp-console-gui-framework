@@ -221,13 +221,16 @@ namespace ConsoleGUI.Example
 
 			var scrollPanel = new VerticalScrollPanel
 			{
-				Content = new VerticalStackPanel
+				Content = new SimpleDecorator
 				{
-					Children = new IControl[]
+					Content = new VerticalStackPanel
 					{
-						new WrapPanel { Content = new TextBlock{Text = "Here is a short example of text wrapping" } },
-						new HorizontalSeparator(),
-						new WrapPanel { Content = new TextBlock{Text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." } },
+						Children = new IControl[]
+						{
+							new WrapPanel { Content = new TextBlock{Text = "Here is a short example of text wrapping" } },
+							new HorizontalSeparator(),
+							new WrapPanel { Content = new TextBlock{Text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." } },
+						}
 					}
 				}
 			};
