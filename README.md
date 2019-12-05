@@ -103,7 +103,7 @@ Sets the background color of the `Content` control. If the `Important` property 
 
 ##### Border
 
-Draws a border around the `Content` control. The `BorderPlacement` and the `BorderStyle` can be adjusted to change the look of the generated outline.
+Draws a border around the `Content` control. The `BorderPlacement` and the `BorderStyle` can be adjusted to change the look of the generated outline. The `Border` will always take all of the available space when not stored in a control that defines a different layout behavior.
 
 ##### Boundary
 
