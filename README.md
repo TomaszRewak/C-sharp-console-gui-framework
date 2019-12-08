@@ -115,6 +115,10 @@ Especially useful to limit the space taken by controls that would otherwise stre
 
 Aligns the `Content` control vertically (`Top`/`Center`/`Bottom`/`Stretch`) and horizontally (`Left`/`Center`/`Right`/`Stretch`).
 
+##### BreakPanel
+
+Breaks a single line of text into multiple lines based on the available vertical space and new line characters. It can be used with any type of control (`TextBox`, `TextBlock` but also `HorizontalStackPanel` and any other).
+
 ##### Canvas
 
 Can host multiple child controls, each displayed within a specified rectangle. Allows content overlapping.
