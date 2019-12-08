@@ -93,5 +93,14 @@ namespace ConsoleGUI.Space
 		}
 
 		public Rect Move(in Vector vector) => Move(vector.X, vector.Y);
+
+		public bool Contains(in Position position)
+		{
+			return
+				position.X >= Left &&
+				position.X <= Right &&
+				position.Y >= Top &&
+				position.Y <= Bottom;
+		}
 	}
 }

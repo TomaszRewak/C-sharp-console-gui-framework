@@ -134,10 +134,13 @@ namespace ConsoleGUI.Controls
 					case ConsoleKey.Delete when CaretStart < TextLength:
 						newText = $"{Text.Substring(0, CaretStart)}{Text.Substring(CaretStart + 1)}";
 						break;
-					case ConsoleKey key when char.IsControl(inputEvent.Key.KeyChar):
+					case ConsoleKey key when char.IsControl(inputEvent.Key.KeyChar) && inputEvent.Key.Key != ConsoleKey.Enter:
 						return;
 					default:
-						newText = $"{Text.Substring(0, CaretStart)}{inputEvent.Key.KeyChar}{Text.Substring(CaretEnd)}";
+						var character = inputEvent.Key.Key == ConsoleKey.Enter
+							? '\n'
+							: inputEvent.Key.KeyChar;
+						newText = $"{Text.Substring(0, CaretStart)}{character}{Text.Substring(CaretEnd)}";
 						CaretStart = CaretEnd = CaretStart + 1;
 						break;
 				}
