@@ -71,7 +71,7 @@ namespace ConsoleGUI.Controls
 		}
 
 		private int? _mousePosition;
-		public int? MousePosition
+		private int? MousePosition
 		{
 			get => _mousePosition;
 			set => Setter
@@ -81,7 +81,7 @@ namespace ConsoleGUI.Controls
 
 		private int TextLength => Text?.Length ?? 0;
 		private Size TextSize => new Size(TextLength, 1);
-		private Size EditorSize => CaretEnd >= TextLength ? TextSize.Expand(1, 0) : TextSize;
+		private Size EditorSize => TextSize.Expand(1, 0);
 
 		public override Cell this[Position position]
 		{
@@ -121,6 +121,12 @@ namespace ConsoleGUI.Controls
 						break;
 					case ConsoleKey.RightArrow:
 						CaretStart = CaretEnd = Math.Min(Text.Length, CaretEnd + 1);
+						break;
+					case ConsoleKey.UpArrow:
+						CaretStart = CaretEnd = TextUtils.PreviousLine(Text, CaretStart);
+						break;
+					case ConsoleKey.DownArrow:
+						CaretStart = CaretEnd = TextUtils.NextLine(Text, CaretEnd);
 						break;
 					case ConsoleKey.Delete when CaretStart != CaretEnd:
 					case ConsoleKey.Backspace when CaretStart != CaretEnd:

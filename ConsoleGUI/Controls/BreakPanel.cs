@@ -74,7 +74,7 @@ namespace ConsoleGUI.Controls
 
 						var drawingSection = _wrapPanels[breaks].Content as DrawingSection;
 						drawingSection.Content = Content;
-						drawingSection.Rect = new Rect(x - width, 0, width, 1);
+						drawingSection.Rect = new Rect(x - width, 0, width + 1, 1);
 
 						breaks++;
 						width = 0;
