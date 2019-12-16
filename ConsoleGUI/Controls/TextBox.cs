@@ -87,6 +87,9 @@ namespace ConsoleGUI.Controls
 		{
 			get
 			{
+				if (CaretEnd + 1 > Size.Width)
+					position = position.Move(CaretEnd - Size.Width + 1, 0);
+
 				var content = EditorSize.Contains(position) && position.X < TextLength
 					? Text[position.X]
 					: (char?)null;

@@ -152,8 +152,9 @@ namespace ConsoleGUI.Example
 											Content = new DockPanel
 											{
 												Placement = DockPanel.DockedControlPlacement.Bottom,
-												DockedControl = new WrapPanel
+												DockedControl = new Boundary
 												{
+													MaxHeight = 1,
 													Content = new HorizontalStackPanel
 													{
 														Children = new IControl[]
