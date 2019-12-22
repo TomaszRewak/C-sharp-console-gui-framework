@@ -102,7 +102,7 @@ namespace ConsoleGUI.Example
 					},
 					FillingControl = new Background
 					{
-						Color = new Color(100, 0, 0),
+						Color = ConsoleColor.DarkRed,
 						Content = new Box
 						{
 							Content = new TextBlock { Text = "Center" },

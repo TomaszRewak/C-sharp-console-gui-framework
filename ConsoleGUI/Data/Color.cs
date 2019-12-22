@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleGUI.Utils;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,6 +17,8 @@ namespace ConsoleGUI.Data
 			Green = green;
 			Blue = blue;
 		}
+
+		public static implicit operator Color(ConsoleColor color) => ColorConverter.GetColor(color);
 
 		public Color Mix(in Color color, float factor) => this * (1 - factor) + color * factor;
 
