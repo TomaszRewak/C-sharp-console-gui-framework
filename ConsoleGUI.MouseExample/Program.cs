@@ -1,4 +1,5 @@
-﻿using ConsoleGUI.Controls;
+﻿using ConsoleGUI.Api;
+using ConsoleGUI.Controls;
 using ConsoleGUI.Data;
 using ConsoleGUI.Input;
 using ConsoleGUI.Space;
@@ -74,8 +75,7 @@ namespace ConsoleGUI.MouseExample
 			MouseHandler.Initialize();
 
 			ConsoleManager.Setup();
-			ConsoleManager.CompatibilityMode = true;
-			ConsoleManager.DontPrintTheLastCharacter = true;
+			ConsoleManager.Console = new SimplifiedConsole();
 			ConsoleManager.Resize(new Size(80, 30));
 
 			var textBox1 = new TextBox { Text = "Hello world" };

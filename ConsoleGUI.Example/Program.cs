@@ -279,8 +279,6 @@ namespace ConsoleGUI.Example
 
 			ConsoleManager.Setup();
 			ConsoleManager.Resize(new Size(150, 40));
-			ConsoleManager.CompatibilityMode = false;
-			ConsoleManager.DontPrintTheLastCharacter = false;
 			ConsoleManager.Content = dockPanel;
 
 			var input = new IInputListener[]

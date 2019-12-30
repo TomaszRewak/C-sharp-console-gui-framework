@@ -55,5 +55,15 @@ namespace ConsoleGUI.Utils
 			catch (Exception)
 			{ }
 		}
+
+		public static void Clear()
+		{
+			try
+			{
+				Console.Clear();
+			}
+			catch (Exception)
+			{ }
+		}
 	}
 }
