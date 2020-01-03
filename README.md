@@ -49,10 +49,6 @@ ConsoleManager.Setup();
 // optional: resizes the console window (the size is set in a number of characters, not pixels)
 ConsoleManager.Resize(new Size(150, 40));
 
-// required for terminals that don't support true color formatting (e.g. powershell.exe)
-// not recommended if you only want to run your app in a console that supports true color formatting
-ConsoleManager.CompatibilityMode = true;
-
 // sets the main layout element and prints it on the screen
 ConsoleManager.Content = new TextBlock { Text = "Hello world" };
 ```
@@ -63,7 +59,7 @@ After that, whenever you make a change to any of the controls within the UI tree
 
 #### Compatibility mode
 
-The above example uses the compatibility mode. It's required if your terminal of choice doesn't support true color formatting. If set, the ConsoleGUI will translate all of the RGB colors into 4bit values of the ConsoleColor enum. This will, of course, degrade the user experience.
+By default, the ConsoleGUI uses the true color formatting to provide the best possible user experience by supporting 16777216 foreground and background colors. Unfortunately this way of formatting is not supported by all terminals. Some of them (depending on the platform and software) support only 16bit colors, or just the 4bit colors defined in the `ConsoleColor` enum. 
 
 Terminals that DO NOT support the true color formatting are (for example): powershell.exe and cmd.exe.
 
@@ -73,19 +69,15 @@ Terminals that DO support the true color formatting are (for example): the new W
   <img src="https://github.com/TomaszRewak/C-sharp-console-gui-framework/blob/master/Resources/Problems.png?raw=true" width=800/>
 </p>
 
-If after starting the application you see the same output as the one on the left, you have to enable the compatibility mode:
+If after starting the application you see the same output as the one on the left, you have to enable the compatibility mode by changing the `Console` interface used by the framework:
 
 ```csharp
-ConsoleManager.CompatibilityMode = true;
+ConsoleManager.Console = new SimplifiedConsole();
 ```
 
-If your application works more or less correctly, but the top line is not visible and the bottom line is duplicated (the right example), you need to set the `DontPrintTheLastCharacter` property of the `ConsoleManager`:
+The `SimplifiedConsole` translates all of the RGB colors into 4bit values of the ConsoleColor enum. It also prevents the bottom-right character from being printed, to avoid the bug visible on the right image (in some terminals printing the last character can cause the buffer to scroll).
 
-```csharp
-ConsoleManager.DontPrintTheLastCharacter = true;
-```
-
-This will prevent the last (bottom-right) character from being printed so that the console will not try to scroll to the next line (it's also a console-specific behaviour).
+If the output is still being printed incorrectly (or if you want to print it on a non-standard console) you can implement the `IConsole` interface yourself and set the `Console` property of the `ConsoleManager` with the instance of your custom class. Alternatively you can also derive from the `StandardConsole` class (which is being used by default) and only override its virtual `void Write(Position, in Character)` method.
 
 #### Responsiveness
 
