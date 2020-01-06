@@ -17,6 +17,8 @@ namespace ConsoleGUI.Controls
 			set
 			{
 				foreach (var child in _children) child.Dispose();
+				_children.Clear();
+				
 				foreach (var child in value) _children.Add(new DrawingContext(this, child));
 
 				Initialize();
