@@ -57,6 +57,10 @@ And that's it. As you can see most of those steps are optional, depending on how
 
 After that, whenever you make a change to any of the controls within the UI tree, the updates will be propagated and displayed automatically. No manual `Redraw()` calls are required.
 
+#### Threading
+
+The ConsoleGUI (as many other UI frameworks) is not thread-safe. All UI changes should be performed from the same thread.
+
 #### Compatibility mode
 
 By default, the ConsoleGUI uses the true color formatting to provide the best possible user experience by supporting 16777216 foreground and background colors. Unfortunately this way of formatting is not supported by all terminals. Some of them (depending on the platform and software) support only 16bit colors, or just the 4bit colors defined in the `ConsoleColor` enum. 
