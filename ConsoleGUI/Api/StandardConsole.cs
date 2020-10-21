@@ -14,7 +14,7 @@ namespace ConsoleGUI.Api
 			get => new Size(Console.WindowWidth, Console.WindowHeight);
 			set
 			{
-				Console.SetCursorPosition(0, 0);
+				SafeConsole.SetCursorPosition(0, 0);
 				SafeConsole.SetWindowPosition(0, 0);
 				if (!(Size <= value)) SafeConsole.SetWindowSize(1, 1);
 				SafeConsole.SetBufferSize(value.Width, value.Height);

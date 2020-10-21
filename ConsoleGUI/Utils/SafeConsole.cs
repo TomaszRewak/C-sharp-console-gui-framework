@@ -6,6 +6,16 @@ namespace ConsoleGUI.Utils
 {
 	internal static class SafeConsole
 	{
+		public static void SetCursorPosition(int left, int top)
+		{
+			try
+			{
+				Console.SetCursorPosition(left, top);
+			}
+			catch (Exception)
+			{ }
+		}
+
 		public static void SetWindowPosition(int left, int top)
 		{
 			try
