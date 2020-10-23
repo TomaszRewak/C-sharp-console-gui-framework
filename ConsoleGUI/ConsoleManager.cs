@@ -147,7 +147,7 @@ namespace ConsoleGUI
 					{
 						Console.Write(position, cell.Character);
 					}
-					catch (ArgumentOutOfRangeException)
+					catch (SafeConsoleException)
 					{
 						rect = Rect.Intersect(rect, Rect.OfSize(WindowSize));
 					}

@@ -45,8 +45,7 @@ namespace ConsoleGUI.Api
 
 			if (content == '\n') content = ' ';
 
-			Console.SetCursorPosition(position.X, position.Y);
-			Console.Write($"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
+			SafeConsole.WriteOrThrow(position.X, position.Y, $"\x1b[38;2;{foreground.Red};{foreground.Green};{foreground.Blue}m\x1b[48;2;{background.Red};{background.Green};{background.Blue}m{content}");
 		}
 
 		public ConsoleKeyInfo ReadKey()

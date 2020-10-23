@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleGUI.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -44,6 +45,34 @@ namespace ConsoleGUI.Utils
 			}
 			catch (Exception)
 			{ }
+		}
+
+		public static void WriteOrThrow(int left, int top, string content)
+		{
+			try
+			{
+				Console.SetCursorPosition(left, top);
+				Console.Write(content);
+			}
+			catch (Exception)
+			{
+				throw new SafeConsoleException();
+			}
+		}
+
+		public static void WriteOrThrow(int left, int top, ConsoleColor background, ConsoleColor foreground, char content)
+		{
+			try
+			{
+				Console.SetCursorPosition(left, top);
+				Console.BackgroundColor = background;
+				Console.ForegroundColor = foreground;
+				Console.Write(content);
+			}
+			catch (Exception)
+			{
+				throw new SafeConsoleException();
+			}
 		}
 
 		public static void SetUtf8()

@@ -21,10 +21,12 @@ namespace ConsoleGUI.Api
 
 			if (content == '\n') content = ' ';
 
-			Console.SetCursorPosition(position.X, position.Y);
-			Console.BackgroundColor = ColorConverter.GetNearestConsoleColor(background);
-			Console.ForegroundColor = ColorConverter.GetNearestConsoleColor(foreground);
-			Console.Write(content);
+			SafeConsole.WriteOrThrow(
+				position.X,
+				position.Y,
+				ColorConverter.GetNearestConsoleColor(background),
+				ColorConverter.GetNearestConsoleColor(foreground),
+				content);
 		}
 
 		public override void OnRefresh()
