@@ -109,13 +109,13 @@ namespace ConsoleGUI.Controls
 			if (inputEvent.Key.Key == ScrollUpKey)
 			{
 				Top -= 1;
+				inputEvent.Handled = true;
 			}
 			else if (inputEvent.Key.Key == ScrollDownKey)
 			{
 				Top += 1;
+				inputEvent.Handled = true;
 			}
-			
-			inputEvent.Handled = true;
 		}
 	}
 }
