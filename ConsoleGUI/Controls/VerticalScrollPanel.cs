@@ -4,8 +4,6 @@ using ConsoleGUI.Input;
 using ConsoleGUI.Space;
 using ConsoleGUI.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleGUI.Controls
 {
@@ -56,6 +54,9 @@ namespace ConsoleGUI.Controls
 				.Then(RedrawScrollBar);
 		}
 
+		public ConsoleKey ScrollUpKey { get; set; } = ConsoleKey.UpArrow;
+		public ConsoleKey ScrollDownKey { get; set; } = ConsoleKey.DownArrow;
+		
 		public override Cell this[Position position]
 		{
 			get
@@ -105,19 +106,16 @@ namespace ConsoleGUI.Controls
 
 		void IInputListener.OnInput(InputEvent inputEvent)
 		{
-			switch (inputEvent.Key.Key)
+			if (inputEvent.Key.Key == ScrollUpKey)
 			{
-				case ConsoleKey.UpArrow:
-					Top -= 1;
-					return;
-				case ConsoleKey.DownArrow:
-					Top += 1;
-					break;
-				default:
-					return;
+				Top -= 1;
+				inputEvent.Handled = true;
 			}
-
-			inputEvent.Handled = true;
+			else if (inputEvent.Key.Key == ScrollDownKey)
+			{
+				Top += 1;
+				inputEvent.Handled = true;
+			}
 		}
 	}
 }
