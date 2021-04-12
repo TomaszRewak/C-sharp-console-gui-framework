@@ -4,15 +4,12 @@ using ConsoleGUI.Input;
 using ConsoleGUI.Space;
 using ConsoleGUI.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleGUI.Controls
 {
 	public class VerticalScrollPanel : Control, IDrawingContextListener, IInputListener
 	{
 		private DrawingContext _contentContext = DrawingContext.Dummy;
-
 		private DrawingContext ContentContext
 		{
 			get => _contentContext;
@@ -22,7 +19,6 @@ namespace ConsoleGUI.Controls
 		}
 
 		private IControl _content;
-
 		public IControl Content
 		{
 			get => _content;
@@ -32,7 +28,6 @@ namespace ConsoleGUI.Controls
 		}
 
 		private int _top;
-
 		public int Top
 		{
 			get => _top;
@@ -42,10 +37,6 @@ namespace ConsoleGUI.Controls
 		}
 
 		private Character _scrollBarForeground = new Character('▀', foreground: new Color(100, 100, 255));
-
-		public ConsoleKey ScrollUpKey { get; set; } = ConsoleKey.UpArrow;
-		public ConsoleKey ScrollDownKey { get; set; } = ConsoleKey.DownArrow;
-		
 		public Character ScrollBarForeground
 		{
 			get => _scrollBarForeground;
@@ -55,7 +46,6 @@ namespace ConsoleGUI.Controls
 		}
 
 		private Character _scrollBarBackground = new Character('║', foreground: new Color(100, 100, 100));
-
 		public Character ScrollBarBackground
 		{
 			get => _scrollBarBackground;
@@ -64,6 +54,9 @@ namespace ConsoleGUI.Controls
 				.Then(RedrawScrollBar);
 		}
 
+		public ConsoleKey ScrollUpKey { get; set; } = ConsoleKey.UpArrow;
+		public ConsoleKey ScrollDownKey { get; set; } = ConsoleKey.DownArrow;
+		
 		public override Cell this[Position position]
 		{
 			get
