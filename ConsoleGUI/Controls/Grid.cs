@@ -31,12 +31,12 @@ namespace ConsoleGUI.Controls
 			}
 		}
 
-		private DrawingContext[,] children = new DrawingContext[0, 0];
+		private DrawingContext[,] _children = new DrawingContext[0, 0];
 		private DrawingContext[,] Children
 		{
-			get => children;
+			get => _children;
 			set => Setter
-				.Set(ref children, value);
+				.Set(ref _children, value);
 		}
 
 		private ColumnDefinition[] _columns = new ColumnDefinition[0];

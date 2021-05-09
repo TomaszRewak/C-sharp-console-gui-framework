@@ -22,10 +22,10 @@ namespace ConsoleGUI.Example
 			{
 				Columns = new[]
 				{
-					new DataGrid<Player>.ColumnDefinition("Name", 10, p => p.Name, foreground: p => p.Name == "Tomasz" ? (Color?)new Color(100, 100, 220) : null),
+					new DataGrid<Player>.ColumnDefinition("Name", 10, p => p.Name, foreground: p => p.Name == "Tomasz" ? (Color?)new Color(100, 100, 220) : null, textAlignment: TextAlignment.Right),
 					new DataGrid<Player>.ColumnDefinition("Surname", 10, p => p.Surname),
-					new DataGrid<Player>.ColumnDefinition("Birth date", 15, p => p.BirthDate.ToShortDateString()),
-					new DataGrid<Player>.ColumnDefinition("Points", 5, p => p.Points.ToString(), background: p => p.Points > 20 ? (Color?)new Color(0, 220, 0) : null)
+					new DataGrid<Player>.ColumnDefinition("Birth date", 15, p => p.BirthDate.ToShortDateString(), textAlignment: TextAlignment.Center),
+					new DataGrid<Player>.ColumnDefinition("Points", 5, p => p.Points.ToString(), background: p => p.Points > 20 ? (Color?)new Color(0, 220, 0) : null, textAlignment: TextAlignment.Right)
 				},
 				Data = new[]
 				{
@@ -33,7 +33,8 @@ namespace ConsoleGUI.Example
 					new Player("Ellen", "Ripley", new DateTime(2092, 1, 1), 23),
 					new Player("Jan", "Kowalski", new DateTime(1990, 4, 10), 50),
 					new Player("Tomasz", "Rewak", new DateTime(1900, 1, 1), 0),
-				}
+				},
+				Style = DataGridStyle.AllBorders
 			};
 
 			var tabPanel = new TabPanel();

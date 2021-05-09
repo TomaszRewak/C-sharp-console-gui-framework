@@ -5,7 +5,6 @@ using ConsoleGUI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ConsoleGUI.Controls
 {
@@ -13,55 +12,118 @@ namespace ConsoleGUI.Controls
 	{
 		public class ColumnDefinition
 		{
-			public readonly string Header;
-			public readonly int Width;
-			public readonly Func<T, int, Character> Selector;
+			private readonly Func<int, Character> _headerSelector;
+			private readonly Func<T, int, Character> _valueSelector;
 
-			public ColumnDefinition(string header, int width, Func<T, int, Character> selector)
-			{
-				Header = header;
-				Width = width;
-				Selector = selector;
-			}
+			public readonly int Width;
 
 			public ColumnDefinition(string header, int width, Func<T, string> selector)
 			{
-				Header = header;
 				Width = width;
-				Selector = (v, i) =>
+
+				_headerSelector = i =>
+				{
+					var text = header;
+					return i < text.Length ? new Character(text[i]) : Character.Empty;
+				};
+
+				_valueSelector = (v, i) =>
 				{
 					var text = selector(v);
 					return i < text.Length ? new Character(text[i]) : Character.Empty;
 				};
 			}
 
-			public ColumnDefinition(string header, int width, Func<T, string> selector, Func<T, Color?> foreground = null, Func<T, Color?> background = null)
+			public ColumnDefinition(string header, int width, Func<T, int, Character> selector)
 			{
-				Header = header;
 				Width = width;
-				Selector = (v, i) =>
+
+				_headerSelector = i =>
+				{
+					var text = header;
+					return i < text.Length ? new Character(text[i]) : Character.Empty;
+				};
+
+				_valueSelector = selector;
+			}
+
+			public ColumnDefinition(int width, Func<int, Character> headerSelector, Func<T, int, Character> valueSelector)
+			{
+				Width = width;
+
+				_headerSelector = headerSelector;
+				_valueSelector = valueSelector;
+			}
+
+			public ColumnDefinition(
+				string header,
+				int width,
+				Func<T, string> selector,
+				Func<T, Color?> foreground = null,
+				Func<T, Color?> background = null,
+				TextAlignment textAlignment = TextAlignment.Left)
+			{
+				Width = width;
+
+				_headerSelector = i =>
+				{
+					var text = header;
+					return i < text.Length ? new Character(text[i]) : Character.Empty;
+				};
+
+				_valueSelector = (v, i) =>
 				{
 					var text = selector(v);
-					return new Character(i < text.Length ? (char?)text[i] : null, foreground?.Invoke(v), background?.Invoke(v));
+
+					if (textAlignment == TextAlignment.Center)
+						i -= (Width - text.Length) / 2;
+					if (textAlignment == TextAlignment.Right)
+						i -= Width - text.Length;
+
+					return new Character(
+						i >= 0 && i < text.Length ? (char?)text[i] : null,
+						foreground?.Invoke(v),
+						background?.Invoke(v));
 				};
 			}
+
+			internal Character GetHeader(int xOffset) => _headerSelector(xOffset);
+			internal Character GetValue(T value, int xOffset) => _valueSelector(value, xOffset);
 		}
 
-		private ColumnDefinition[] columns = new ColumnDefinition[0];
+		private ColumnDefinition[] _columns = new ColumnDefinition[0];
 		public ColumnDefinition[] Columns
 		{
-			get => columns;
+			get => _columns;
 			set => Setter
-				.Set(ref columns, value.ToArray())
+				.Set(ref _columns, value.ToArray())
 				.Then(Initialize);
 		}
 
-		private IReadOnlyCollection<T> data = new T[0];
+		private IReadOnlyCollection<T> _data = new T[0];
 		public IReadOnlyCollection<T> Data
 		{
-			get => data;
+			get => _data;
 			set => Setter
-				.Set(ref data, value)
+				.Set(ref _data, value)
+				.Then(Initialize);
+		}
+
+		private DataGridStyle _style = DataGridStyle.AllBorders;
+		public DataGridStyle Style
+		{
+			get => _style;
+			set => Setter
+				.Set(ref _style, value)
+				.Then(Initialize);
+		}
+
+		private bool _showHeader = true;
+		public bool ShowHeader
+		{
+			get => _showHeader;
+			set => Setter
+				.Set(ref _showHeader, value)
 				.Then(Initialize);
 		}
 
@@ -89,33 +151,80 @@ namespace ConsoleGUI.Controls
 		{
 			get
 			{
-				int column = 0;
-				int xOffset = 0;
-				if (position.Y > Data.Count * 2) return Character.Empty;
-				while (column < Columns.Length && position.X > xOffset + Columns[column].Width) xOffset += Columns[column++].Width + 1;
+				if (position.Y < 0) return Character.Empty;
+				if (position.X < 0) return Character.Empty;
+				if (position.Y >= CalculateDesiredHeight()) return Character.Empty;
+				if (position.X >= CalculateDesiredWidth()) return Character.Empty;
 
-				int x = position.X - xOffset;
-				if (column >= Columns.Length) return Character.Empty;
-				if (column == Columns.Length - 1 && x == Columns[column].Width) return Character.Empty;
-				if (position.Y == 1 && x == Columns[column].Width) return new Character('╪');
-				if (position.Y == 1) return new Character('═');
-				if (position.Y % 2 == 1 && x == Columns[column].Width) return new Character('┼');
-				if (position.Y % 2 == 1) return new Character('─');
-				if (x == Columns[column].Width) return new Character('│');
-				if (position.Y == 0) return x < Columns[column].Header.Length ? new Character(Columns[column].Header[x]) : Character.Empty;
-				return Columns[column].Selector(Data.ElementAt(position.Y / 2 - 1), x);
+				int column = 0;
+				int xOffset = position.X;
+				bool isVerticalBorder = false;
+
+				while (xOffset >= Columns[column].Width)
+				{
+					if (Style.HasVertivalBorders && xOffset == Columns[column].Width)
+					{
+						isVerticalBorder = true;
+						break;
+					}
+
+					xOffset -= Columns[column].Width;
+					xOffset -= Style.HasVertivalBorders ? 1 : 0;
+					column += 1;
+				}
+
+				if (ShowHeader && position.Y == 0 && isVerticalBorder) return Style.HeaderVerticalBorder.Value;
+				if (ShowHeader && position.Y == 1 && isVerticalBorder && Style.HeaderIntersectionBorder.HasValue) return Style.HeaderIntersectionBorder.Value;
+				if (ShowHeader && position.Y == 1 && Style.HeaderHorizontalBorder.HasValue) return Style.HeaderHorizontalBorder.Value;
+				if (ShowHeader && position.Y == 0) return Columns[column].GetHeader(xOffset);
+
+				int yOffset = position.Y;
+
+				if (ShowHeader) yOffset--;
+				if (ShowHeader && Style.HeaderHorizontalBorder.HasValue) yOffset--;
+
+				int row = Style.CellHorizontalBorder.HasValue
+					? yOffset / 2
+					: yOffset;
+				bool isHorizontalBorder = Style.CellHorizontalBorder.HasValue
+					? yOffset % 2 == 1
+					: false;
+
+				if (isHorizontalBorder && isVerticalBorder) return Style.CellIntersectionBorder.Value;
+				if (isHorizontalBorder) return Style.CellHorizontalBorder.Value;
+				if (isVerticalBorder) return Style.CellVerticalBorder.Value;
+
+				return Columns[column].GetValue(Data.ElementAt(row), xOffset);
 			}
 		}
 
 		protected override void Initialize()
 		{
-			using (Freeze())
-			{
-				int width = Columns.Sum(c => c.Width) + Math.Max(0, Columns.Length - 1);
-				int height = Data.Count * 2 + 1;
+			Resize(new Size(CalculateDesiredWidth(), CalculateDesiredHeight()));
+		}
 
-				Resize(new Size(width, height));
-			}
+		private int CalculateDesiredHeight()
+		{
+			int height = Data.Count;
+
+			if (ShowHeader)
+				height += 1;
+			if (ShowHeader && Style.HeaderHorizontalBorder.HasValue)
+				height += 1;
+			if (Data.Count > 0 && Style.CellHorizontalBorder.HasValue)
+				height += Data.Count - 1;
+
+			return height;
+		}
+
+		private int CalculateDesiredWidth()
+		{
+			int width = Columns.Sum(c => c.Width);
+
+			if (Columns.Length > 0 && Style.HasVertivalBorders)
+				width += Columns.Length - 1;
+
+			return width;
 		}
 	}
 }

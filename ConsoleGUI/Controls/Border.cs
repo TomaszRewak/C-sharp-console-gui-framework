@@ -2,9 +2,6 @@
 using ConsoleGUI.Data;
 using ConsoleGUI.Space;
 using ConsoleGUI.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleGUI.Controls
 {
