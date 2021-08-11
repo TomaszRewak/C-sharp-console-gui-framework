@@ -123,7 +123,7 @@ Can host multiple child controls, each displayed within a specified rectangle. A
   
 Displays `Data` in a grid based on provided column definitions.
 
-The `ColumnDefinition` defines the column `Header`, its `Width` and the data `Selector`. The `Selector` can be used to extract text from a data row, specify that cell's color, or even define a custom content generator.
+The `ColumnDefinition` defines the column header, its width and the data selector. The selector can be used to extract text from a data row, specify that cell's color, or even define a custom content generator.
 
 ##### Decorator
 
