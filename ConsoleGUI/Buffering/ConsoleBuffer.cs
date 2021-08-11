@@ -17,6 +17,13 @@ namespace ConsoleGUI.Buffering
 			_buffer = new Cell?[size.Width, size.Height];
 		}
 
+		public void Clear()
+		{
+			for (int i = 0; i < _buffer.GetLength(0); i++)
+				for (int j = 0; j < _buffer.GetLength(1); j++)
+					_buffer[i, j] = null;
+		}
+
 		public bool Update(in Position position, in Cell newCell)
 		{
 			ref var cell = ref _buffer[position.X, position.Y];

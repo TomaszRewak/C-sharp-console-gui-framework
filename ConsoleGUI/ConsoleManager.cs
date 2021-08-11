@@ -113,6 +113,7 @@ namespace ConsoleGUI
 			var consoleSize = BufferSize;
 
 			Console.Initialize();
+			_buffer.Clear();
 
 			_freezeLock.Freeze();
 			ContentContext.SetLimits(consoleSize, consoleSize);
