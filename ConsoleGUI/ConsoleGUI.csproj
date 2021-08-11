@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/TomaszRewak/C-sharp-console-gui-framework</RepositoryUrl>
     <PackageTags>console, gui, framework</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
     <PackageReleaseNotes>1.4.1 - Fixing the refresh bug on swapping of the ConsoleManager.Content
 1.4.0 - Customizable data grid style
 1.3.0 - Making the ScrollUpKey and the ScrollDownKey configurable in the VerticalScrollPanel
