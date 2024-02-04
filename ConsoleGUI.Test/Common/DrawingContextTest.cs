@@ -16,7 +16,7 @@ namespace ConsoleGUI.Test.Common
 		{
 			var drawingContext = DrawingContext.Dummy;
 
-			Assert.AreEqual(Size.Empty, drawingContext.Size);
+			Assert.That(Size.Empty,Is.EqualTo( drawingContext.Size));
 		}
 
 		[Test]
@@ -77,7 +77,7 @@ namespace ConsoleGUI.Test.Common
 
 			drawingContext.SetLimits(new Size(10, 15), new Size(20, 25));
 
-			Assert.IsTrue(raised);
+			Assert.That(raised,Is.True);
 		}
 
 		[Test]

@@ -28,7 +28,7 @@ namespace ConsoleGUI.Test.Controls
 			};
 			(border as IControl).Context = context.Object;
 
-			Assert.AreEqual(new Size(22, 32), border.Size);
+			Assert.That(new Size(22, 32),Is.EqualTo( border.Size));
 		}
 
 		[Test]
@@ -41,7 +41,7 @@ namespace ConsoleGUI.Test.Controls
 			var border = new Border();
 			(border as IControl).Context = context.Object;
 
-			Assert.AreEqual(new Size(10, 20), border.Size);
+			Assert.That(new Size(10, 20),Is.EqualTo( border.Size));
 		}
 
 		[Test]
@@ -54,7 +54,7 @@ namespace ConsoleGUI.Test.Controls
 			var border = new Border();
 			(border as IControl).Context = context.Object;
 
-			Assert.AreEqual(Character.Empty, border[new Position(1, 1)].Character);
+			Assert.That(Character.Empty,Is.EqualTo(  border[new Position(1, 1)].Character));
 		}
 
 		[Test]
@@ -67,7 +67,7 @@ namespace ConsoleGUI.Test.Controls
 			var border = new Border();
 			(border as IControl).Context = context.Object;
 
-			Assert.AreEqual(Character.Empty, border[new Position(3, 1)].Character);
+			Assert.That(Character.Empty,Is.EqualTo( border[new Position(3, 1)].Character));
 		}
 	}
 }
