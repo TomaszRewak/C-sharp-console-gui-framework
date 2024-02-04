@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28922.388
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleGUI", "ConsoleGUI\Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleGUI.Test", "ConsoleGUI.Test\ConsoleGUI.Test.csproj", "{ABC28308-500E-48E9-AD7E-AA8977370D35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleGUI.MouseExample", "ConsoleGUI.MouseExample\ConsoleGUI.MouseExample.csproj", "{97B69CAE-3F74-4DEA-86FF-929FC45D3080}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleGUI.MouseExample", "ConsoleGUI.MouseExample\ConsoleGUI.MouseExample.csproj", "{97B69CAE-3F74-4DEA-86FF-929FC45D3080}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

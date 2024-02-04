@@ -30,7 +30,7 @@ namespace ConsoleGUI.Test.Utils
 			var color = ColorConverter.GetColor(initialColor);
 			var convertedColor = ColorConverter.GetNearestConsoleColor(color);
 
-			Assert.AreEqual(initialColor, convertedColor);
+			Assert.That(initialColor,Is.EqualTo( convertedColor));
 		}
 	}
 }

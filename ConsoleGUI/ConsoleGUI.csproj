@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Tomasz Rewak</Authors>
     <Company />
@@ -24,6 +23,6 @@
 1.1.0 - Adding BreakPanel and Decorator
 1.0.5 - Adding basic mouse support
 1.0.4 - Adding support for window resizing</PackageReleaseNotes>
+    <AssemblyVersion>2024.2.4.1031</AssemblyVersion>
   </PropertyGroup>
-
 </Project>
